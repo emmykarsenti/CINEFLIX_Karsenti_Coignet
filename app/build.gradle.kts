@@ -49,6 +49,12 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation("io.coil-kt:coil-compose:2.6.0")
+    // Ajoute celle-ci, c'est elle qui contient le fameux "Theme.Material3"
+    implementation("com.google.android.material:material:1.12.0")
+
+    // Et assure-toi que celle du splashscreen est toujours là
+    implementation("androidx.core:core-splashscreen:1.0.1")
 
     //Bibliothèque de Navigation
     implementation("androidx.navigation:navigation-compose:2.7.7")
