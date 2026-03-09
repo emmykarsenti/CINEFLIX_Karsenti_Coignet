@@ -18,27 +18,19 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(navController: NavController) {
-    // 1. Les couleurs de ton dégradé : Bleu très foncé vers le Rose du "F" et "x"
-    val gradientColors = listOf(
-        Color(0xFF05001E), // Bleu nuit
-        Color(0xFF1E1165), // Bleu moyen
-        Color(0xFFF299B5)  // Rose Cineflix
-    )
-
-    // 2. Le minuteur avant de passer à l'écran d'accueil
+    // Le minuteur avant de passer à l'écran d'accueil
     LaunchedEffect(key1 = true) {
-        delay(2500) // Attend 2.5 secondes
-        navController.navigate("home") {
+        delay(1500) // On réduit à 1.5 seconde pour que ce soit plus rapide
+        // On force la direction vers "auth"
+        navController.navigate("auth") {
             popUpTo("splash") { inclusive = true }
         }
     }
 
-    // 3. Le fond dégradé et le logo
+    // Le fond et le logo
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Brush.verticalGradient(colors = gradientColors)), // C'est ici que la magie opère !
-        contentAlignment = Alignment.Center
     ) {
         Image(
             // Vérifie que c'est bien le nom de ton image ici
