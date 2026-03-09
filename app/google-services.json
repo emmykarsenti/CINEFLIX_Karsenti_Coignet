@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "169771163726",
+    "project_id": "cineflix-karsenti-coignet",
+    "storage_bucket": "cineflix-karsenti-coignet.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:169771163726:android:9418bbce9970fe698a631f",
+        "android_client_info": {
+          "package_name": "fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDN4BSWFsoDLKuTnaRnC8pEbb7dAT_jnPw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
