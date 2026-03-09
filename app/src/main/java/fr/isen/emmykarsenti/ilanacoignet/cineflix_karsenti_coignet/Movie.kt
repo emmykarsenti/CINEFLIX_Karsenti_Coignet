@@ -5,5 +5,6 @@ data class Movie(
     val title: String = "",
     val universe: String = "",
     val releaseDate: String = "",
-    val category: String? = null
+    val category: String? = null,
+    val posterUrl: String = ""
 )
