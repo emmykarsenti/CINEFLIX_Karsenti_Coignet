@@ -123,6 +123,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.firebase.database.*
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 // Modèle d'un film Firebase
 data class FilmFirebase(
@@ -157,22 +159,19 @@ fun UniverseScreen(navController: NavController, universeName: String) {
     var sousSagas by remember { mutableStateOf<List<SousSaga>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
 
-    // Charger les films depuis Firebase
+    // Charger les films depuis Firebase de manière moderne et sécurisée
     LaunchedEffect(universeName) {
         val db = FirebaseDatabase.getInstance("https://cineflix-karsenti-coignet-default-rtdb.europe-west1.firebasedatabase.app").reference
 
-        db.child("categories").addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
+        db.child("categories").get()
+            .addOnSuccessListener { snapshot ->
                 val result = mutableListOf<SousSaga>()
 
-                // On parcourt toutes les catégories
                 for (categorySnap in snapshot.children) {
-                    // On parcourt toutes les franchises de cette catégorie
                     val franchisesSnap = categorySnap.child("franchises")
                     for (franchiseSnap in franchisesSnap.children) {
                         val nom = franchiseSnap.child("nom").getValue(String::class.java) ?: ""
 
-                        // On trouve la bonne franchise
                         if (nom == firebaseName) {
                             val sousSagasSnap = franchiseSnap.child("sous_sagas")
                             for (ssSnap in sousSagasSnap.children) {
@@ -181,34 +180,26 @@ fun UniverseScreen(navController: NavController, universeName: String) {
 
                                 for (filmSnap in ssSnap.child("films").children) {
                                     val film = FilmFirebase(
-                                        titre = filmSnap.child("titre").getValue(String::class.java)
-                                            ?: "",
-                                        annee = filmSnap.child("annee").getValue(Int::class.java)
-                                            ?: 0,
-                                        genre = filmSnap.child("genre").getValue(String::class.java)
-                                            ?: "",
-                                        numero = filmSnap.child("numero").getValue(Int::class.java)
-                                            ?: 0
+                                        titre = filmSnap.child("titre").getValue(String::class.java) ?: "",
+                                        annee = filmSnap.child("annee").getValue(Int::class.java) ?: 0,
+                                        genre = filmSnap.child("genre").getValue(String::class.java) ?: "",
+                                        numero = filmSnap.child("numero").getValue(Int::class.java) ?: 0
                                     )
                                     films.add(film)
                                 }
-                                result.add(
-                                    SousSaga(
-                                        nom = ssNom,
-                                        films = films.sortedBy { it.numero })
-                                )
+                                result.add(SousSaga(nom = ssNom, films = films.sortedBy { it.numero }))
                             }
                         }
                     }
                 }
                 sousSagas = result
-                isLoading = false
+                isLoading = false // On arrête de charger
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                isLoading = false
+            .addOnFailureListener { exception ->
+                // SI FIREBASE PLANTE, ON PASSE ICI !
+                println("ERREUR FIREBASE : ${exception.message}")
+                isLoading = false // On arrête de charger même s'il y a une erreur
             }
-        })
     }
 
     Scaffold(

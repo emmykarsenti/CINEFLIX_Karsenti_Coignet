@@ -27,13 +27,13 @@ fun HomeScreen(navController: NavController? = null) {
     val backgroundDark = Color(0xFF1A1D29) // Fond bleu très foncé (style Disney+)
     val cardBackground = Color(0xFF31343E) // Gris foncé pour les cases
 
-    // Liste des univers avec le proxy d'image pour contourner le blocage de Wikipédia
+    // On utilise des images générées avec un fond clair pour être SÛRS de les voir
     val universes = listOf(
-        Universe("Disney", "https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Disney_wordmark.svg/512px-Disney_wordmark.svg.png"),
-        Universe("Pixar", "https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Pixar_logo.svg/512px-Pixar_logo.svg.png"),
-        Universe("Marvel", "https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Marvel_Logo.svg/512px-Marvel_Logo.svg.png"),
-        Universe("Star Wars", "https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Star_wars2.svg/512px-Star_wars2.svg.png"),
-        Universe("Avatar", "https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Avatar_logo.svg/512px-Avatar_logo.svg.png")
+        Universe("Disney", "https://placehold.co/400x200/003366/FFFFFF/png?text=DISNEY"),
+        Universe("Pixar", "https://placehold.co/400x200/808080/FFFFFF/png?text=PIXAR"),
+        Universe("Marvel", "https://placehold.co/400x200/E23636/FFFFFF/png?text=MARVEL"),
+        Universe("Star Wars", "https://placehold.co/400x200/000000/FFE81F/png?text=STAR+WARS"),
+        Universe("Avatar", "https://placehold.co/400x200/00A8FF/FFFFFF/png?text=AVATAR")
     )
 
     Column(
