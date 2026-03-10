@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -17,20 +18,26 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(navController: NavController) {
-    // Le minuteur avant de passer à l'écran d'accueil
+    // 1. Les couleurs de ton dégradé : Bleu très foncé vers le Rose du "F" et "x"
+    val gradientColors = listOf(
+        Color(0xFF05001E), // Bleu nuit
+        Color(0xFF1E1165), // Bleu moyen
+        Color(0xFFF299B5)  // Rose Cineflix
+    )
+
+    // 2. Le minuteur avant de passer à l'écran d'accueil
     LaunchedEffect(key1 = true) {
-        delay(1500) // On réduit à 1.5 seconde pour que ce soit plus rapide
-        // On force la direction vers "auth"
-        navController.navigate("auth") {
+        delay(2500) // Attend 2.5 secondes
+        navController.navigate("home") {
             popUpTo("splash") { inclusive = true }
         }
     }
 
-    // Le fond et le logo
+    // 3. Le fond dégradé et le logo
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF05001E)), // Fond sombre cohérent avec HomeScreen
+            .background(Brush.verticalGradient(colors = gradientColors)), // C'est ici que la magie opère !
         contentAlignment = Alignment.Center
     ) {
         Image(

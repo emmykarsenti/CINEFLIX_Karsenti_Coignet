@@ -1,105 +1,100 @@
 package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
+// L'import de la fameuse bibliothèque Coil !
+import coil.compose.AsyncImage
 
-@OptIn(ExperimentalMaterial3Api::class)
+// Petite structure de données pour relier un nom d'univers à son logo
+data class Universe(val name: String, val imageUrl: String)
+
 @Composable
-fun HomeScreen(navController: NavController) {
-    var categories by remember { mutableStateOf<List<Category>>(emptyList()) }
+fun HomeScreen(navController: NavController? = null) {
+    val backgroundDark = Color(0xFF1A1D29) // Fond bleu très foncé (style Disney+)
+    val cardBackground = Color(0xFF31343E) // Gris foncé pour les cases
 
-    LaunchedEffect(Unit) {
-        val database = Firebase.database.reference
-        database.child("categories").get().addOnSuccessListener { snapshot ->
-            val list = mutableListOf<Category>()
-            snapshot.children.forEach { child ->
-                val cat = child.getValue(Category::class.java)
-                if (cat != null) list.add(cat)
-            }
-            categories = list
-        }
-    }
+    // Liste des univers avec le proxy d'image pour contourner le blocage de Wikipédia
+    val universes = listOf(
+        Universe("Disney", "https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Disney_wordmark.svg/512px-Disney_wordmark.svg.png"),
+        Universe("Pixar", "https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Pixar_logo.svg/512px-Pixar_logo.svg.png"),
+        Universe("Marvel", "https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Marvel_Logo.svg/512px-Marvel_Logo.svg.png"),
+        Universe("Star Wars", "https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Star_wars2.svg/512px-Star_wars2.svg.png"),
+        Universe("Avatar", "https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Avatar_logo.svg/512px-Avatar_logo.svg.png")
+    )
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text("CINEFLIX", color = Color.White, fontWeight = FontWeight.Bold, letterSpacing = 2.sp) },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color(0xFF05001E))
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(backgroundDark)
+            .padding(horizontal = 16.dp)
+    ) {
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // En-tête avec le nom de l'app
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "CINEFLIX",
+                fontSize = 32.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = Color.White
             )
-        },
-        containerColor = Color(0xFF05001E)
-    ) { padding ->
-        if (categories.isEmpty()) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = Color.White)
-            }
-        } else {
-            LazyColumn(modifier = Modifier.fillMaxSize().padding(padding)) {
-                // CHANGEMENT ICI : itemsIndexed pour avoir l'index de la catégorie (catIndex)
-                itemsIndexed(categories) { catIndex, category ->
-                    Column(modifier = Modifier.padding(vertical = 12.dp)) {
-                        Text(
-                            text = category.categorie,
-                            color = Color.White,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                        )
+        }
 
-                        LazyRow(
-                            contentPadding = PaddingValues(horizontal = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            // CHANGEMENT ICI : itemsIndexed pour avoir l'index de la franchise (franIndex)
-                            itemsIndexed(category.franchises ?: emptyList()) { franIndex, franchise ->
-                                FranchiseCard(
-                                    franchise = franchise,
-                                    onClick = {
-                                        // On navigue en passant les index dans l'URL !
-                                        navController.navigate("franchise_detail/$catIndex/$franIndex")
-                                    }
-                                )
-                            }
-                        }
+        Spacer(modifier = Modifier.height(32.dp))
+
+        // La fameuse grille avec les logos !
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2), // 2 colonnes
+            horizontalArrangement = Arrangement.spacedBy(16.dp), // Espace horizontal
+            verticalArrangement = Arrangement.spacedBy(16.dp),   // Espace vertical
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            items(universes) { universe ->
+                Card(
+                    modifier = Modifier
+                        .height(100.dp)
+                        .fillMaxWidth()
+                        .clickable {
+                            // TODO: Naviguer vers la liste des films de cet univers
+                        },
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(containerColor = cardBackground),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                ) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        // C'est ici que la magie opère : on télécharge l'image depuis internet !
+                        AsyncImage(
+                            model = universe.imageUrl,
+                            contentDescription = "Logo ${universe.name}",
+                            modifier = Modifier
+                                .padding(16.dp) // Un peu de marge interne pour que le logo respire
+                                .fillMaxSize(),
+                            contentScale = ContentScale.Fit // Pour que le logo rentre bien sans être déformé
+                        )
                     }
                 }
             }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun FranchiseCard(franchise: Franchise, onClick: () -> Unit) {
-    Card(
-        onClick = onClick,
-        modifier = Modifier.width(160.dp).height(90.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1D29)),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
-    ) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text(
-                text = franchise.nom,
-                color = Color.White,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(8.dp)
-            )
         }
     }
 }
