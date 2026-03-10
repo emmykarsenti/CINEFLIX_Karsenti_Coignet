@@ -1,5 +1,6 @@
 package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,17 +52,20 @@ fun HomeScreen(navController: NavController) {
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = "CINEFLIX",
-                fontSize = 32.sp,
-                fontWeight = FontWeight.ExtraBold,
-                color = Color.White
+
+            Image(
+                painter = painterResource(id = R.drawable.logo_cineflix_homescreen),
+                contentDescription = "Logo Cineflix Homescreen",
+                modifier = Modifier
+                    .height(130.dp)
+                    .fillMaxWidth()
+                    .padding(bottom = 48.dp),
+                contentScale = ContentScale.Fit
             )
         }
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // La fameuse grille avec les logos !
         LazyVerticalGrid(
             columns = GridCells.Fixed(2), // 2 colonnes
             horizontalArrangement = Arrangement.spacedBy(16.dp), // Espace horizontal
