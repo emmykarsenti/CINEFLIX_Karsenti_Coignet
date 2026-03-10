@@ -1,110 +1,3 @@
-/* package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet
-
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import coil.compose.AsyncImage
-import androidx.compose.runtime.Composable
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun UniverseScreen(navController: NavController, universeName: String) {
-    val backgroundDark = Color(0xFF1A1D29)
-
-    // On filtre les films selon l'univers cliqué
-    val movies = MockData.myMovies.filter { it.universe == universeName }
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(universeName, fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            Icons.Default.ArrowBack,
-                            contentDescription = "Retour",
-                            tint = Color.White
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF1A1D29),
-                    titleContentColor = Color.White
-                )
-            )
-        },
-        containerColor = backgroundDark
-    ) { padding ->
-
-        if (movies.isEmpty()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("Aucun film disponible", color = Color.Gray)
-            }
-        } else {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(3),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .padding(horizontal = 12.dp, vertical = 8.dp)
-            ) {
-                items(movies) { movie ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { },  // on branchera le détail après
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        AsyncImage(
-                            model = movie.posterUrl,
-                            contentDescription = movie.title,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .aspectRatio(2f / 3f)
-                                .clip(RoundedCornerShape(8.dp))
-                        )
-                        Spacer(Modifier.height(4.dp))
-                        Text(
-                            text = movie.title,
-                            color = Color.White,
-                            fontSize = 11.sp,
-                            textAlign = TextAlign.Center,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                }
-            }
-        }
-    }
-}*/
-
 package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet
 
 import androidx.compose.foundation.layout.*
@@ -123,10 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 
-// Modèle d'un film Firebase
 data class FilmFirebase(
     val titre: String = "",
     val annee: Int = 0,
@@ -134,7 +24,6 @@ data class FilmFirebase(
     val numero: Int = 0
 )
 
-// Modèle d'une sous-saga
 data class SousSaga(
     val nom: String = "",
     val films: List<FilmFirebase> = emptyList()
@@ -145,26 +34,24 @@ data class SousSaga(
 fun UniverseScreen(navController: NavController, universeName: String) {
     val backgroundDark = Color(0xFF1A1D29)
 
-    // Mapping entre le nom affiché et le nom dans Firebase
     val firebaseName = when (universeName) {
         "Marvel" -> "Marvel Cinematic Universe"
         "Star Wars" -> "Star Wars"
         "Avatar" -> "Avatar"
         "Indiana Jones" -> "Indiana Jones"
-        "Pixar" -> "Pixar" // à adapter selon ton JSON
-        "Disney" -> "Disney" // à adapter selon ton JSON
+        "Pixar" -> "Pixar"
+        "Disney" -> "Disney"
         else -> universeName
     }
 
     var sousSagas by remember { mutableStateOf<List<SousSaga>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
 
-    // Charger les films depuis Firebase de manière moderne et sécurisée
     LaunchedEffect(universeName) {
         val db = FirebaseDatabase.getInstance("https://cineflix-karsenti-coignet-default-rtdb.europe-west1.firebasedatabase.app").reference
 
-        db.child("categories").get()
-            .addOnSuccessListener { snapshot ->
+        db.child("categories").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
                 val result = mutableListOf<SousSaga>()
 
                 for (categorySnap in snapshot.children) {
@@ -193,13 +80,13 @@ fun UniverseScreen(navController: NavController, universeName: String) {
                     }
                 }
                 sousSagas = result
-                isLoading = false // On arrête de charger
+                isLoading = false
             }
-            .addOnFailureListener { exception ->
-                // SI FIREBASE PLANTE, ON PASSE ICI !
-                println("ERREUR FIREBASE : ${exception.message}")
-                isLoading = false // On arrête de charger même s'il y a une erreur
+
+            override fun onCancelled(error: DatabaseError) {
+                isLoading = false
             }
+        })
     }
 
     Scaffold(
@@ -222,48 +109,7 @@ fun UniverseScreen(navController: NavController, universeName: String) {
             )
         },
         containerColor = backgroundDark
-    ) /*{ padding ->
-
-        when {
-            isLoading -> {
-                Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = Color(0xFFE50914))
-                }
-            }
-            sousSagas.isEmpty() -> {
-                Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
-                    Text("Aucun film trouvé", color = Color.Gray)
-                }
-            }
-            else -> {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding)
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(24.dp)
-                ) {
-                    sousSagas.forEach { sousSaga ->
-                        item {
-                            // Titre de la sous-saga
-                            Text(
-                                text = sousSaga.nom,
-                                color = Color.White,
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier.padding(bottom = 8.dp)
-                            )
-                        }
-                        items(sousSaga.films) { film ->
-                            FilmRow(film = film)
-                        }
-                    }
-                }
-            }
-        }
-    }
-}*/
-    { padding ->
+    ) { padding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -298,19 +144,19 @@ fun UniverseScreen(navController: NavController, universeName: String) {
                             )
                         }
                         items(sousSaga.films) { film ->
-                            FilmRow(film = film)
+                            FilmRow(film = film, navController = navController)
                         }
                     }
                 }
             }
         }
     }
-
 }
 
 @Composable
-fun FilmRow(film: FilmFirebase) {
+fun FilmRow(film: FilmFirebase, navController: NavController) {
     Card(
+        onClick = { navController.navigate("movie/${film.titre}/${film.annee}/${film.genre}") },
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(10.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF31343E))
@@ -319,7 +165,6 @@ fun FilmRow(film: FilmFirebase) {
             modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Numéro du film
             Text(
                 text = "${film.numero}",
                 color = Color(0xFFE50914),

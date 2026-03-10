@@ -17,23 +17,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+// L'import de la fameuse bibliothèque Coil !
 import coil.compose.AsyncImage
 
 // Petite structure de données pour relier un nom d'univers à son logo
 data class Universe(val name: String, val imageUrl: String)
 
 @Composable
-fun HomeScreen(navController: NavController? = null) {
+fun HomeScreen(navController: NavController) {
     val backgroundDark = Color(0xFF1A1D29) // Fond bleu très foncé (style Disney+)
     val cardBackground = Color(0xFF31343E) // Gris foncé pour les cases
 
-    // On utilise des images générées avec un fond clair pour être SÛRS de les voir
+    // Liste des univers avec le proxy d'image pour contourner le blocage de Wikipédia
     val universes = listOf(
-        Universe("Disney", "https://placehold.co/400x200/003366/FFFFFF/png?text=DISNEY"),
-        Universe("Pixar", "https://placehold.co/400x200/808080/FFFFFF/png?text=PIXAR"),
-        Universe("Marvel", "https://placehold.co/400x200/E23636/FFFFFF/png?text=MARVEL"),
-        Universe("Star Wars", "https://placehold.co/400x200/000000/FFE81F/png?text=STAR+WARS"),
-        Universe("Avatar", "https://placehold.co/400x200/00A8FF/FFFFFF/png?text=AVATAR")
+        Universe("Disney", "https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Disney_wordmark.svg/512px-Disney_wordmark.svg.png"),
+        Universe("Pixar", "https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Pixar_logo.svg/512px-Pixar_logo.svg.png"),
+        Universe("Marvel", "https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Marvel_Logo.svg/512px-Marvel_Logo.svg.png"),
+        Universe("Star Wars", "https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Star_wars2.svg/512px-Star_wars2.svg.png"),
+        Universe("Avatar", "https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Avatar_logo.svg/512px-Avatar_logo.svg.png")
     )
 
     Column(
@@ -72,8 +73,8 @@ fun HomeScreen(navController: NavController? = null) {
                         .height(100.dp)
                         .fillMaxWidth()
                         .clickable {
-                            // On navigue vers l'écran de l'univers en passant son nom !
-                            navController?.navigate("universe/${universe.name}")
+                            navController.navigate("universe/${universe.name}")
+                            // TODO: Naviguer vers la liste des films de cet univers
                         },
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(containerColor = cardBackground),
@@ -83,6 +84,7 @@ fun HomeScreen(navController: NavController? = null) {
                         contentAlignment = Alignment.Center,
                         modifier = Modifier.fillMaxSize()
                     ) {
+                        // C'est ici que la magie opère : on télécharge l'image depuis internet !
                         AsyncImage(
                             model = universe.imageUrl,
                             contentDescription = "Logo ${universe.name}",

@@ -37,13 +37,13 @@ fun SplashScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Brush.verticalGradient(colors = gradientColors)), // C'est ici que la magie opère !
+            .background(Brush.verticalGradient(colors = gradientColors)),
         contentAlignment = Alignment.Center
     ) {
         Image(
-            // Vérifie que c'est bien le nom de ton image ici
-            painter = painterResource(id = R.drawable.logo_cineflix),
-            contentDescription = "Logo Cineflix",
+            // Vérifie que c'est bien le nom de la bonne image ici
+            painter = painterResource(id = R.drawable.logo_app_ronde_cineflix),
+            contentDescription = "Logo Rond Cineflix",
             modifier = Modifier.size(250.dp)
         )
     }
