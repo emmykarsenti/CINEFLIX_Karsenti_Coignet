@@ -9,6 +9,7 @@ data class Film(
     val category: String = "" // ex: Skywalker Saga
 )
 
+
 // Modèle pour les actions de l'utilisateur sur un film (Vu, À voir, Possède...)
 data class UserFilmAction(
     val userId: String = "",
