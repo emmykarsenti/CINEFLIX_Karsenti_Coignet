@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             CINEFLIX_Karsenti_CoignetTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    // Le Box permet d'appliquer le "innerPadding" pour que ton formulaire
+                    // Le Box permet d'appliquer le "innerPadding" pour que le formulaire
                     // ne soit pas caché par l'encoche de la caméra ou la barre du bas
                     Box(modifier = Modifier.padding(innerPadding)) {
 
@@ -35,11 +35,20 @@ class MainActivity : ComponentActivity() {
 
                         // 2. On définit nos routes (écrans)
                         NavHost(navController = navController, startDestination = "auth") {
+                            //splash screen
+                            composable("splash") { SplashScreen(navController) }
+
                             // Écran de connexion
                             composable("auth") { AuthScreen(navController) }
 
                             // Écran d'accueil (la liste des univers)
-                            composable("home") { HomeScreen() }
+                            composable("home") { HomeScreen(navController) }
+
+                            // Écran des films d'un univers
+                            composable("universe/{universeName}") {
+                                val universeName = it.arguments?.getString("universeName") ?: ""
+                                UniverseScreen(navController = navController, universeName = universeName)
+                            }
                         }
                     }
                 }

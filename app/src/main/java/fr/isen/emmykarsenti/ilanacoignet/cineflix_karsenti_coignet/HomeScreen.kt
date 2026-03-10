@@ -24,7 +24,7 @@ import coil.compose.AsyncImage
 data class Universe(val name: String, val imageUrl: String)
 
 @Composable
-fun HomeScreen(navController: NavController? = null) {
+fun HomeScreen(navController: NavController) {
     val backgroundDark = Color(0xFF1A1D29) // Fond bleu très foncé (style Disney+)
     val cardBackground = Color(0xFF31343E) // Gris foncé pour les cases
 
@@ -73,6 +73,7 @@ fun HomeScreen(navController: NavController? = null) {
                         .height(100.dp)
                         .fillMaxWidth()
                         .clickable {
+                            navController.navigate("universe/${universe.name}")
                             // TODO: Naviguer vers la liste des films de cet univers
                         },
                     shape = RoundedCornerShape(12.dp),
