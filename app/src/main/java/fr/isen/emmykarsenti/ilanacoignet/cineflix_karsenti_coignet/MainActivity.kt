@@ -17,37 +17,27 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.compose.ui.graphics.Color
+import androidx.navigation.navArgument
 import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.theme.CINEFLIX_Karsenti_CoignetTheme
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        val splashScreen = installSplashScreen()
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         setContent {
             CINEFLIX_Karsenti_CoignetTheme {
-                // 1. On crée le contrôleur de navigation
+                // 1. On crée le contrôleur de navigation unique
                 val navController = rememberNavController()
-                // On dit à l'application de commencer par la route "splash"
-                NavHost(navController = navController, startDestination = "splash") {
 
-                    // Notre fameux écran de chargement
-                    composable("splash") {
-                        SplashScreen(navController = navController)
-                    }
-
-                    // Ton écran principal (celui avec les cases)
-                    composable("home") {
-                        HomeScreen(navController = navController) // Remplace HomeScreen par le nom exact de ta page d'accueil si c'est différent
-                    }
-                }
                 // 2. On récupère la route actuelle pour savoir sur quel écran on est
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.destination?.route
@@ -59,7 +49,6 @@ class MainActivity : ComponentActivity() {
                         // On n'affiche la barre que si on est sur 'home' ou 'profile'
                         if (currentRoute == "home" || currentRoute == "profile") {
                             NavigationBar(containerColor = Color(0xFF1A1D29), contentColor = Color.White) {
-
                                 // Bouton Accueil
                                 NavigationBarItem(
                                     icon = { Icon(Icons.Filled.Home, contentDescription = "Accueil") },
@@ -92,11 +81,21 @@ class MainActivity : ComponentActivity() {
                     }
                 ) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
-                        // 4. On définit nos routes (écrans)
-                        NavHost(navController = navController, startDestination = "auth") {
+                        // 4. On définit nos routes (écrans) dans UN SEUL NavHost
+                        NavHost(navController = navController, startDestination = "splash") {
+                            composable("splash") { SplashScreen(navController) }
                             composable("auth") { AuthScreen(navController) }
-                            composable("home") { HomeScreen() }
+                            composable("home") { HomeScreen(navController) }
                             composable("profile") { ProfileScreen(navController) }
+
+                            // NOUVELLE ROUTE : L'écran de l'univers détaillé
+                            composable(
+                                route = "universe/{universeName}",
+                                arguments = listOf(navArgument("universeName") { type = NavType.StringType })
+                            ) { backStackEntry ->
+                                val universeName = backStackEntry.arguments?.getString("universeName") ?: ""
+                                UniverseScreen(navController = navController, universeName = universeName)
+                            }
                         }
                     }
                 }
