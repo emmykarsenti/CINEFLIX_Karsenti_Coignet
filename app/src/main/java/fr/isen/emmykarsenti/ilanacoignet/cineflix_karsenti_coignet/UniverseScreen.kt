@@ -1,7 +1,10 @@
 package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -10,11 +13,15 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.google.firebase.database.*
 
 data class FilmFirebase(
@@ -47,8 +54,10 @@ fun UniverseScreen(navController: NavController, universeName: String) {
     var sousSagas by remember { mutableStateOf<List<SousSaga>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
 
+    // Ta logique Firebase intacte !
     LaunchedEffect(universeName) {
-        val db = FirebaseDatabase.getInstance("https://cineflix-karsenti-coignet-default-rtdb.europe-west1.firebasedatabase.app").reference
+        val db =
+            FirebaseDatabase.getInstance("https://cineflix-karsenti-coignet-default-rtdb.europe-west1.firebasedatabase.app").reference
 
         db.child("categories").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -67,14 +76,22 @@ fun UniverseScreen(navController: NavController, universeName: String) {
 
                                 for (filmSnap in ssSnap.child("films").children) {
                                     val film = FilmFirebase(
-                                        titre = filmSnap.child("titre").getValue(String::class.java) ?: "",
-                                        annee = filmSnap.child("annee").getValue(Int::class.java) ?: 0,
-                                        genre = filmSnap.child("genre").getValue(String::class.java) ?: "",
-                                        numero = filmSnap.child("numero").getValue(Int::class.java) ?: 0
+                                        titre = filmSnap.child("titre").getValue(String::class.java)
+                                            ?: "",
+                                        annee = filmSnap.child("annee").getValue(Int::class.java)
+                                            ?: 0,
+                                        genre = filmSnap.child("genre").getValue(String::class.java)
+                                            ?: "",
+                                        numero = filmSnap.child("numero").getValue(Int::class.java)
+                                            ?: 0
                                     )
                                     films.add(film)
                                 }
-                                result.add(SousSaga(nom = ssNom, films = films.sortedBy { it.numero }))
+                                result.add(
+                                    SousSaga(
+                                        nom = ssNom,
+                                        films = films.sortedBy { it.numero })
+                                )
                             }
                         }
                     }
@@ -88,7 +105,6 @@ fun UniverseScreen(navController: NavController, universeName: String) {
             }
         })
     }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -103,18 +119,14 @@ fun UniverseScreen(navController: NavController, universeName: String) {
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF1A1D29),
+                    containerColor = backgroundDark,
                     titleContentColor = Color.White
                 )
             )
         },
         containerColor = backgroundDark
-    ) { padding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-        ) {
+    ) { innerPadding -> // <--- ON A RENOMMÉ ICI
+        Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) { // <--- ET ICI
             if (isLoading) {
                 CircularProgressIndicator(
                     color = Color(0xFFE50914),
@@ -122,29 +134,38 @@ fun UniverseScreen(navController: NavController, universeName: String) {
                 )
             } else if (sousSagas.isEmpty()) {
                 Text(
-                    text = "Aucun film trouvé",
+                    "Aucun film trouvé",
                     color = Color.Gray,
                     modifier = Modifier.align(Alignment.Center)
                 )
             } else {
+                // Affichage style Disney+ : Colonne de Sagas, et Ligne de films pour chaque saga
                 LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(vertical = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(24.dp)
                 ) {
-                    sousSagas.forEach { sousSaga ->
-                        item {
+                    items(sousSagas) { sousSaga ->
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            // Titre de la sous-saga (ex: "Phase 1")
+                            // Titre de la sous-saga (ex: "Phase 1")
                             Text(
                                 text = sousSaga.nom,
                                 color = Color.White,
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold,
-                                modifier = Modifier.padding(bottom = 8.dp)
+                                modifier = Modifier.padding(horizontal = 16.dp).padding(bottom = 12.dp) // <--- CORRECTION ICI
                             )
-                        }
-                        items(sousSaga.films) { film ->
-                            FilmRow(film = film, navController = navController)
+
+                            // Carrousel horizontal des films de cette saga
+                            LazyRow(
+                                contentPadding = PaddingValues(horizontal = 16.dp),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                items(sousSaga.films) { film ->
+                                    FilmPosterCard(film = film, navController = navController)
+                                }
+                            }
                         }
                     }
                 }
@@ -153,28 +174,58 @@ fun UniverseScreen(navController: NavController, universeName: String) {
     }
 }
 
+// Le nouveau composant qui cherche l'affiche et l'affiche au format Disney+
 @Composable
-fun FilmRow(film: FilmFirebase, navController: NavController) {
-    Card(
-        onClick = { navController.navigate("movie/${film.titre}/${film.annee}/${film.genre}") },
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(10.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF31343E))
+fun FilmPosterCard(film: FilmFirebase, navController: NavController) {
+    var posterUrl by remember { mutableStateOf<String?>(null) }
+    val myApiKey = "9b06bfc70be38627cb51e3cb6d008512"
+
+    // Recherche de l'affiche sur TMDB en utilisant le titre Firebase
+    LaunchedEffect(film.titre) {
+        try {
+            val response = TmdbClient.apiService.searchMovie(myApiKey, film.titre)
+            if (response.results.isNotEmpty() && response.results[0].poster_path != null) {
+                posterUrl = "https://image.tmdb.org/t/p/w500${response.results[0].poster_path}"
+            }
+        } catch (e: Exception) {
+            println("Erreur de chargement de l'image pour ${film.titre}")
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .width(130.dp)
+            .height(195.dp) // Ratio affiche classique
+            .clip(RoundedCornerShape(8.dp))
+            .background(Color(0xFF31343E)) // Fond gris si l'image charge ou n'existe pas
+            .clickable {
+                navController.navigate("movie/${film.titre}/${film.annee}/${film.genre}")
+            },
+        contentAlignment = Alignment.Center
     ) {
-        Row(
-            modifier = Modifier.padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "${film.numero}",
-                color = Color(0xFFE50914),
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                modifier = Modifier.width(30.dp)
+        if (posterUrl != null) {
+            AsyncImage(
+                model = posterUrl,
+                contentDescription = film.titre,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
             )
-            Column(modifier = Modifier.weight(1f)) {
-                Text(film.titre, color = Color.White, fontWeight = FontWeight.Medium, fontSize = 14.sp)
-                Text("${film.annee} · ${film.genre}", color = Color.Gray, fontSize = 12.sp)
+        } else {
+            // Affichage de secours (Fallback) si TMDB ne trouve pas l'affiche
+            Column(
+                modifier = Modifier.padding(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = film.titre,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(text = "${film.annee}", color = Color.Gray, fontSize = 10.sp)
             }
         }
     }

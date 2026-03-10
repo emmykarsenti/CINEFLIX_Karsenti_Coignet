@@ -19,6 +19,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.theme.CINEFLIX_Karsenti_CoignetTheme
+import androidx.navigation.compose.composable
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,6 +82,13 @@ class MainActivity : ComponentActivity() {
                                     annee = annee,
                                     genre = genre
                                 )
+                            }
+                            composable(
+                                route = "universe/{universeName}",
+                                arguments = listOf(navArgument("universeName") { type = NavType.StringType })
+                            ) { backStackEntry ->
+                                val universeName = backStackEntry.arguments?.getString("universeName") ?: "Disney"
+                                UniverseScreen(navController = navController, universeName = universeName)
                             }
                         }
                     }
