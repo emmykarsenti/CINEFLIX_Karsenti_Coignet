@@ -3,169 +3,99 @@ package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+// L'import de la fameuse bibliothèque Coil !
 import coil.compose.AsyncImage
-import kotlinx.coroutines.launch
+
+// Petite structure de données pour relier un nom d'univers à son logo
+data class Universe(val name: String, val imageUrl: String)
 
 @Composable
 fun HomeScreen(navController: NavController) {
-    // Ta clé API TMDB officielle
-    val myApiKey = "9b06bfc70be38627cb51e3cb6d008512"
+    val backgroundDark = Color(0xFF1A1D29) // Fond bleu très foncé (style Disney+)
+    val cardBackground = Color(0xFF31343E) // Gris foncé pour les cases
 
-    // Variables pour stocker les films récupérés depuis l'API
-    var recommendedMovies by remember { mutableStateOf<List<TmdbMovie>>(emptyList()) }
-    val coroutineScope = rememberCoroutineScope()
-
-    // Bannières "Dernières sorties" (Format paysage idéal pour le haut de l'écran)
-    val latestReleases = listOf(
-        Pair("The Mandalorian", "https://image.tmdb.org/t/p/w780/kKxkH0GdlN0K1Q22Xl0B2iZz8A.jpg"),
-        Pair("Avengers: Endgame", "https://image.tmdb.org/t/p/w780/7RyHsO4yDXtBv1zUU3mTpHeQ0d5.jpg"),
-        Pair("Avatar : La Voie de l'eau", "https://image.tmdb.org/t/p/w780/8rpDcsfLJypbO6vtec021P2NZYV.jpg")
+    // Liste des univers avec le proxy d'image pour contourner le blocage de Wikipédia
+    val universes = listOf(
+        Universe("Disney", "https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Disney_wordmark.svg/512px-Disney_wordmark.svg.png"),
+        Universe("Pixar", "https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Pixar_logo.svg/512px-Pixar_logo.svg.png"),
+        Universe("Marvel", "https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Marvel_Logo.svg/512px-Marvel_Logo.svg.png"),
+        Universe("Star Wars", "https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Star_wars2.svg/512px-Star_wars2.svg.png"),
+        Universe("Avatar", "https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Avatar_logo.svg/512px-Avatar_logo.svg.png")
     )
 
-    // Appel à l'API TMDB au lancement de l'écran
-    LaunchedEffect(Unit) {
-        coroutineScope.launch {
-            try {
-                // ID 2 = Walt Disney Pictures
-                val response = TmdbClient.apiService.discoverMovies(myApiKey, "2")
-                recommendedMovies = response.results
-            } catch (e: Exception) {
-                println("Erreur API: ${e.message}")
-            }
-        }
-    }
-
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF1A1D29)) // Couleur de fond style Disney+
+            .background(backgroundDark)
+            .padding(horizontal = 16.dp)
     ) {
-        // --- 1. CARROUSEL : DERNIÈRES SORTIES ---
-        item {
-            LazyRow(
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 24.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(latestReleases) { movie ->
-                    AsyncImage(
-                        model = movie.second,
-                        contentDescription = movie.first,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillParentMaxWidth(0.9f) // Prend 90% de l'écran pour laisser entrevoir la suivante
-                            .height(200.dp)
-                            .clip(RoundedCornerShape(12.dp))
-                            .clickable {
-                                // Navigation basique si on clique sur la bannière
-                                navController.navigate("movie/${movie.first}/2023/Action")
-                            }
-                    )
-                }
-            }
-        }
+        Spacer(modifier = Modifier.height(24.dp))
 
-        // --- 2. GRILLE : CATÉGORIES / UNIVERS ---
-        item {
-            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    CategoryCard("Disney", Modifier.weight(1f)) { navController.navigate("universe/Disney") }
-                    CategoryCard("Pixar", Modifier.weight(1f)) { navController.navigate("universe/Pixar") }
-                    CategoryCard("Marvel", Modifier.weight(1f)) { navController.navigate("universe/Marvel") }
-                }
-                Spacer(modifier = Modifier.height(12.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    CategoryCard("Star Wars", Modifier.weight(1f)) { navController.navigate("universe/Star Wars") }
-                    CategoryCard("Avatar", Modifier.weight(1f)) { navController.navigate("universe/Avatar") }
-                    CategoryCard("Nat Geo", Modifier.weight(1f)) { navController.navigate("universe/Nat Geo") }
-                }
-            }
-        }
-
-        // --- 3. CARROUSEL : RECOMMANDÉS POUR VOUS (Généré via API) ---
-        item {
-            Spacer(modifier = Modifier.height(32.dp))
+        // En-tête avec le nom de l'app
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
             Text(
-                text = "Recommandés pour vous",
-                color = Color.White,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                text = "CINEFLIX",
+                fontSize = 32.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = Color.White
             )
+        }
 
-            if (recommendedMovies.isEmpty()) {
-                // Animation de chargement en attendant la réponse de l'API
-                Box(modifier = Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = Color(0xFFE50914))
-                }
-            } else {
-                LazyRow(
-                    contentPadding = PaddingValues(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+        Spacer(modifier = Modifier.height(32.dp))
+
+        // La fameuse grille avec les logos !
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2), // 2 colonnes
+            horizontalArrangement = Arrangement.spacedBy(16.dp), // Espace horizontal
+            verticalArrangement = Arrangement.spacedBy(16.dp),   // Espace vertical
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            items(universes) { universe ->
+                Card(
+                    modifier = Modifier
+                        .height(100.dp)
+                        .fillMaxWidth()
+                        .clickable {
+                            navController.navigate("universe/${universe.name}")
+                            // TODO: Naviguer vers la liste des films de cet univers
+                        },
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(containerColor = cardBackground),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
                 ) {
-                    items(recommendedMovies) { movie ->
-                        // L'API nous donne juste le nom du fichier, on ajoute l'URL de base TMDB
-                        val imageUrl = "https://image.tmdb.org/t/p/w500${movie.poster_path}"
-
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        // C'est ici que la magie opère : on télécharge l'image depuis internet !
                         AsyncImage(
-                            model = imageUrl,
-                            contentDescription = movie.title,
-                            contentScale = ContentScale.Crop,
+                            model = universe.imageUrl,
+                            contentDescription = "Logo ${universe.name}",
                             modifier = Modifier
-                                .width(120.dp)
-                                .height(180.dp) // Ratio portrait (Affiche)
-                                .clip(RoundedCornerShape(8.dp))
-                                .clickable {
-                                    // On récupère l'année de sortie depuis l'API (les 4 premiers caractères de la date)
-                                    val annee = movie.release_date?.take(4) ?: "Inconnue"
-                                    navController.navigate("movie/${movie.title}/$annee/Disney")
-                                }
+                                .padding(16.dp) // Un peu de marge interne pour que le logo respire
+                                .fillMaxSize(),
+                            contentScale = ContentScale.Fit // Pour que le logo rentre bien sans être déformé
                         )
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(32.dp))
-        }
-    }
-}
-
-// Sous-composant pour les boutons de catégories
-@Composable
-fun CategoryCard(title: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    Card(
-        modifier = modifier
-            .height(60.dp)
-            .clickable { onClick() }, // Rend toute la case cliquable
-        shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF31343E)) // Gris foncé
-    ) {
-        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-            Text(
-                text = title,
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp
-            )
         }
     }
 }
