@@ -1,28 +1,21 @@
 package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet
 
-// 1. Le modèle pour un Film
+// Modèle pour un Film
 data class Film(
-    val titre: String = "",
-    val annee: Int = 0,
-    val genre: String = "",
-    val numero: Int = 0
+    val id: String = "",
+    val title: String = "",
+    val universe: String = "", // ex: Marvel, Disney, Star Wars...
+    val releaseDate: String = "",
+    val category: String = "" // ex: Skywalker Saga
 )
 
-// 2. Le modèle pour une Franchise (ex: Star Wars, Marvel)
-data class Franchise(
-    val nom: String = "",
-    val films: List<Film>? = null,
-    val sous_sagas: List<SousSaga>? = null // Certaines ont des sous-sagas
-)
 
-// 3. Le modèle pour les Sous-Sagas (spécifique à Star Wars par ex)
-data class SousSaga(
-    val nom: String = "",
-    val films: List<Film> = emptyList()
-)
-
-// 4. Le modèle pour une Catégorie (le plus haut niveau de ton JSON)
-data class Category(
-    val categorie: String = "",
-    val franchises: List<Franchise> = emptyList()
+// Modèle pour les actions de l'utilisateur sur un film (Vu, À voir, Possède...)
+data class UserFilmAction(
+    val userId: String = "",
+    val filmId: String = "",
+    val isWatched: Boolean = false,
+    val wantToWatch: Boolean = false,
+    val ownOnDVD: Boolean = false,
+    val wantToGetRidOf: Boolean = false
 )

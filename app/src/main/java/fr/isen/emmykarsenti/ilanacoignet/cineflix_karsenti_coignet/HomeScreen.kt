@@ -17,7 +17,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-// L'import de la fameuse bibliothèque Coil !
 import coil.compose.AsyncImage
 
 // Petite structure de données pour relier un nom d'univers à son logo
@@ -73,7 +72,8 @@ fun HomeScreen(navController: NavController? = null) {
                         .height(100.dp)
                         .fillMaxWidth()
                         .clickable {
-                            // TODO: Naviguer vers la liste des films de cet univers
+                            // On navigue vers l'écran de l'univers en passant son nom !
+                            navController?.navigate("universe/${universe.name}")
                         },
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(containerColor = cardBackground),
@@ -83,7 +83,6 @@ fun HomeScreen(navController: NavController? = null) {
                         contentAlignment = Alignment.Center,
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        // C'est ici que la magie opère : on télécharge l'image depuis internet !
                         AsyncImage(
                             model = universe.imageUrl,
                             contentDescription = "Logo ${universe.name}",
