@@ -79,8 +79,6 @@ fun MovieDetailScreen(
             // Infos du film
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                clickable {
-                    navController.navigate("movie/${film.titre}/${film.annee}/${film.genre}")
                 shape = RoundedCornerShape(12.dp),
                 colors = CardDefaults.cardColors(containerColor = Color(0xFF31343E))
             ) {
