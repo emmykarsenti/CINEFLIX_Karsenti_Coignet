@@ -13,7 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController // <-- L'import de Navigation est ici
+import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
@@ -24,11 +24,10 @@ fun AuthScreen(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    // ON FORCE UN FOND BLANC ET DES TEXTES NOIRS POUR LE TEST
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White) // Fond blanc forcé
+            .background(Color.White)
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -36,17 +35,28 @@ fun AuthScreen(navController: NavController) {
         Text(
             text = "CINEFLIX",
             fontSize = 36.sp,
-            color = Color.Black, // Texte noir forcé
+            color = Color.Black,
             fontWeight = FontWeight.Bold
         )
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Ajoute "color = TextFieldDefaults.colors(...)" ou force juste le style
+        // Champ E-mail
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
             label = { Text("Adresse E-mail") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Champ Mot de passe (AJOUTÉ ICI)
+        OutlinedTextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text("Mot de passe") },
+            visualTransformation = PasswordVisualTransformation(), // Masque le texte
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -56,12 +66,10 @@ fun AuthScreen(navController: NavController) {
         Button(
             onClick = {
                 if (email.isNotEmpty() && password.isNotEmpty()) {
-                    // Appel à Firebase pour connecter l'utilisateur
                     auth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
                                 Toast.makeText(context, "Connexion réussie !", Toast.LENGTH_SHORT).show()
-                                // L'UTILISATEUR EST CONNECTÉ, ON L'ENVOIE À L'ACCUEIL :
                                 navController.navigate("home")
                             } else {
                                 Toast.makeText(context, "Erreur : ${task.exception?.message}", Toast.LENGTH_LONG).show()
@@ -82,12 +90,10 @@ fun AuthScreen(navController: NavController) {
         TextButton(
             onClick = {
                 if (email.isNotEmpty() && password.isNotEmpty()) {
-                    // Appel à Firebase pour CRÉER un utilisateur
                     auth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
                                 Toast.makeText(context, "Compte créé avec succès !", Toast.LENGTH_SHORT).show()
-                                // LE COMPTE EST CRÉÉ, ON L'ENVOIE À L'ACCUEIL :
                                 navController.navigate("home")
                             } else {
                                 Toast.makeText(context, "Erreur : ${task.exception?.message}", Toast.LENGTH_LONG).show()

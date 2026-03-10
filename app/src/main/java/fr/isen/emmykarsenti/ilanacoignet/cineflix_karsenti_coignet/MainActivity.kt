@@ -74,6 +74,11 @@ class MainActivity : ComponentActivity() {
                             composable("auth") { AuthScreen(navController) }
                             composable("home") { HomeScreen(navController) }
                             composable("profile") { ProfileScreen(navController) }
+                            composable("franchise_detail/{catIndex}/{franIndex}") { backStackEntry ->
+                                val catIndex = backStackEntry.arguments?.getString("catIndex")
+                                val franIndex = backStackEntry.arguments?.getString("franIndex")
+                                FranchiseDetailScreen(navController, catIndex, franIndex)
+                            }
                         }
                     }
                 }

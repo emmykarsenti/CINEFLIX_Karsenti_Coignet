@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -31,6 +30,8 @@ fun SplashScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color(0xFF05001E)), // Fond sombre cohérent avec HomeScreen
+        contentAlignment = Alignment.Center
     ) {
         Image(
             // Vérifie que c'est bien le nom de ton image ici
