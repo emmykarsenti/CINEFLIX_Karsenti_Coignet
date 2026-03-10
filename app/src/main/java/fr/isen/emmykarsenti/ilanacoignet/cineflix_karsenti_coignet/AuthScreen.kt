@@ -1,12 +1,14 @@
 package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,7 +33,14 @@ fun AuthScreen(navController: NavController) { // <-- On reçoit le navControlle
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = "CINEFLIX", fontSize = 36.sp, color = MaterialTheme.colorScheme.primary)
+        //Text(text = "CINEFLIX", fontSize = 36.sp, color = MaterialTheme.colorScheme.primary)
+        Image(
+            painter = painterResource(id = R.drawable.logo_cineflix),
+            contentDescription = "Logo Cineflix",
+            modifier = Modifier
+                .height(100.dp)
+                .fillMaxWidth()
+        )
         Spacer(modifier = Modifier.height(32.dp))
 
         // Champ Email
