@@ -1,4 +1,4 @@
-package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet
+package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.screen
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -16,6 +16,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
+import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.R
 
 @Composable
 fun AuthScreen(navController: NavController) {

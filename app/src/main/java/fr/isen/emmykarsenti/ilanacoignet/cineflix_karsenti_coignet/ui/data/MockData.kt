@@ -1,4 +1,4 @@
-package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet
+package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.data
 
 object MockData {
     val myMovies = listOf(

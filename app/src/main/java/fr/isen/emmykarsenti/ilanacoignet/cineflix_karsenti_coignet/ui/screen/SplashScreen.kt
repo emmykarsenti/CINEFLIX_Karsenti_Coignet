@@ -1,4 +1,4 @@
-package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet
+package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.R
 import kotlinx.coroutines.delay
 
 @Composable

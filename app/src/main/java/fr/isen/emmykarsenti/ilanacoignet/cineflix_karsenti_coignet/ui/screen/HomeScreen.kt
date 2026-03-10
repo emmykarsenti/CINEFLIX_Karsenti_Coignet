@@ -1,4 +1,4 @@
-package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet
+package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

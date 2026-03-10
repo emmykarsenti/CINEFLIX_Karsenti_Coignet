@@ -1,4 +1,4 @@
-package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet
+package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,18 +10,26 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.theme.CINEFLIX_Karsenti_CoignetTheme
-import androidx.navigation.compose.composable
-import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.screen.AuthScreen
+import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.screen.HomeScreen
+import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.screen.MovieDetailScreen
+import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.screen.ProfileScreen
+import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.screen.UniverseScreen
+import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.theme.CINEFLIX_Karsenti_CoignetTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,21 +45,31 @@ class MainActivity : ComponentActivity() {
                 val currentRoute = navBackStackEntry?.destination?.route
 
                 Scaffold(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.Companion.fillMaxSize(),
                     bottomBar = {
                         if (currentRoute == "home" || currentRoute == "profile") {
                             NavigationBar(
                                 containerColor = Color(0xFF1A1D29),
-                                contentColor = Color.White
+                                contentColor = Color.Companion.White
                             ) {
                                 NavigationBarItem(
-                                    icon = { Icon(Icons.Filled.Home, contentDescription = "Accueil") },
+                                    icon = {
+                                        Icon(
+                                            Icons.Filled.Home,
+                                            contentDescription = "Accueil"
+                                        )
+                                    },
                                     label = { Text("Accueil") },
                                     selected = currentRoute == "home",
                                     onClick = { navController.navigate("home") }
                                 )
                                 NavigationBarItem(
-                                    icon = { Icon(Icons.Filled.Person, contentDescription = "Profil") },
+                                    icon = {
+                                        Icon(
+                                            Icons.Filled.Person,
+                                            contentDescription = "Profil"
+                                        )
+                                    },
                                     label = { Text("Profil") },
                                     selected = currentRoute == "profile",
                                     onClick = { navController.navigate("profile") }
@@ -60,7 +78,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 ) { innerPadding ->
-                    Box(modifier = Modifier.padding(innerPadding)) {
+                    Box(modifier = Modifier.Companion.padding(innerPadding)) {
                         NavHost(navController = navController, startDestination = "auth") {
 
                             composable("auth") { AuthScreen(navController) }
@@ -69,7 +87,10 @@ class MainActivity : ComponentActivity() {
 
                             composable("universe/{universeName}") {
                                 val universeName = it.arguments?.getString("universeName") ?: ""
-                                UniverseScreen(navController = navController, universeName = universeName)
+                                UniverseScreen(
+                                    navController = navController,
+                                    universeName = universeName
+                                )
                             }
 
                             composable("movie/{movieTitre}/{movieAnnee}/{movieGenre}") {
@@ -85,10 +106,16 @@ class MainActivity : ComponentActivity() {
                             }
                             composable(
                                 route = "universe/{universeName}",
-                                arguments = listOf(navArgument("universeName") { type = NavType.StringType })
+                                arguments = listOf(navArgument("universeName") {
+                                    type = NavType.Companion.StringType
+                                })
                             ) { backStackEntry ->
-                                val universeName = backStackEntry.arguments?.getString("universeName") ?: "Disney"
-                                UniverseScreen(navController = navController, universeName = universeName)
+                                val universeName =
+                                    backStackEntry.arguments?.getString("universeName") ?: "Disney"
+                                UniverseScreen(
+                                    navController = navController,
+                                    universeName = universeName
+                                )
                             }
                         }
                     }
