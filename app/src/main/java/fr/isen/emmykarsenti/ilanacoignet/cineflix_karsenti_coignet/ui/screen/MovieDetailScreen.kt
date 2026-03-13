@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -16,6 +17,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import coil.compose.AsyncImage
+import androidx.compose.ui.layout.ContentScale
+import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.data.PosterCache
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,6 +31,8 @@ fun MovieDetailScreen(
 ) {
     val currentUser = FirebaseAuth.getInstance().currentUser
 
+    // Récupération de l'affiche depuis le cache
+    val posterUrl = remember(titre) { PosterCache.posters[titre] }
     // 1. Deux variables séparées pour les deux types de statuts
     var watchStatus by remember { mutableStateOf<String?>(null) }
     var ownStatus by remember { mutableStateOf<String?>(null) }
@@ -118,6 +124,31 @@ fun MovieDetailScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+
+            // NOUVEL ITEM : L'affiche du film
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(350.dp), // Hauteur définie dans ton CDC
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (posterUrl != null) {
+                        AsyncImage(
+                            model = posterUrl,
+                            contentDescription = titre,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(RoundedCornerShape(12.dp)),
+                            contentScale = ContentScale.Fit
+                        )
+                    } else {
+                        Text("🎬", fontSize = 80.sp)
+                    }
+                }
+            }
+
+
             // Infos du film
             item {
                 Card(

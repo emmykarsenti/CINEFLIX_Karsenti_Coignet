@@ -56,3 +56,9 @@ object TmdbClient {
             .create(TmdbApiService::class.java)
     }
 }
+
+object PosterCache {
+    val posters = mutableMapOf<String, String>()
+    val years = mutableMapOf<String, String>()
+    val genres = mutableMapOf<String, String>()
+}
