@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -21,34 +23,53 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.data.TmdbClient
 import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.data.TmdbMovie
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
+// Cache pour éviter que l'API ne soit rappelée à chaque changement d'onglet
+object SessionCache {
+    var recommendedMoviesCache: List<TmdbMovie>? = null
+}
 
 @Composable
 fun HomeScreen(navController: NavController) {
-    // Ta clé API TMDB officielle
     val myApiKey = "9b06bfc70be38627cb51e3cb6d008512"
 
-    // Variables pour stocker les films récupérés depuis l'API
     var recommendedMovies by remember { mutableStateOf<List<TmdbMovie>>(emptyList()) }
     val coroutineScope = rememberCoroutineScope()
 
-    // Bannières "Dernières sorties" (Format paysage idéal pour le haut de l'écran)
+    // 1. Tes 3 nouveautés pour le carrousel
     val latestReleases = listOf(
         Pair("The Mandalorian", "https://image.tmdb.org/t/p/w780/kKxkH0GdlN0K1Q22Xl0B2iZz8A.jpg"),
         Pair("Avengers: Endgame", "https://image.tmdb.org/t/p/w780/7RyHsO4yDXtBv1zUU3mTpHeQ0d5.jpg"),
         Pair("Avatar : La Voie de l'eau", "https://image.tmdb.org/t/p/w780/8rpDcsfLJypbO6vtec021P2NZYV.jpg")
     )
 
-    // Appel à l'API TMDB au lancement de l'écran
+    // État du carrousel pour l'animation automatique
+    val pagerState = rememberPagerState(pageCount = { latestReleases.size })
+
+    // Animation automatique du carrousel toutes les 3 secondes
+    LaunchedEffect(pagerState) {
+        while (true) {
+            delay(3000) // Attend 3 secondes
+            val nextPage = (pagerState.currentPage + 1) % latestReleases.size
+            pagerState.animateScrollToPage(nextPage) // Défilement fluide vers la page suivante
+        }
+    }
+
     LaunchedEffect(Unit) {
-        coroutineScope.launch {
-            try {
-                // ID 2 = Walt Disney Pictures
-                val response = TmdbClient.apiService.discoverMovies(myApiKey, "2")
-                recommendedMovies = response.results
-            } catch (e: Exception) {
-                println("Erreur API: ${e.message}")
+        if (SessionCache.recommendedMoviesCache == null) {
+            coroutineScope.launch {
+                try {
+                    val response = TmdbClient.apiService.discoverMovies(myApiKey, "2")
+                    SessionCache.recommendedMoviesCache = response.results.shuffled().take(10)
+                    recommendedMovies = SessionCache.recommendedMoviesCache!!
+                } catch (e: Exception) {
+                    println("Erreur API: ${e.message}")
+                }
             }
+        } else {
+            recommendedMovies = SessionCache.recommendedMoviesCache!!
         }
     }
 
@@ -57,27 +78,29 @@ fun HomeScreen(navController: NavController) {
             .fillMaxSize()
             .background(Color(0xFF1A1D29)) // Couleur de fond style Disney+
     ) {
-        // --- 1. CARROUSEL : DERNIÈRES SORTIES ---
+        // --- 1. CARROUSEL : DERNIÈRES SORTIES (Animé) ---
         item {
-            LazyRow(
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 24.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(latestReleases) { movie ->
-                    AsyncImage(
-                        model = movie.second,
-                        contentDescription = movie.first,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillParentMaxWidth(0.9f) // Prend 90% de l'écran pour laisser entrevoir la suivante
-                            .height(200.dp)
-                            .clip(RoundedCornerShape(12.dp))
-                            .clickable {
-                                // Navigation basique si on clique sur la bannière
-                                navController.navigate("movie/${movie.first}/2023/Action")
-                            }
-                    )
-                }
+            HorizontalPager(
+                state = pagerState,
+                contentPadding = PaddingValues(horizontal = 24.dp), // Permet de voir un peu l'image suivante
+                pageSpacing = 16.dp, // Espace entre les images
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 24.dp, bottom = 16.dp)
+            ) { page ->
+                val movie = latestReleases[page]
+                AsyncImage(
+                    model = movie.second,
+                    contentDescription = movie.first,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .clickable {
+                            navController.navigate("movie/${movie.first}/2023/Action")
+                        }
+                )
             }
         }
 
@@ -104,7 +127,7 @@ fun HomeScreen(navController: NavController) {
             }
         }
 
-        // --- 3. CARROUSEL : RECOMMANDÉS POUR VOUS (Généré via API) ---
+        // --- 3. CARROUSEL : RECOMMANDÉS POUR VOUS ---
         item {
             Spacer(modifier = Modifier.height(32.dp))
             Text(
@@ -116,7 +139,6 @@ fun HomeScreen(navController: NavController) {
             )
 
             if (recommendedMovies.isEmpty()) {
-                // Animation de chargement en attendant la réponse de l'API
                 Box(modifier = Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(color = Color(0xFFE50914))
                 }
@@ -126,7 +148,6 @@ fun HomeScreen(navController: NavController) {
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     items(recommendedMovies) { movie ->
-                        // L'API nous donne juste le nom du fichier, on ajoute l'URL de base TMDB
                         val imageUrl = "https://image.tmdb.org/t/p/w500${movie.poster_path}"
 
                         AsyncImage(
@@ -135,10 +156,9 @@ fun HomeScreen(navController: NavController) {
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .width(120.dp)
-                                .height(180.dp) // Ratio portrait (Affiche)
+                                .height(180.dp)
                                 .clip(RoundedCornerShape(8.dp))
                                 .clickable {
-                                    // On récupère l'année de sortie depuis l'API (les 4 premiers caractères de la date)
                                     val annee = movie.release_date?.take(4) ?: "Inconnue"
                                     navController.navigate("movie/${movie.title}/$annee/Disney")
                                 }
@@ -146,20 +166,19 @@ fun HomeScreen(navController: NavController) {
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(100.dp))
         }
     }
 }
 
-// Sous-composant pour les boutons de catégories
 @Composable
 fun CategoryCard(title: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Card(
         modifier = modifier
             .height(60.dp)
-            .clickable { onClick() }, // Rend toute la case cliquable
+            .clickable { onClick() },
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF31343E)) // Gris foncé
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF31343E))
     ) {
         Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
             Text(

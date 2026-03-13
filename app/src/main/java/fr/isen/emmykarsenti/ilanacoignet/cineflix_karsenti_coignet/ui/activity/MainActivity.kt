@@ -45,31 +45,22 @@ class MainActivity : ComponentActivity() {
                 val currentRoute = navBackStackEntry?.destination?.route
 
                 Scaffold(
-                    modifier = Modifier.Companion.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                     bottomBar = {
-                        if (currentRoute == "home" || currentRoute == "profile") {
+                        // La barre s'affiche PARTOUT sauf sur l'écran d'authentification
+                        if (currentRoute != "auth") {
                             NavigationBar(
                                 containerColor = Color(0xFF1A1D29),
-                                contentColor = Color.Companion.White
+                                contentColor = Color.White
                             ) {
                                 NavigationBarItem(
-                                    icon = {
-                                        Icon(
-                                            Icons.Filled.Home,
-                                            contentDescription = "Accueil"
-                                        )
-                                    },
+                                    icon = { Icon(Icons.Filled.Home, contentDescription = "Accueil") },
                                     label = { Text("Accueil") },
                                     selected = currentRoute == "home",
                                     onClick = { navController.navigate("home") }
                                 )
                                 NavigationBarItem(
-                                    icon = {
-                                        Icon(
-                                            Icons.Filled.Person,
-                                            contentDescription = "Profil"
-                                        )
-                                    },
+                                    icon = { Icon(Icons.Filled.Person, contentDescription = "Profil") },
                                     label = { Text("Profil") },
                                     selected = currentRoute == "profile",
                                     onClick = { navController.navigate("profile") }
