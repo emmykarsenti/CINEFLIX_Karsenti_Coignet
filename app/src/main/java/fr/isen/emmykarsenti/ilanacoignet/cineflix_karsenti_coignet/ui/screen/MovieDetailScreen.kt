@@ -32,8 +32,8 @@ fun MovieDetailScreen(
     titre: String,
     annee: String,
     genre: String,
-    duree: String,
-    realisateur: String
+    duree: String = "-",
+    realisateur: String = "-"
 ) {
     // Récupération de l'utilisateur actuellement connecté via Firebase Auth
     val currentUser = FirebaseAuth.getInstance().currentUser
@@ -43,6 +43,8 @@ fun MovieDetailScreen(
     // Variables pour l'API TMDB (Affiche et Résumé)
     var posterUrl by remember { mutableStateOf<String?>(null) }
     var synopsis by remember { mutableStateOf("Chargement du synopsis...") }
+    var duree by remember { mutableStateOf("-") }
+    var realisateur by remember { mutableStateOf("-") }
     val myApiKey = "9b06bfc70be38627cb51e3cb6d008512"
 
     // Variables pour les statuts Firebase de l'utilisateur connecté
@@ -213,10 +215,14 @@ fun MovieDetailScreen(
                         Text(titre, color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                         Spacer(Modifier.height(8.dp))
 
-                        // Ligne avec les infos de TON JSON !
-                        Text("Sortie : $annee  •  Durée : $duree", color = Color.LightGray, fontSize = 14.sp)
+                        /*Text("Sortie : $annee  •  Durée : $duree", color = Color.LightGray, fontSize = 14.sp)
                         Text("Genre : $genre", color = Color.LightGray, fontSize = 14.sp)
-                        Text("De : $realisateur", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Medium)
+                        Text("Durée : $duree", color = Color.LightGray, fontSize = 14.sp)
+                        Text("De : $realisateur", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Medium)*/
+                        if (annee != "-") Text("📅 Sortie : $annee", color = Color.LightGray, fontSize = 14.sp)
+                        if (genre != "-") Text("🎬 Genre : $genre", color = Color.LightGray, fontSize = 14.sp)
+                        if (duree != "-") Text("⏱ Durée : $duree", color = Color.LightGray, fontSize = 14.sp)
+                        if (realisateur != "-") Text("🎥 De : $realisateur", color = Color.White, fontSize = 14.sp)
                         Spacer(Modifier.height(16.dp))
 
                         Text("Synopsis", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)

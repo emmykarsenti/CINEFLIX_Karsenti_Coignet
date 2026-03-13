@@ -202,7 +202,8 @@ fun MoviePosterGrid(
                                     .background(Color(0xFF31343E))
                                     .clickable {
                                         movie.posterUrl?.let { PosterCache.posters[movie.title] = it }
-                                        navController.navigate("movie/${movie.title}/-/-")
+                                        //navController.navigate("movie/${movie.title}/-/-")
+                                        navController.navigate("movie/${movie.title.replace(' ', '_')}/-/-")
                                     }
                             )
                             IconButton(

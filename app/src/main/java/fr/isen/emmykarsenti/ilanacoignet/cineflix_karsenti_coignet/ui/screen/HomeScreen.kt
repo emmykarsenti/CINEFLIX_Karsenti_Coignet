@@ -146,7 +146,9 @@ fun HomeScreen(navController: NavController) {
                                 .background(Color(0xFF31343E)) // Couleur grise pendant le chargement
                                 .clickable {
                                     val annee = movie.release_date?.take(4) ?: "Inconnue"
-                                    navController.navigate("movie/${movie.title}/$annee/Nouveauté")
+                                    //navController.navigate("movie/${movie.title}/$annee/Nouveauté")
+                                    navController.navigate("movie/${movie.title.replace(' ', '_')}/$annee/Nouveauté")
+
                                 }
                         )
                     }
@@ -214,7 +216,8 @@ fun HomeScreen(navController: NavController) {
                                 .background(Color(0xFF31343E))
                                 .clickable {
                                     val annee = movie.release_date?.take(4) ?: "Inconnue"
-                                    navController.navigate("movie/${movie.title}/$annee/Populaire")
+                                    //navController.navigate("movie/${movie.title}/$annee/Populaire")
+                                    navController.navigate("movie/${movie.title.replace(' ', '_')}/$annee/Populaire")
                                 }
                         )
                     }
@@ -256,7 +259,8 @@ fun HomeScreen(navController: NavController) {
                                 .background(Color(0xFF31343E))
                                 .clickable {
                                     val annee = movie.release_date?.take(4) ?: "Inconnue"
-                                    navController.navigate("movie/${movie.title}/$annee/Recommandé")
+                                    //navController.navigate("movie/${movie.title}/$annee/Recommandé")
+                                    navController.navigate("movie/${movie.title.replace(' ', '_')}/$annee/Recommandé")
                                 }
                         )
                     }
