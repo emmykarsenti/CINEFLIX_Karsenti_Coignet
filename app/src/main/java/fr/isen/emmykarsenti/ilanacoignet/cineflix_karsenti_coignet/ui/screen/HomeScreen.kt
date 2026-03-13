@@ -172,7 +172,9 @@ fun HomeScreen(navController: NavController) {
                 ) {
                     CategoryCard("Star Wars", Modifier.weight(1f)) { navController.navigate("universe/Star Wars") }
                     CategoryCard("Avatar", Modifier.weight(1f)) { navController.navigate("universe/Avatar") }
-                    CategoryCard("Nat Geo", Modifier.weight(1f)) { navController.navigate("universe/Nat Geo") }
+
+                    // NOUVEAU BOUTON : Toutes les catégories
+                    CategoryCard("Voir tous", Modifier.weight(1f)) { navController.navigate("universe/Toutes Catégories") }
                 }
             }
         }
