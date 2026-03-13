@@ -1,5 +1,6 @@
 package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,11 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.R
 import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.data.TmdbClient
 import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.data.TmdbMovie
 import kotlinx.coroutines.launch
@@ -115,7 +118,19 @@ fun HomeScreen(navController: NavController) {
     LazyColumn(
         modifier = Modifier.fillMaxSize().background(Color(0xFF1A1D29)) // Couleur de fond style Disney+
     ) {
-
+        item {
+            Image(
+                painter = painterResource(id = R.drawable.logo_cineflix_homescreen),
+                contentDescription = "Logo Cineflix",
+                modifier = Modifier
+                    .height(220.dp)
+                    .fillMaxWidth()
+                    .padding(bottom = 48.dp),
+                    //.background(Color(0xFF1A1D29)),
+                contentScale = ContentScale.Fit
+            )
+            //Spacer(modifier = Modifier.height(16.dp))
+        }
         // SECTION 1 : CARROUSEL DES NOUVEAUTÉS (Images larges, Boucle infinie)
         item {
             if (latestReleases.isEmpty()) {
