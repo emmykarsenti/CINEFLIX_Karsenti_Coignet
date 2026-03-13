@@ -284,12 +284,11 @@ fun FilmPosterCard(film: FilmFirebase, navController: NavController) {
     Box(
         modifier = Modifier
             .width(130.dp)
-            .height(195.dp) // Ratio 2:3 classique pour les affiches de cinéma
+            .height(195.dp) // Ratio 2:3 pour les affiches de cinéma
             .clip(RoundedCornerShape(8.dp)) // Bords arrondis
             .background(Color(0xFF31343E)) // Couleur de fond "placeholder" (en attendant l'image)
             .clickable {
                 // On encode les textes (Uri.encode) pour éviter que des espaces ou des caractères
-                // spéciaux (comme dans "Lilo & Stitch") ne fassent planter la route Compose.
                 val encodedTitle = Uri.encode(film.titre)
                 val safeGenre = Uri.encode(film.genre)
 
@@ -297,7 +296,7 @@ fun FilmPosterCard(film: FilmFirebase, navController: NavController) {
             },
         contentAlignment = Alignment.Center
     ) {
-        // Affichage de l'affiche si elle a été trouvée par TMDB
+        // Affichage de l'affiche si elle a été trouvée par le tmdb api
         if (posterUrl != null) {
             AsyncImage(
                 model = posterUrl,
@@ -306,7 +305,7 @@ fun FilmPosterCard(film: FilmFirebase, navController: NavController) {
                 modifier = Modifier.fillMaxSize()
             )
         } else {
-            // Si l'API TMDB ne trouve pas d'image, on affiche le titre et l'année en format texte
+            // Si le tmdb api ne trouve pas d'image, on affiche le titre et l'année en format texte
             Column(
                 modifier = Modifier.padding(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,

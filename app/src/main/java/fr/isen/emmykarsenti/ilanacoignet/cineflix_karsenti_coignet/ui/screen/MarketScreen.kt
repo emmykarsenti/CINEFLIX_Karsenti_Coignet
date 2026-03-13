@@ -205,7 +205,7 @@ fun MarketScreen(navController: NavController) {
             } else null
         } catch (e: Exception) { null }
     }
-
+/*
     LaunchedEffect(Unit) {
         FirebaseDatabase.getInstance("https://cineflix-karsenti-coignet-default-rtdb.europe-west1.firebasedatabase.app")
             .getReference("userMovies")
@@ -230,6 +230,53 @@ fun MarketScreen(navController: NavController) {
                     coroutineScope.launch {
                         filmsEnVente = result.map { it.copy(posterUrl = fetchPoster(it.titre)) }
                         isLoading = false
+                    }
+                }
+                override fun onCancelled(error: DatabaseError) { isLoading = false }
+            })
+    }*/
+
+    // APRÈS
+    LaunchedEffect(Unit) {
+        val db = FirebaseDatabase.getInstance("https://cineflix-karsenti-coignet-default-rtdb.europe-west1.firebasedatabase.app")
+
+        db.getReference("userMovies")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val result = mutableListOf<FilmEnVente>()
+                    var usersRestants = snapshot.children.count { it.key != currentUser?.uid }
+
+                    if (usersRestants == 0) {
+                        isLoading = false
+                        return
+                    }
+
+                    for (userSnap in snapshot.children) {
+                        val uid = userSnap.key ?: continue
+                        if (uid == currentUser?.uid) continue
+
+                        db.getReference("users/$uid/username")
+                            .get()
+                            .addOnSuccessListener { usernameSnap ->
+                                val pseudo = usernameSnap.getValue(String::class.java)
+                                    ?: "Utilisateur_${uid.take(5)}"
+
+                                for (filmSnap in userSnap.children) {
+                                    val titre = filmSnap.key ?: continue
+                                    val ownStatus = filmSnap.child("own_status").getValue(String::class.java)
+                                    if (ownStatus == "WANT_TO_SELL") {
+                                        result.add(FilmEnVente(titre, pseudo, null))
+                                    }
+                                }
+
+                                usersRestants--
+                                if (usersRestants == 0) {
+                                    coroutineScope.launch {
+                                        filmsEnVente = result.map { it.copy(posterUrl = fetchPoster(it.titre)) }
+                                        isLoading = false
+                                    }
+                                }
+                            }
                     }
                 }
                 override fun onCancelled(error: DatabaseError) { isLoading = false }

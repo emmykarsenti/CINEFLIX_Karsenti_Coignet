@@ -154,10 +154,10 @@ fun ProfileScreen(navController: NavController) {
                 auth.signOut()
                 navController.navigate("auth") { popUpTo(0) }
             },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE50914)),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF299B5)),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Se déconnecter")
+            Text("Se déconnecter", fontSize = 14.sp, color = Color.White)
         }
     }
 }
@@ -214,7 +214,7 @@ fun MoviePosterGrid(
                                 Icon(
                                     Icons.Default.Delete,
                                     contentDescription = "Supprimer",
-                                    tint = Color(0xFFE50914),
+                                    tint = Color(0xFFFFFFFF),
                                     modifier = Modifier.size(18.dp)
                                 )
                             }
