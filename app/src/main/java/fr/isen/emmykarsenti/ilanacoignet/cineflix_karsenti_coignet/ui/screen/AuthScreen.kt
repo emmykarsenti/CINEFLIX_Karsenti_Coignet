@@ -1,4 +1,4 @@
-package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.screen
+/* package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.screen
 
 import android.content.Context
 import android.widget.Toast
@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.R
@@ -36,6 +37,7 @@ fun AuthScreen(navController: NavController) {
     // 2. VARIABLES D'ÉTAT (Gérées par Compose)
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("") }
     // Cette variable gère l'état visuel et logique de la case à cocher (décochée par défaut)
     var rememberMe by remember { mutableStateOf(false) }
 
@@ -125,6 +127,27 @@ fun AuthScreen(navController: NavController) {
             )
         )
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Champ pour le username
+        OutlinedTextField(
+            value = username,
+            onValueChange = { username = it },
+            label = { Text("Username", color = Color(0xFFF299B5)) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White,
+                focusedBorderColor = Color(0xFFF299B5),
+                unfocusedBorderColor = Color(0xFFF299B5),
+                focusedLabelColor = Color(0xFFF299B5),
+                unfocusedLabelColor = Color(0xFFF299B5),
+                cursorColor = Color(0xFFF299B5)
+            )
+        )
+
         // 5. CASE À COCHER "RESTER CONNECTÉ"
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -174,19 +197,17 @@ fun AuthScreen(navController: NavController) {
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3B2FA3))
         ) {
-            Text("Se connecter")
+            Text("Se connecter", fontSize = 14.sp, color = Color.White)
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // 7. BOUTON "CRÉER UN COMPTE"
         TextButton(
             onClick = {
                 if (email.isNotEmpty() && password.isNotEmpty()) {
                     auth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
-                                // CRÉATION RÉUSSIE !
                                 // On fait exactement la même chose : on sauvegarde le choix de l'utilisateur
                                 // pour qu'il n'ait pas à se reconnecter s'il a coché la case pendant l'inscription.
                                 sharedPreferences.edit().putBoolean("remember_me", rememberMe).apply()
@@ -207,6 +228,208 @@ fun AuthScreen(navController: NavController) {
             }
         ) {
             Text("Créer un compte", color = Color.LightGray)
+        }
+    }
+}*/
+
+package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.screen
+
+import android.content.Context
+import android.widget.Toast
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.R
+
+@Composable
+fun AuthScreen(navController: NavController) {
+    val context = LocalContext.current
+    val auth = FirebaseAuth.getInstance()
+    val sharedPreferences = context.getSharedPreferences("CineflixPrefs", Context.MODE_PRIVATE)
+
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("") }
+    var rememberMe by remember { mutableStateOf(false) }
+    var isInscription by remember { mutableStateOf(false) } // false = connexion, true = inscription
+
+    LaunchedEffect(Unit) {
+        val isRememberMeChecked = sharedPreferences.getBoolean("remember_me", false)
+        if (auth.currentUser != null) {
+            if (isRememberMeChecked) {
+                navController.navigate("home") { popUpTo("auth") { inclusive = true } }
+            } else {
+                auth.signOut()
+            }
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF000000))
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.logo_cineflix_noir),
+            contentDescription = "Logo Cineflix",
+            modifier = Modifier
+                .height(330.dp)
+                .fillMaxWidth()
+                .padding(bottom = 48.dp),
+            contentScale = ContentScale.Fit
+        )
+
+        // Champ email
+        OutlinedTextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Adresse E-mail", color = Color(0xFFF299B5)) },
+            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = Color.White, unfocusedTextColor = Color.White,
+                focusedBorderColor = Color(0xFFF299B5), unfocusedBorderColor = Color(0xFFF299B5),
+                focusedLabelColor = Color(0xFFF299B5), unfocusedLabelColor = Color(0xFFF299B5),
+                cursorColor = Color(0xFFF299B5)
+            )
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Champ mot de passe
+        OutlinedTextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text("Mot de passe", color = Color(0xFFF299B5)) },
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = Color.White, unfocusedTextColor = Color.White,
+                focusedBorderColor = Color(0xFFF299B5), unfocusedBorderColor = Color(0xFFF299B5),
+                focusedLabelColor = Color(0xFFF299B5), unfocusedLabelColor = Color(0xFFF299B5),
+                cursorColor = Color(0xFFF299B5)
+            )
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Champ username uniquement en mode inscription
+        if (isInscription) {
+            OutlinedTextField(
+                value = username,
+                onValueChange = { username = it },
+                label = { Text("Nom d'utilisateur", color = Color(0xFFF299B5)) },
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = Color.White, unfocusedTextColor = Color.White,
+                    focusedBorderColor = Color(0xFFF299B5), unfocusedBorderColor = Color(0xFFF299B5),
+                    focusedLabelColor = Color(0xFFF299B5), unfocusedLabelColor = Color(0xFFF299B5),
+                    cursorColor = Color(0xFFF299B5)
+                )
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
+        // Case à cocher
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+            Checkbox(
+                checked = rememberMe,
+                onCheckedChange = { rememberMe = it },
+                colors = CheckboxDefaults.colors(
+                    checkedColor = Color(0xFFF299B5),
+                    checkmarkColor = Color.Black,
+                    uncheckedColor = Color.White
+                )
+            )
+            Text(text = "Rester connecté", color = Color.White)
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        if (!isInscription) {
+            // Bouton Se connecter
+            Button(
+                onClick = {
+                    if (email.isNotEmpty() && password.isNotEmpty()) {
+                        auth.signInWithEmailAndPassword(email, password)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    sharedPreferences.edit().putBoolean("remember_me", rememberMe).apply()
+                                    Toast.makeText(context, "Connexion réussie !", Toast.LENGTH_SHORT).show()
+                                    navController.navigate("home") { popUpTo("auth") { inclusive = true } }
+                                } else {
+                                    Toast.makeText(context, "Erreur : ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                                }
+                            }
+                    } else {
+                        Toast.makeText(context, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show()
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF299B5))
+            ) {
+                Text("Se connecter", fontSize = 14.sp, color = Color.Black)
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Bouton vers mode inscription
+            TextButton(onClick = { isInscription = true }) {
+                Text("Créer un compte", color = Color.LightGray)
+            }
+
+        } else {
+            // Bouton Créer un compte
+            Button(
+                onClick = {
+                    if (email.isNotEmpty() && password.isNotEmpty() && username.isNotEmpty()) {
+                        auth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    val uid = auth.currentUser?.uid ?: return@addOnCompleteListener
+                                    // Sauvegarde du username dans Firebase
+                                    FirebaseDatabase.getInstance("https://cineflix-karsenti-coignet-default-rtdb.europe-west1.firebasedatabase.app")
+                                        .getReference("users/$uid/username")
+                                        .setValue(username)
+                                    sharedPreferences.edit().putBoolean("remember_me", rememberMe).apply()
+                                    Toast.makeText(context, "Compte créé avec succès !", Toast.LENGTH_SHORT).show()
+                                    navController.navigate("home") { popUpTo("auth") { inclusive = true } }
+                                } else {
+                                    Toast.makeText(context, "Erreur : ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                                }
+                            }
+                    } else {
+                        Toast.makeText(context, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show()
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF299B5))
+            ) {
+                Text("Créer mon compte", fontSize = 14.sp, color = Color.Black)
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Retour vers mode connexion
+            TextButton(onClick = { isInscription = false }) {
+                Text("Déjà un compte ? Se connecter", color = Color.LightGray)
+            }
         }
     }
 }
