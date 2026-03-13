@@ -34,7 +34,9 @@ data class FilmFirebase(
     val titre: String = "",
     val annee: Int = 0,
     val genre: String = "",
-    val numero: Int = 0 // Utilisé pour trier les films dans l'ordre chronologique
+    val numero: Int = 0, // Utilisé pour trier les films dans l'ordre chronologique
+    val duree: String = "",
+    val realisateur: String = ""
 )
 
 // Représente une ligne complète de films à l'écran (ex: "Phase 1", "Animation 2D").
@@ -113,7 +115,9 @@ fun UniverseScreen(navController: NavController, universeName: String) {
                                             titre = filmSnap.child("titre").getValue(String::class.java) ?: "",
                                             annee = filmSnap.child("annee").getValue(Int::class.java) ?: 0,
                                             genre = finalGenre,
-                                            numero = filmSnap.child("numero").getValue(Int::class.java) ?: 0
+                                            numero = filmSnap.child("numero").getValue(Int::class.java) ?: 0,
+                                            duree = filmSnap.child("duree").getValue(String::class.java) ?: "Inconnue",
+                                            realisateur = filmSnap.child("realisateur").getValue(String::class.java) ?: "Inconnu"
                                         )
                                         films.add(film)
                                     }
@@ -290,10 +294,12 @@ fun FilmPosterCard(film: FilmFirebase, navController: NavController) {
             .clickable {
                 // On encode les textes (Uri.encode) pour éviter que des espaces ou des caractères
                 // spéciaux (comme dans "Lilo & Stitch") ne fassent planter la route Compose.
-                val encodedTitle = Uri.encode(film.titre)
-                val safeGenre = Uri.encode(film.genre)
+                val safeTitre = Uri.encode(if (film.titre.isNotBlank()) film.titre else "Inconnu")
+                val safeGenre = Uri.encode(if (film.genre.isNotBlank()) film.genre else "Inconnu")
+                val safeDuree = Uri.encode(if (film.duree.isNotBlank()) film.duree else "Inconnue")
+                val safeRealisateur = Uri.encode(if (film.realisateur.isNotBlank()) film.realisateur else "Inconnu")
 
-                navController.navigate("movie/$encodedTitle/${film.annee}/$safeGenre")
+                navController.navigate("movie/$safeTitre/${film.annee}/$safeGenre/$safeDuree/$safeRealisateur")
             },
         contentAlignment = Alignment.Center
     ) {

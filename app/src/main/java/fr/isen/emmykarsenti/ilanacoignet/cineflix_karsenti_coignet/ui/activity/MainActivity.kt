@@ -216,15 +216,20 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            composable("movie/{movieTitre}/{movieAnnee}/{movieGenre}") {
-                                val titre = it.arguments?.getString("movieTitre") ?: ""
-                                val annee = it.arguments?.getString("movieAnnee") ?: ""
-                                val genre = it.arguments?.getString("movieGenre") ?: ""
+                            composable("movie/{titre}/{annee}/{genre}/{duree}/{realisateur}") { backStackEntry ->
+                                // On récupère les informations de l'URL de navigation
+                                val titre = backStackEntry.arguments?.getString("titre") ?: ""
+                                val annee = backStackEntry.arguments?.getString("annee") ?: ""
+                                val genre = backStackEntry.arguments?.getString("genre") ?: ""
+                                val duree = backStackEntry.arguments?.getString("duree") ?: "Inconnue"
+                                val realisateur = backStackEntry.arguments?.getString("realisateur") ?: "Inconnu"
                                 MovieDetailScreen(
                                     navController = navController,
                                     titre = titre,
                                     annee = annee,
-                                    genre = genre
+                                    genre = genre,
+                                    duree = duree,
+                                    realisateur = realisateur
                                 )
                             }
                         }
