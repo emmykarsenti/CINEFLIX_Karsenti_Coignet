@@ -85,9 +85,9 @@ fun HomeScreen(navController: NavController) {
                 }
                 popularMovies = SessionCache.popularMoviesCache!!
 
-                // 3. RECOMMANDÉS POUR VOUS (Ligne du bas)
+                // 3. RECOMMANDÉS POUR VOUS (Ligne du bas - juste Disney pour l'exemple)
                 if (SessionCache.recommendedMoviesCache == null) {
-                    val responseRecs = TmdbClient.apiService.discoverMovies(myApiKey, "2|3|420|1|574")
+                    val responseRecs = TmdbClient.apiService.discoverMovies(myApiKey, "2")
                     // On mélange les résultats pour avoir de la diversité
                     SessionCache.recommendedMoviesCache = responseRecs.results.shuffled().take(10)
                 }
@@ -99,14 +99,14 @@ fun HomeScreen(navController: NavController) {
         }
     }
 
-    // MOTEUR D'ANIMATION DU CARROUSEL
+    // MOTEUR D'ANIMATION DU CARROUSEL (BOUCLE INFINIE)
     LaunchedEffect(latestReleases.size) {
         if (latestReleases.isNotEmpty()) {
             while (true) {
                 kotlinx.coroutines.delay(6000) // Attente de 6 secondes
                 val currentIndex = listState.firstVisibleItemIndex
-                val nextIndex = (currentIndex + 1) % latestReleases.size
-                listState.animateScrollToItem(nextIndex) // Défilement doux vers l'image suivante
+                // On avance continuellement (+1) sans jamais faire de retour en arrière
+                listState.animateScrollToItem(currentIndex + 1)
             }
         }
     }
@@ -116,7 +116,7 @@ fun HomeScreen(navController: NavController) {
         modifier = Modifier.fillMaxSize().background(Color(0xFF1A1D29)) // Couleur de fond style Disney+
     ) {
 
-        // SECTION 1 : CARROUSEL DES NOUVEAUTÉS (Images larges)
+        // SECTION 1 : CARROUSEL DES NOUVEAUTÉS (Images larges, Boucle infinie)
         item {
             if (latestReleases.isEmpty()) {
                 Box(modifier = Modifier.fillMaxWidth().height(248.dp), contentAlignment = Alignment.Center) {
@@ -128,8 +128,11 @@ fun HomeScreen(navController: NavController) {
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 24.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    items(latestReleases) { movie ->
-                        // On utilise backdrop_path pour avoir le format paysage
+                    // LA MAGIE EST ICI : On crée une liste quasi infinie
+                    items(count = Int.MAX_VALUE) { index ->
+                        // On boucle sur nos 5 films grâce au modulo (%)
+                        val movie = latestReleases[index % latestReleases.size]
+
                         val backdropUrl = "https://image.tmdb.org/t/p/w780${movie.backdrop_path}"
 
                         AsyncImage(
