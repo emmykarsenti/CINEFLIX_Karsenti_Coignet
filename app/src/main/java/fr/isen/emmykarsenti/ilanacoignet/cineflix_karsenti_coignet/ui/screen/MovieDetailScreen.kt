@@ -159,8 +159,8 @@ fun MovieDetailScreen(
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(titre, color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                         Spacer(Modifier.height(8.dp))
-                        Text("📅 Année : $annee", color = Color.LightGray, fontSize = 14.sp)
-                        Text("🎬 Genre : $genre", color = Color.LightGray, fontSize = 14.sp)
+                        Text("Année : $annee", color = Color.LightGray, fontSize = 14.sp)
+                        Text("Genre : $genre", color = Color.LightGray, fontSize = 14.sp)
                     }
                 }
             }
@@ -171,8 +171,8 @@ fun MovieDetailScreen(
                     Text("Mon statut de visionnage", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
                     Spacer(Modifier.height(8.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-                        StatusBtn("✅ Vu", "WATCHED", watchStatus, Modifier.weight(1f)) { setWatchStatus("WATCHED") }
-                        StatusBtn("🎯 À voir", "WANT_TO_WATCH", watchStatus, Modifier.weight(1f)) { setWatchStatus("WANT_TO_WATCH") }
+                        StatusBtn("Vu", "WATCHED", watchStatus, Modifier.weight(1f)) { setWatchStatus("WATCHED") }
+                        StatusBtn("À voir", "WANT_TO_WATCH", watchStatus, Modifier.weight(1f)) { setWatchStatus("WANT_TO_WATCH") }
                     }
 
                     Spacer(Modifier.height(16.dp))
@@ -180,8 +180,8 @@ fun MovieDetailScreen(
                     Text("Ma collection", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
                     Spacer(Modifier.height(8.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-                        StatusBtn("📀 Je possède", "OWN_DVD", ownStatus, Modifier.weight(1f)) { setOwnStatus("OWN_DVD") }
-                        StatusBtn("💸 Vendre", "WANT_TO_SELL", ownStatus, Modifier.weight(1f)) { setOwnStatus("WANT_TO_SELL") }
+                        StatusBtn("Je possède", "OWN_DVD", ownStatus, Modifier.weight(1f)) { setOwnStatus("OWN_DVD") }
+                        StatusBtn("Vendre", "WANT_TO_SELL", ownStatus, Modifier.weight(1f)) { setOwnStatus("WANT_TO_SELL") }
                     }
                 } else {
                     Text("Connectez-vous pour gérer votre collection", color = Color.Gray, fontSize = 14.sp)
@@ -191,7 +191,7 @@ fun MovieDetailScreen(
             // Section "Aspect Social" : Affichage des vendeurs
             item {
                 Spacer(Modifier.height(16.dp))
-                Text("🛒 Membres cédant ce film", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Text("Membres cédant ce film", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(8.dp))
 
                 if (sellers.isEmpty()) {

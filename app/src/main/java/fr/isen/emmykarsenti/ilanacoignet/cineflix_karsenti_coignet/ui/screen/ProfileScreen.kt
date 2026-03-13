@@ -128,22 +128,22 @@ fun ProfileScreen(navController: NavController) {
             }
 
             if (ownedMovies.isNotEmpty()) {
-                item { ProfileSectionTitle("📀 Mes films possédés") }
+                item { ProfileSectionTitle("Mes films possédés") }
                 item { MoviePosterGrid(ownedMovies, navController) { removeMovieFromFirebase(it) } }
             }
 
             if (watchedMovies.isNotEmpty()) {
-                item { ProfileSectionTitle("✅ Films vus") }
+                item { ProfileSectionTitle("Films vus") }
                 item { MoviePosterGrid(watchedMovies, navController) { removeMovieFromFirebase(it) } }
             }
 
             if (wantToWatchMovies.isNotEmpty()) {
-                item { ProfileSectionTitle("🎯 À voir") }
+                item { ProfileSectionTitle("À voir") }
                 item { MoviePosterGrid(wantToWatchMovies, navController) { removeMovieFromFirebase(it) } }
             }
 
             if (wantToSellMovies.isNotEmpty()) {
-                item { ProfileSectionTitle("💸 À vendre") }
+                item { ProfileSectionTitle("À vendre") }
                 item { MoviePosterGrid(wantToSellMovies, navController) { removeMovieFromFirebase(it) } }
             }
         }
