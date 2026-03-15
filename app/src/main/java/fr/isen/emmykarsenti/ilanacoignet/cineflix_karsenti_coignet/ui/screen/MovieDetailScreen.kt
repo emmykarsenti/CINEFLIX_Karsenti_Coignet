@@ -20,10 +20,10 @@ import coil.compose.AsyncImage
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.data.TmdbClient
-
-// ÉCRAN DE DÉTAIL D'UN FILM
-// Cet écran affiche l'affiche, le synopsis, permet à l'utilisateur de gérer
-// sa collection (vu, à voir, possédé, à vendre) et d'afficher les vendeurs.
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.net.URL
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,70 +32,91 @@ fun MovieDetailScreen(
     titre: String,
     annee: String,
     genre: String,
-    duree: String = "-",
-    realisateur: String = "-"
+    duree: String,
+    realisateur: String,
+    franchise: String
 ) {
-    // Récupération de l'utilisateur actuellement connecté via Firebase Auth
+    // Récupération de l'utilisateur actuellement connecté via Firebase
     val currentUser = FirebaseAuth.getInstance().currentUser
 
-    // 1. GESTION DES ÉTATS (Variables qui vont mettre à jour l'interface)
-
-    // Variables pour l'API TMDB (Affiche et Résumé)
+    // 1. VARIABLES D'ÉTAT (State)
     var posterUrl by remember { mutableStateOf<String?>(null) }
     var synopsis by remember { mutableStateOf("Chargement du synopsis...") }
-    var duree by remember { mutableStateOf("-") }
-    var realisateur by remember { mutableStateOf("-") }
     val myApiKey = "9b06bfc70be38627cb51e3cb6d008512"
 
-    // Variables pour les statuts Firebase de l'utilisateur connecté
-    var watchStatus by remember { mutableStateOf<String?>(null) } // Ex: "WATCHED" ou "WANT_TO_WATCH"
-    var ownStatus by remember { mutableStateOf<String?>(null) }   // Ex: "OWN_DVD" ou "WANT_TO_SELL"
+    // Variables d'affichage : elles prennent les valeurs par défaut reçues en paramètre,
+    // mais pourront être écrasées par les vraies données de TMDB.
+    var displayTitre by remember { mutableStateOf(titre) }
+    var displayFranchise by remember { mutableStateOf(franchise) }
+    var displayGenre by remember { mutableStateOf(genre) }
+    var displayDuree by remember { mutableStateOf(duree) }
+    var displayRealisateur by remember { mutableStateOf(realisateur) }
 
-    // Liste des pseudonymes des personnes vendant ce film
-    var sellers by remember { mutableStateOf<List<String>>(emptyList()) }
+    // Statuts de l'utilisateur pour ce film
+    var watchStatus by remember { mutableStateOf<String?>(null) } // Vu / À voir
+    var ownStatus by remember { mutableStateOf<String?>(null) }   // Possède / Veut vendre
+    var sellers by remember { mutableStateOf<List<String>>(emptyList()) } // Liste des vendeurs
 
-    // 2. RÉCUPÉRATION DES DONNÉES DEPUIS TMDB ET FIREBASE
-
-    // A. Récupération de l'affiche et du synopsis (API TMDB)
-    // LaunchedEffect(titre) s'exécute une fois à l'ouverture de la page pour ce film
+    // 2. RÉCUPÉRATION DES DONNÉES TMDB
     LaunchedEffect(titre) {
         try {
-            // On cherche le film par son titre sur TMDB
+            // Recherche du film sur TMDB avec le titre fourni
             val response = TmdbClient.apiService.searchMovie(myApiKey, titre)
 
-            // Si l'API trouve au moins un résultat
             if (response.results.isNotEmpty()) {
-                val movie = response.results[0] // On prend le résultat le plus pertinent (le premier)
+                val movie = response.results[0]
 
-                // On construit l'URL de l'image si elle existe
+                // Récupération de l'affiche et du synopsis
                 if (movie.poster_path != null) {
                     posterUrl = "https://image.tmdb.org/t/p/w500${movie.poster_path}"
                 }
+                synopsis = if (!movie.overview.isNullOrBlank()) movie.overview else "Aucun synopsis disponible pour ce film."
 
-                // On récupère le synopsis (overview), ou un message par défaut s'il est vide
-                if (!movie.overview.isNullOrBlank()) {
-                    synopsis = movie.overview
-                } else {
-                    synopsis = "Aucun synopsis disponible pour ce film."
+                // Récupération des détails avancés (en français) via une fonction personnalisée
+                try {
+                    val movieId = movie.id
+                    val extraData = fetchTmdbDetails(movieId, myApiKey)
+
+                    // Mise à jour des textes si TMDB a trouvé de meilleures informations
+                    if (extraData["title"]?.isNotBlank() == true) displayTitre = extraData["title"]!!
+                    if (extraData["genre"]?.isNotBlank() == true) displayGenre = extraData["genre"]!!
+                    if (extraData["runtime"]?.isNotBlank() == true) displayDuree = extraData["runtime"]!!
+                    if (extraData["director"]?.isNotBlank() == true) displayRealisateur = extraData["director"]!!
+
+                    val tmdbFranchise = extraData["franchise"] ?: ""
+
+                    // Gestion de l'affichage du texte rouge (Saga / Franchise / Studio)
+                    if (tmdbFranchise.isNotBlank()) {
+                        displayFranchise = tmdbFranchise
+                    } else {
+                        // Si TMDB n'a pas de saga et que la catégorie actuelle est trop générique, on la masque.
+                        if (displayFranchise.equals("Pop Culture", ignoreCase = true) ||
+                            displayFranchise == "Inconnue" ||
+                            displayFranchise == "Nouveauté" ||
+                            displayFranchise == "Populaire") {
+                            displayFranchise = ""
+                        }
+                    }
+
+                } catch (e: Exception) {
+                    println("Détails supplémentaires introuvables : ${e.message}")
                 }
+
             } else {
                 synopsis = "Film introuvable dans la base de données TMDB."
             }
         } catch (e: Exception) {
-            println("Erreur TMDB : ${e.message}")
-            synopsis = "Impossible de charger le synopsis (Vérifiez votre connexion)."
+            synopsis = "Impossible de charger les données (Vérifiez votre connexion)."
         }
     }
 
-    // B. Lecture des statuts de l'utilisateur (Firebase Realtime DB)
-    // On écoute en temps réel si l'utilisateur a déjà ce film dans sa collection
+    // 3. LECTURE DES STATUTS FIREBASE (VISIONNAGE & POSSESSION)
     LaunchedEffect(titre) {
         val uid = currentUser?.uid ?: return@LaunchedEffect
         FirebaseDatabase.getInstance("https://cineflix-karsenti-coignet-default-rtdb.europe-west1.firebasedatabase.app")
             .getReference("userMovies/$uid/$titre")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    // On met à jour les variables d'état (ça changera la couleur des boutons)
                     watchStatus = snapshot.child("watch_status").getValue(String::class.java)
                     ownStatus = snapshot.child("own_status").getValue(String::class.java)
                 }
@@ -103,128 +124,91 @@ fun MovieDetailScreen(
             })
     }
 
-    // C. Recherche des vendeurs (Aspect Social / Communautaire)
-    // On parcourt TOUTE la base de données pour trouver qui a mis "WANT_TO_SELL" sur ce film
+    // 4. LECTURE DES VENDEURS FIREBASE
     LaunchedEffect(titre) {
         val dbRef = FirebaseDatabase.getInstance("https://cineflix-karsenti-coignet-default-rtdb.europe-west1.firebasedatabase.app")
             .getReference("userMovies")
-
         dbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val sellersList = mutableListOf<String>()
-
-                // On boucle sur chaque utilisateur enregistré dans la base
+                // On parcourt tous les utilisateurs pour voir qui possède ce film avec le statut WANT_TO_SELL
                 for (userSnap in snapshot.children) {
                     val userUid = userSnap.key ?: continue
-
-                    // On regarde le statut de CE film spécifique chez CET utilisateur
                     val status = userSnap.child(titre).child("own_status").getValue(String::class.java)
-
-                    // Si l'utilisateur le vend ET que ce n'est pas nous-même
                     if (status == "WANT_TO_SELL" && userUid != currentUser?.uid) {
-                        // Pour l'instant on génère un pseudo avec le début de son ID
-                        val pseudo = "Utilisateur_" + userUid.take(5)
-                        sellersList.add(pseudo)
+                        sellersList.add("Utilisateur_" + userUid.take(5)) // On n'affiche que le début de l'UID pour l'anonymat
                     }
                 }
-                sellers = sellersList // On met à jour la liste affichée à l'écran
+                sellers = sellersList
             }
             override fun onCancelled(error: DatabaseError) {}
         })
     }
 
-    // 3. FONCTIONS D'ACTIONS (Écriture dans Firebase)
-
-    // Met à jour le statut "Visionnage" (Vu / À voir)
+    // Fonctions pour mettre à jour les statuts dans Firebase lors d'un clic
     fun setWatchStatus(status: String) {
         val uid = currentUser?.uid ?: return
-        val ref = FirebaseDatabase.getInstance("https://cineflix-karsenti-coignet-default-rtdb.europe-west1.firebasedatabase.app")
-            .getReference("userMovies/$uid/$titre/watch_status")
-
-        // Logique "Toggle" : Si on clique sur le bouton déjà actif, ça supprime le statut
+        val ref = FirebaseDatabase.getInstance("https://cineflix-karsenti-coignet-default-rtdb.europe-west1.firebasedatabase.app").getReference("userMovies/$uid/$titre/watch_status")
         if (watchStatus == status) ref.removeValue() else ref.setValue(status)
     }
 
-    // Met à jour le statut "Possession" (Possédé / À Vendre)
     fun setOwnStatus(status: String) {
         val uid = currentUser?.uid ?: return
-        val ref = FirebaseDatabase.getInstance("https://cineflix-karsenti-coignet-default-rtdb.europe-west1.firebasedatabase.app")
-            .getReference("userMovies/$uid/$titre/own_status")
-
+        val ref = FirebaseDatabase.getInstance("https://cineflix-karsenti-coignet-default-rtdb.europe-west1.firebasedatabase.app").getReference("userMovies/$uid/$titre/own_status")
         if (ownStatus == status) ref.removeValue() else ref.setValue(status)
     }
 
-    // 4. INTERFACE GRAPHIQUE (UI)
+    // 5. INTERFACE UTILISATEUR (UI)
     Scaffold(
         topBar = {
-            // Barre d'en-tête avec bouton retour et titre du film
             TopAppBar(
-                title = { Text(titre, fontWeight = FontWeight.Bold) },
+                title = { Text(displayTitre, fontWeight = FontWeight.Bold) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { navController.popBackStack() }) { // Bouton retour
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Retour", tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF1A1D29), titleContentColor = Color.White)
             )
         },
-        containerColor = Color(0xFF1A1D29) // Fond global sombre
+        containerColor = Color(0xFF1A1D29)
     ) { padding ->
 
-        // LazyColumn permet de faire défiler la page (scroll)
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
+        LazyColumn(modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
 
-            // SECTION 1 : L'Affiche du film
+            // Affiche du film
             item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(350.dp),
-                    contentAlignment = Alignment.Center
-                ) {
+                Box(modifier = Modifier.fillMaxWidth().height(350.dp), contentAlignment = Alignment.Center) {
                     if (posterUrl != null) {
-                        AsyncImage(
-                            model = posterUrl,
-                            contentDescription = titre,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .clip(RoundedCornerShape(12.dp)),
-                            contentScale = ContentScale.Fit
-                        )
+                        AsyncImage(model = posterUrl, contentDescription = displayTitre, modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(12.dp)), contentScale = ContentScale.Fit)
                     } else {
-                        // Cercle de chargement rouge pendant que TMDB cherche l'image
                         CircularProgressIndicator(color = Color(0xFFE50914))
                     }
                 }
             }
 
-            // SECTION 2 : Informations (Titre, Année, Genre, Synopsis)
+            // Fiche détaillée (Titre, Saga, Info, Synopsis)
             item {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFF31343E))
-                ) {
+                Card(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp), colors = CardDefaults.cardColors(containerColor = Color(0xFF31343E))) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        Text(titre, color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                        Text(displayTitre, color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+
+                        // Affichage du texte rouge (Franchise/Studio) s'il y en a un
+                        if (displayFranchise != "Inconnue" && displayFranchise.isNotBlank()) {
+                            Text(displayFranchise.uppercase(), color = Color(0xFFE50914), fontSize = 12.sp, fontWeight = FontWeight.ExtraBold, letterSpacing = 1.sp)
+                        }
+
                         Spacer(Modifier.height(8.dp))
 
-                        /*Text("Sortie : $annee  •  Durée : $duree", color = Color.LightGray, fontSize = 14.sp)
-                        Text("Genre : $genre", color = Color.LightGray, fontSize = 14.sp)
-                        Text("Durée : $duree", color = Color.LightGray, fontSize = 14.sp)
-                        Text("De : $realisateur", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Medium)*/
-                        if (annee != "-") Text("📅 Sortie : $annee", color = Color.LightGray, fontSize = 14.sp)
-                        if (genre != "-") Text("🎬 Genre : $genre", color = Color.LightGray, fontSize = 14.sp)
-                        if (duree != "-") Text("⏱ Durée : $duree", color = Color.LightGray, fontSize = 14.sp)
-                        if (realisateur != "-") Text("🎥 De : $realisateur", color = Color.White, fontSize = 14.sp)
+                        // Informations générales
+                        if (annee != "Inconnue" && annee != "-") Text("📅 Sortie : $annee", color = Color.LightGray, fontSize = 14.sp)
+                        if (displayGenre != "Inconnu" && displayGenre != "-" && displayGenre != "Nouveauté" && displayGenre != "Populaire") Text("🎬 Genre : $displayGenre", color = Color.LightGray, fontSize = 14.sp)
+                        if (displayDuree != "Inconnue" && displayDuree != "-") Text("⏱ Durée : $displayDuree", color = Color.LightGray, fontSize = 14.sp)
+                        if (displayRealisateur != "Inconnu" && displayRealisateur != "-") Text("🎥 De : $displayRealisateur", color = Color.White, fontSize = 14.sp)
+
                         Spacer(Modifier.height(16.dp))
 
+                        // Synopsis
                         Text("Synopsis", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
                         Spacer(Modifier.height(4.dp))
                         Text(synopsis, color = Color.LightGray, fontSize = 14.sp, lineHeight = 20.sp)
@@ -232,10 +216,9 @@ fun MovieDetailScreen(
                 }
             }
 
-            // SECTION 3 : Boutons de la Collection (Seulement si connecté)
+            // Boutons d'action (Si l'utilisateur est connecté)
             item {
                 if (currentUser != null) {
-                    // Ligne 1 : Visionnage
                     Text("Mon statut de visionnage", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
                     Spacer(Modifier.height(8.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
@@ -245,7 +228,6 @@ fun MovieDetailScreen(
 
                     Spacer(Modifier.height(16.dp))
 
-                    // Ligne 2 : Possession
                     Text("Ma collection", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
                     Spacer(Modifier.height(8.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
@@ -253,73 +235,147 @@ fun MovieDetailScreen(
                         StatusBtn("Vendre", "WANT_TO_SELL", ownStatus, Modifier.weight(1f)) { setOwnStatus("WANT_TO_SELL") }
                     }
                 } else {
-                    // Message si l'utilisateur navigue en mode "invité"
                     Text("Connectez-vous pour gérer votre collection", color = Color.Gray, fontSize = 14.sp)
                 }
             }
 
-            // SECTION 4 : Espace Communautaire (Liste des vendeurs)
+            // Section Marché d'occasion (Utilisateurs vendant ce film)
             item {
                 Spacer(Modifier.height(16.dp))
                 Text("Membres cédant ce film", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(8.dp))
-
-                if (sellers.isEmpty()) {
-                    Text("Aucun utilisateur ne souhaite se séparer de ce film pour le moment.", color = Color.Gray, fontSize = 14.sp)
-                }
+                if (sellers.isEmpty()) Text("Aucun utilisateur ne souhaite se séparer de ce film pour le moment.", color = Color.Gray, fontSize = 14.sp)
             }
 
-            // On génère dynamiquement une "Carte" par vendeur trouvé
             items(sellers.size) { index ->
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFF2C2C54)),
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = Color(0xFF2C2C54)), shape = RoundedCornerShape(8.dp)) {
+                    Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                         Text("👤", fontSize = 20.sp)
                         Spacer(Modifier.width(12.dp))
                         Text(sellers[index], color = Color.White, fontWeight = FontWeight.Medium)
                     }
                 }
             }
-
-            // Espace de confort à la fin pour que le dernier item ne soit pas caché par le menu de navigation
-            item {
-                Spacer(Modifier.height(80.dp))
-            }
+            item { Spacer(Modifier.height(80.dp)) }
         }
     }
 }
 
-// 5. COMPOSANT RÉUTILISABLE : BOUTON DE STATUT
-/**
- * Un bouton personnalisé qui change de couleur s'il est actif.
- * @param label Le texte affiché (ex: "Vu")
- * @param status L'identifiant du statut en BDD (ex: "WATCHED")
- * @param currentStatus Le statut actuel sélectionné par l'utilisateur
- * @param onClick L'action à déclencher au clic
- */
+// Composant réutilisable pour les boutons de statut (rouge si sélectionné, gris sinon)
 @Composable
-fun StatusBtn(
-    label: String,
-    status: String,
-    currentStatus: String?,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-    Button(
-        onClick = onClick,
-        modifier = modifier.height(50.dp),
-        shape = RoundedCornerShape(12.dp),
-        colors = ButtonDefaults.buttonColors(
-            // Le bouton devient rouge s'il est sélectionné, sinon il reste bleu nuit
-            containerColor = if (currentStatus == status) Color(0xFFE50914) else Color(0xFF2C2C54)
-        )
-    ) {
+fun StatusBtn(label: String, status: String, currentStatus: String?, modifier: Modifier = Modifier, onClick: () -> Unit) {
+    Button(onClick = onClick, modifier = modifier.height(50.dp), shape = RoundedCornerShape(12.dp), colors = ButtonDefaults.buttonColors(containerColor = if (currentStatus == status) Color(0xFFE50914) else Color(0xFF2C2C54))) {
         Text(label, fontSize = 12.sp, color = Color.White)
+    }
+}
+
+// 6. FONCTION DE RÉCUPÉRATION AVANCÉE TMDB
+suspend fun fetchTmdbDetails(movieId: Int, apiKey: String): Map<String, String> {
+    return withContext(Dispatchers.IO) { // S'exécute sur un thread de fond (IO) pour ne pas bloquer l'UI
+        try {
+            val url = "https://api.themoviedb.org/3/movie/$movieId?api_key=$apiKey&language=fr-FR&append_to_response=credits"
+            val responseString = URL(url).readText()
+            val json = JSONObject(responseString)
+
+            val foundTitle = json.optString("title") // Vrai titre en VF
+
+            // RECHERCHE DE LA FRANCHISE / STUDIO
+            var foundFranchise = ""
+            val prodCompanies = json.optJSONArray("production_companies")
+            var isMarvel = false
+            var isDisney = false
+            var isPixar = false
+            var isDC = false
+            var isStarWars = false
+
+            // On boucle sur les studios de production pour détecter les grands univers
+            if (prodCompanies != null) {
+                for (i in 0 until prodCompanies.length()) {
+                    val comp = prodCompanies.getJSONObject(i).optString("name").lowercase()
+                    if (comp.contains("marvel")) isMarvel = true
+                    if (comp.contains("pixar")) isPixar = true
+                    if (comp.contains("disney")) isDisney = true
+                    if (comp.contains("dc comics") || comp.contains("dc entertainment")) isDC = true
+                    if (comp.contains("lucasfilm")) isStarWars = true
+                }
+            }
+
+            // On vérifie s'il y a une "Collection" officielle (ex: Avatar Collection)
+            var tmdbCollection = ""
+            if (json.has("belongs_to_collection") && !json.isNull("belongs_to_collection")) {
+                tmdbCollection = json.getJSONObject("belongs_to_collection").optString("name")
+                    .replace(" Collection", "")
+                    .replace(" - Saga", "")
+                    .replace(" Saga", "")
+                    .trim()
+                // Nettoyage des articles pour faire plus propre
+                if (tmdbCollection.startsWith("The ")) tmdbCollection = tmdbCollection.substring(4)
+                if (tmdbCollection.startsWith("Les ")) tmdbCollection = tmdbCollection.substring(4)
+            }
+
+            // Application des règles de priorité (Pixar gagne sur Disney, Marvel gagne sur Saga Avengers, etc.)
+            if (isMarvel) {
+                foundFranchise = "Marvel"
+            } else if (isStarWars) {
+                foundFranchise = "Star Wars"
+            } else if (isPixar) {
+                foundFranchise = "Pixar"
+            } else if (isDisney) {
+                foundFranchise = "Disney"
+            } else if (isDC) {
+                foundFranchise = "DC Comics"
+            } else if (tmdbCollection.isNotEmpty()) {
+                foundFranchise = tmdbCollection
+            }
+
+            // CALCUL DE LA DURÉE (Minutes -> Heures / Minutes)
+            var foundRuntime = ""
+            if (json.has("runtime") && !json.isNull("runtime")) {
+                val r = json.getInt("runtime")
+                if (r > 0) {
+                    val h = r / 60
+                    val m = r % 60
+                    foundRuntime = if (h > 0) "${h}h ${m}min" else "${m}min"
+                }
+            }
+
+            // LISTE DES GENRES
+            var foundGenres = ""
+            val genresArr = json.optJSONArray("genres")
+            if (genresArr != null && genresArr.length() > 0) {
+                val list = mutableListOf<String>()
+                for (i in 0 until genresArr.length()) {
+                    list.add(genresArr.getJSONObject(i).optString("name"))
+                }
+                foundGenres = list.joinToString(", ")
+            }
+
+            // RECHERCHE DU RÉALISATEUR
+            var foundDirector = ""
+            val credits = json.optJSONObject("credits")
+            if (credits != null) {
+                val crew = credits.optJSONArray("crew")
+                if (crew != null) {
+                    for (i in 0 until crew.length()) {
+                        val member = crew.getJSONObject(i)
+                        if (member.optString("job") == "Director") {
+                            foundDirector = member.optString("name")
+                            break
+                        }
+                    }
+                }
+            }
+
+            // On retourne tous les éléments trouvés sous forme de dictionnaire (Map)
+            mapOf(
+                "title" to foundTitle,
+                "franchise" to foundFranchise,
+                "runtime" to foundRuntime,
+                "genre" to foundGenres,
+                "director" to foundDirector
+            )
+        } catch (e: Exception) {
+            emptyMap()
+        }
     }
 }

@@ -20,7 +20,8 @@ data class TmdbMovie(
     val poster_path: String?,    // Affiche verticale (jaquette classique)
     val backdrop_path: String?,  // Affiche horizontale (parfaite pour le carrousel du haut)
     val release_date: String?,    // Date de sortie
-    val overview: String?        // Résumé
+    val overview: String?,        // Résumé
+    val genre_ids: List<Int>? = null
 )
 
 // 2. INTERFACE API (Les requêtes qu'on peut faire)
@@ -30,10 +31,11 @@ interface TmdbApiService {
     @GET("discover/movie")
     suspend fun discoverMovies(
         @Query("api_key") apiKey: String, // Votre clé API TMDB
-        @Query("with_companies") companyId: String, // Permet de filtrer par studio (ex: Disney = 2)
+        @Query("with_companies") companyId: String? = null, // Permet de filtrer par univers (ex: 2|3|420|1|574)
         @Query("language") language: String = "fr-FR", // Pour avoir les titres et résumés en français
         @Query("sort_by") sortBy: String = "popularity.desc", // Le tri par défaut (les plus populaires d'abord)
-        @Query("primary_release_date.lte") maxDate: String? = null // Permet d'exclure les films qui ne sont pas encore sortis (lte = Less Than or Equal)
+        @Query("primary_release_date.lte") maxDate: String? = null, // Permet d'exclure les films qui ne sont pas encore sortis (lte = Less Than or Equal)
+        @Query("with_genres") withGenres: String? = null // Permet de filtrer par genre (ex: 35 = Comedie)
     ): MovieResponse
 
     // Requête pour la barre de recherche
