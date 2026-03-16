@@ -24,8 +24,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.R
@@ -37,40 +35,44 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+/* * NOTE IMPORTANTE CONCERNANT LES FRANCHISES :
+ * Nous avons voulu restreindre l'intégralité de l'application aux franchises
+ * Disney, Pixar, Marvel, Star Wars et Avatar. Cependant, l'API TMDB présente des limites.
+ * Si le endpoint "discover" permet d'utiliser un "companyId", le endpoint de recherche
+ * textuelle ("search/movie") ne permet PAS de filtrer par studio. Par conséquent,
+ * lors d'une recherche, des films n'appartenant pas à nos franchises peuvent apparaître.
+ * C'est une limitation directe de l'API TMDB que nous ne pouvons pas contourner.
+ */
+
+// Objet de cache pour éviter de recharger l'API à chaque recomposition de l'écran d'accueil
 object SessionCache {
     var latestReleasesCache: List<TmdbMovie>? = null
     var popularMoviesCache: List<TmdbMovie>? = null
     var recommendedMoviesCache: List<TmdbMovie>? = null
-    var comedyMoviesCache: List<TmdbMovie>? = null
-    var actionMoviesCache: List<TmdbMovie>? = null
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
+    // Clé API TMDB et IDs des studios ciblés
     val myApiKey = "9b06bfc70be38627cb51e3cb6d008512"
-    val myUniverses = "2|3|420|1|574"
+    val myUniverses = "2|3|420|1|574" // Disney, Pixar, Marvel, StarWars, Avatar
 
+    // États pour stocker les listes de films de l'accueil
     var latestReleases by remember { mutableStateOf<List<TmdbMovie>>(emptyList()) }
     var popularMovies by remember { mutableStateOf<List<TmdbMovie>>(emptyList()) }
     var recommendedMovies by remember { mutableStateOf<List<TmdbMovie>>(emptyList()) }
-    var comedyMovies by remember { mutableStateOf<List<TmdbMovie>>(emptyList()) }
-    var actionMovies by remember { mutableStateOf<List<TmdbMovie>>(emptyList()) }
 
+    // États pour gérer la barre de recherche
     var searchQuery by remember { mutableStateOf("") }
-    var isSearchActive by remember { mutableStateOf(false) }
     var searchResults by remember { mutableStateOf<List<TmdbMovie>>(emptyList()) }
-
-    // États pour le nouveau menu Filtre
-    var showFilterMenu by remember { mutableStateOf(false) }
-    val selectedCategories = remember { mutableStateListOf<String>() }
-
-    val allCategories = listOf("Disney", "Pixar", "Marvel", "Star Wars", "Action", "Comédie", "Animation", "Science-Fiction")
 
     val coroutineScope = rememberCoroutineScope()
     val listState = rememberLazyListState()
     val todayDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
+    // 1. Chargement initial de l'en-tête (Nouveautés, Populaires, Recommandés)
+    // On utilise le cache pour limiter les requêtes réseau
     LaunchedEffect(Unit) {
         coroutineScope.launch {
             try {
@@ -92,151 +94,108 @@ fun HomeScreen(navController: NavController) {
                 }
                 recommendedMovies = SessionCache.recommendedMoviesCache!!
 
-                if (SessionCache.comedyMoviesCache == null) {
-                    val responseComedy = TmdbClient.apiService.discoverMovies(apiKey = myApiKey, companyId = myUniverses, withGenres = "35", sortBy = "popularity.desc")
-                    SessionCache.comedyMoviesCache = responseComedy.results.filter { it.poster_path != null }.take(7)
-                }
-                comedyMovies = SessionCache.comedyMoviesCache!!
-
-                if (SessionCache.actionMoviesCache == null) {
-                    val responseAction = TmdbClient.apiService.discoverMovies(apiKey = myApiKey, companyId = myUniverses, withGenres = "28", sortBy = "popularity.desc")
-                    SessionCache.actionMoviesCache = responseAction.results.filter { it.poster_path != null }.take(7)
-                }
-                actionMovies = SessionCache.actionMoviesCache!!
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            } catch (e: Exception) { e.printStackTrace() }
         }
     }
 
+    // 2. Gestion de la Recherche Textuelle (Appel API dynamique)
     LaunchedEffect(searchQuery) {
         if (searchQuery.length > 2) {
-            delay(250)
+            delay(250) // Délai anti-spam (debounce) pour ne pas saturer l'API à chaque lettre tapée
             try {
+                // RAPPEL LIMITATION TMDB : Impossible de forcer 'myUniverses' ici.
                 val response = TmdbClient.apiService.searchMovie(myApiKey, searchQuery)
-
-                // Filtre anti-intrus (Horreur: 27, Thriller: 53, Crime: 80)
-                val forbiddenGenres = listOf(27, 53, 80)
-
+                val forbiddenGenres = listOf(27, 53, 80) // Exclusion manuelle des genres indésirables (Horreur, Thriller, Crime)
                 searchResults = response.results.filter { movie ->
-                    movie.poster_path != null &&
-                            movie.genre_ids?.none { id -> id in forbiddenGenres } == true
+                    movie.poster_path != null && movie.genre_ids?.none { id -> id in forbiddenGenres } == true
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            } catch (e: Exception) { e.printStackTrace() }
         } else {
-            searchResults = emptyList()
+            searchResults = emptyList() // On vide les résultats si la recherche est trop courte
         }
-    }
-
-    // Application des filtres sélectionnés dans le menu sur les résultats de recherche
-    val filteredSearchResults = searchResults.filter { movie ->
-        if (selectedCategories.isEmpty()) return@filter true
-
-        val movieGenres = movie.genre_ids ?: emptyList()
-        var matches = false
-
-        if ("Action" in selectedCategories && 28 in movieGenres) matches = true
-        if ("Comédie" in selectedCategories && 35 in movieGenres) matches = true
-        if ("Animation" in selectedCategories && 16 in movieGenres) matches = true
-        if ("Science-Fiction" in selectedCategories && 878 in movieGenres) matches = true
-
-        // Pour les studios, on laisse afficher car la recherche TMDB textuelle ne précise pas le studio
-        if ("Disney" in selectedCategories || "Pixar" in selectedCategories || "Marvel" in selectedCategories || "Star Wars" in selectedCategories) matches = true
-
-        matches
     }
 
     Column(modifier = Modifier.fillMaxSize().background(Color(0xFF1A1D29))) {
 
-        if (!isSearchActive) {
-            Image(
-                painter = painterResource(id = R.drawable.logo_cineflix_homescreen),
-                contentDescription = "Logo Cineflix",
-                modifier = Modifier.height(130.dp).fillMaxWidth().padding(top = 16.dp, bottom = 8.dp),
-                contentScale = ContentScale.Fit
+        // Logo de l'application en haut de l'écran
+        Image(
+            painter = painterResource(id = R.drawable.logo_cineflix_homescreen),
+            contentDescription = "Logo Cineflix",
+            modifier = Modifier.height(110.dp).fillMaxWidth().padding(top = 16.dp, bottom = 8.dp),
+            contentScale = ContentScale.Fit
+        )
+
+        // BARRE DE RECHERCHE FIXE
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                modifier = Modifier.weight(1f),
+                placeholder = { Text("Rechercher un film...", color = Color.Gray) },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = Color.Gray) },
+                trailingIcon = {
+                    // Bouton pour effacer la recherche
+                    if (searchQuery.isNotEmpty()) {
+                        IconButton(onClick = { searchQuery = "" }) { Icon(Icons.Default.Close, contentDescription = "Effacer", tint = Color.White) }
+                    }
+                },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color(0xFFFCA311),
+                    unfocusedBorderColor = Color(0xFF31343E),
+                    focusedContainerColor = Color(0xFF31343E),
+                    unfocusedContainerColor = Color(0xFF31343E),
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White
+                ),
+                shape = RoundedCornerShape(12.dp),
+                singleLine = true
             )
         }
 
-        Box(modifier = Modifier.fillMaxWidth().padding(horizontal = if (isSearchActive) 0.dp else 16.dp, vertical = 8.dp)) {
-            SearchBar(
-                inputField = {
-                    SearchBarDefaults.InputField(
-                        query = searchQuery,
-                        onQueryChange = { searchQuery = it },
-                        onSearch = { isSearchActive = false },
-                        expanded = isSearchActive,
-                        onExpandedChange = { isSearchActive = it },
-                        placeholder = { Text("Rechercher un film...") },
-                        leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Rechercher") },
-                        trailingIcon = {
-                            if (isSearchActive) {
-                                Icon(
-                                    Icons.Default.Close,
-                                    contentDescription = "Fermer",
-                                    modifier = Modifier.clickable {
-                                        if (searchQuery.isNotEmpty()) searchQuery = "" else isSearchActive = false
-                                    }
-                                )
-                            }
-                        }
-                    )
-                },
-                expanded = isSearchActive,
-                onExpandedChange = { isSearchActive = it },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                // BOUTON POUR OUVRIR LE NOUVEAU MENU FILTRE
-                Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp), horizontalArrangement = Arrangement.End) {
-                    TextButton(onClick = { showFilterMenu = true }) {
-                        Text(if (selectedCategories.isEmpty()) "FILTRER" else "FILTRER (${selectedCategories.size})", color = Color(0xFFFCA311), fontWeight = FontWeight.Bold)
-                    }
-                }
-
-                // Résultats de recherche (Maintenant filtrés !)
-                LazyColumn(modifier = Modifier.fillMaxWidth(), contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    items(filteredSearchResults) { movie ->
-                        Row(modifier = Modifier.fillMaxWidth().clickable {
-                            val safeTitre = Uri.encode(movie.title.ifBlank { "Inconnu" })
-                            navController.navigate("movie/$safeTitre/Inconnue/Recherche/Inconnue/Inconnu/Pop Culture")
-                        }, verticalAlignment = Alignment.CenterVertically) {
-                            AsyncImage(
-                                model = "https://image.tmdb.org/t/p/w200${movie.poster_path}",
-                                contentDescription = movie.title,
-                                modifier = Modifier.width(60.dp).height(90.dp).clip(RoundedCornerShape(8.dp)),
-                                contentScale = ContentScale.Crop
-                            )
-                            Spacer(Modifier.width(16.dp))
-                            Column {
-                                Text(movie.title, color = Color.White, fontWeight = FontWeight.Bold)
-                                Text(movie.release_date?.take(4) ?: "", color = Color.Gray, fontSize = 12.sp)
-                            }
+        // AFFICHAGE CONDITIONNEL : Si l'utilisateur cherche, on affiche la liste des résultats.
+        // Sinon, on affiche la page d'accueil avec les carrousels.
+        if (searchQuery.isNotEmpty()) {
+            LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f), contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                items(searchResults) { movie ->
+                    Row(modifier = Modifier.fillMaxWidth().clickable {
+                        val safeTitre = Uri.encode(movie.title.ifBlank { "Inconnu" })
+                        navController.navigate("movie/$safeTitre/Inconnue/Recherche/Inconnue/Inconnu/Pop Culture")
+                    }, verticalAlignment = Alignment.CenterVertically) {
+                        AsyncImage(
+                            model = "https://image.tmdb.org/t/p/w200${movie.poster_path}",
+                            contentDescription = movie.title,
+                            modifier = Modifier.width(60.dp).height(90.dp).clip(RoundedCornerShape(8.dp)),
+                            contentScale = ContentScale.Crop
+                        )
+                        Spacer(Modifier.width(16.dp))
+                        Column {
+                            Text(movie.title, color = Color.White, fontWeight = FontWeight.Bold)
+                            Text(movie.release_date?.take(4) ?: "", color = Color.Gray, fontSize = 12.sp)
                         }
                     }
                 }
             }
-        }
+        } else {
+            // PAGE D'ACCUEIL CLASSIQUE
+            LazyColumn(modifier = Modifier.fillMaxSize().weight(1f)) {
 
-        if (!isSearchActive) {
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                // 1. Carrousel des nouveautés (Bannières larges)
                 item {
                     LazyRow(state = listState, contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                        items(count = Int.MAX_VALUE) { index ->
+                        items(count = Int.MAX_VALUE) { index -> // Boucle infinie simulée
                             if (latestReleases.isNotEmpty()) {
                                 val movie = latestReleases[index % latestReleases.size]
-                                val backdropUrl = "https://image.tmdb.org/t/p/w780${movie.backdrop_path}"
-
                                 AsyncImage(
-                                    model = backdropUrl,
+                                    model = "https://image.tmdb.org/t/p/w780${movie.backdrop_path}",
                                     contentDescription = movie.title,
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier.fillParentMaxWidth(0.9f).height(200.dp).clip(RoundedCornerShape(12.dp)).background(Color(0xFF31343E))
                                         .clickable {
                                             val annee = movie.release_date?.take(4) ?: "Inconnue"
-                                            val safeTitre = Uri.encode(movie.title.ifBlank { "Inconnu" })
-                                            navController.navigate("movie/$safeTitre/$annee/Nouveauté/Inconnue/Inconnu/Pop Culture")
+                                            navController.navigate("movie/${Uri.encode(movie.title)}/$annee/Nouveauté/Inconnue/Inconnu/Pop Culture")
                                         }
                                 )
                             }
@@ -244,6 +203,7 @@ fun HomeScreen(navController: NavController) {
                     }
                 }
 
+                // 2. Grille de navigation des univers (Studios)
                 item {
                     Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -260,6 +220,7 @@ fun HomeScreen(navController: NavController) {
                     }
                 }
 
+                // 3. Carrousels standards (Populaires & Recommandés)
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
                     Text("Les plus populaires", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
@@ -272,113 +233,60 @@ fun HomeScreen(navController: NavController) {
                     MovieCarouselRow(movies = recommendedMovies, navController = navController, genreTag = "Recommandé")
                 }
 
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                        Text("Comédies", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                        Text("Voir plus", color = Color(0xFFE50914), fontSize = 14.sp, fontWeight = FontWeight.Medium, modifier = Modifier.clickable {
-                            navController.navigate("genre/Comédie/35")
-                        })
-                    }
-                    MovieCarouselRow(movies = comedyMovies, navController = navController, genreTag = "Comédie")
+                // 4. Génération automatique des carrousels pour chaque genre ciblé
+                val listOfAllGenres = listOf(
+                    "Action" to "28", "Animation & Dessin Animé" to "16", "Aventure" to "12", "Comédie" to "35",
+                    "Comédie Dramatique" to "35|18", "Comédie Musicale" to "10402", "Documentaire" to "99",
+                    "Drame" to "18", "Fantastique" to "14", "Guerre" to "10752", "Historique & Biographique" to "36",
+                    "Policier" to "80", "Romance" to "10749", "Science-Fiction" to "878", "Téléfilm" to "10770",
+                    "Thriller" to "53", "Western" to "37"
+                )
+
+                items(listOfAllGenres) { (genreName, genreId) ->
+                    GenreDynamicRow(genreName, genreId, navController, myApiKey, myUniverses)
                 }
 
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                        Text("Films d'Action", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                        Text("Voir plus", color = Color(0xFFE50914), fontSize = 14.sp, fontWeight = FontWeight.Medium, modifier = Modifier.clickable {
-                            navController.navigate("genre/Action/28")
-                        })
-                    }
-                    MovieCarouselRow(movies = actionMovies, navController = navController, genreTag = "Action")
-                    Spacer(modifier = Modifier.height(100.dp))
-                }
-            }
-        }
-    }
-
-    // --- LE NOUVEAU MENU FILTRE PLEIN ÉCRAN ---
-    if (showFilterMenu) {
-        Dialog(
-            onDismissRequest = { showFilterMenu = false },
-            properties = DialogProperties(usePlatformDefaultWidth = false)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0xFF1E1E1E))
-                    .padding(24.dp)
-            ) {
-                // Header (Titre + Croix)
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                    Text("FILTER", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                    Icon(
-                        Icons.Default.Close,
-                        contentDescription = "Fermer",
-                        tint = Color.White,
-                        modifier = Modifier.clickable { showFilterMenu = false }
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(32.dp))
-                Text("CATEGORY", color = Color(0xFFFCA311), fontSize = 14.sp, fontWeight = FontWeight.Bold)
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Liste des Checkboxes
-                LazyColumn(modifier = Modifier.weight(1f)) {
-                    items(allCategories) { category ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 12.dp)
-                                .clickable {
-                                    if (selectedCategories.contains(category)) selectedCategories.remove(category)
-                                    else selectedCategories.add(category)
-                                },
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Checkbox(
-                                checked = selectedCategories.contains(category),
-                                onCheckedChange = null,
-                                colors = CheckboxDefaults.colors(
-                                    checkedColor = Color(0xFFFCA311),
-                                    uncheckedColor = Color.LightGray,
-                                    checkmarkColor = Color.Black
-                                )
-                            )
-                            Spacer(modifier = Modifier.width(16.dp))
-                            Text(category, color = Color.White, fontSize = 16.sp)
-                        }
-                    }
-                }
-
-                // Boutons en bas
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Button(
-                        onClick = { showFilterMenu = false },
-                        modifier = Modifier.fillMaxWidth().height(50.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFCA311)),
-                        shape = RoundedCornerShape(4.dp)
-                    ) {
-                        Text("SHOW RESULTS", color = Color.Black, fontWeight = FontWeight.Bold)
-                    }
-                    Spacer(modifier = Modifier.height(12.dp))
-                    OutlinedButton(
-                        onClick = { selectedCategories.clear() },
-                        modifier = Modifier.fillMaxWidth().height(50.dp),
-                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
-                        shape = RoundedCornerShape(4.dp),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, Color.DarkGray)
-                    ) {
-                        Text("CLEAR FILTERS", color = Color.White, fontWeight = FontWeight.Bold)
-                    }
-                }
+                // Espace vide en bas pour éviter que le contenu ne soit caché par la barre de navigation
+                item { Spacer(modifier = Modifier.height(100.dp)) }
             }
         }
     }
 }
 
+// COMPOSANTS UI RÉUTILISABLES
+
+/**
+ * Composant intelligent gérant le chargement asynchrone d'une rangée de films par genre.
+ * Gère également l'affichage du titre et du bouton "Voir plus".
+ */
+@Composable
+fun GenreDynamicRow(genreName: String, genreId: String, navController: NavController, apiKey: String, universes: String) {
+    var movies by remember { mutableStateOf<List<TmdbMovie>>(emptyList()) }
+
+    LaunchedEffect(genreId) {
+        try {
+            // Ici le filtre par studio fonctionne car nous utilisons l'endpoint 'discover'
+            val response = TmdbClient.apiService.discoverMovies(apiKey = apiKey, companyId = universes, withGenres = genreId, sortBy = "popularity.desc")
+            movies = response.results.filter { it.poster_path != null }.take(10)
+        } catch (e: Exception) { e.printStackTrace() }
+    }
+
+    // On n'affiche la section que si des films ont été trouvés
+    if (movies.isNotEmpty()) {
+        Spacer(modifier = Modifier.height(16.dp))
+        Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            Text(genreName, color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            Text("Voir plus", color = Color(0xFFE50914), fontSize = 14.sp, fontWeight = FontWeight.Medium, modifier = Modifier.clickable {
+                navController.navigate("genre/${Uri.encode(genreName)}/$genreId")
+            })
+        }
+        MovieCarouselRow(movies = movies, navController = navController, genreTag = genreName)
+    }
+}
+
+/**
+ * Composant affichant une liste horizontale (carrousel) d'affiches de films.
+ */
 @Composable
 fun MovieCarouselRow(movies: List<TmdbMovie>, navController: NavController, genreTag: String) {
     if (movies.isNotEmpty()) {
@@ -392,6 +300,7 @@ fun MovieCarouselRow(movies: List<TmdbMovie>, navController: NavController, genr
                         .clickable {
                             val annee = movie.release_date?.take(4) ?: "Inconnue"
                             val safeTitre = Uri.encode(movie.title.ifBlank { "Inconnu" })
+                            // Navigation vers l'écran de détails du film
                             navController.navigate("movie/$safeTitre/$annee/${Uri.encode(genreTag)}/Inconnue/Inconnu/Pop Culture")
                         }
                 )
@@ -400,6 +309,9 @@ fun MovieCarouselRow(movies: List<TmdbMovie>, navController: NavController, genr
     }
 }
 
+/**
+ * Bouton de catégorie stylisé (ex: Disney, Pixar, etc.)
+ */
 @Composable
 fun CategoryCard(title: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Card(
