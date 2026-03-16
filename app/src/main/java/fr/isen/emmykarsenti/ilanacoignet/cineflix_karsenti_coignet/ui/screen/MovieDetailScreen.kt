@@ -182,7 +182,7 @@ fun MovieDetailScreen(
                     if (posterUrl != null) {
                         AsyncImage(model = posterUrl, contentDescription = displayTitre, modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(12.dp)), contentScale = ContentScale.Fit)
                     } else {
-                        CircularProgressIndicator(color = Color(0xFFE50914))
+                        CircularProgressIndicator(color = Color(0xFFF299B5))
                     }
                 }
             }
@@ -193,9 +193,9 @@ fun MovieDetailScreen(
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(displayTitre, color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
 
-                        // Affichage du texte rouge (Franchise/Studio) s'il y en a un
+                        // Affichage du texte rose (Franchise/Studio) s'il y en a un
                         if (displayFranchise != "Inconnue" && displayFranchise.isNotBlank()) {
-                            Text(displayFranchise.uppercase(), color = Color(0xFFE50914), fontSize = 12.sp, fontWeight = FontWeight.ExtraBold, letterSpacing = 1.sp)
+                            Text(displayFranchise.uppercase(), color = Color(0xFFF299B5), fontSize = 12.sp, fontWeight = FontWeight.ExtraBold, letterSpacing = 1.sp)
                         }
 
                         Spacer(Modifier.height(8.dp))
@@ -264,7 +264,7 @@ fun MovieDetailScreen(
 // Composant réutilisable pour les boutons de statut (rouge si sélectionné, gris sinon)
 @Composable
 fun StatusBtn(label: String, status: String, currentStatus: String?, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    Button(onClick = onClick, modifier = modifier.height(50.dp), shape = RoundedCornerShape(12.dp), colors = ButtonDefaults.buttonColors(containerColor = if (currentStatus == status) Color(0xFFE50914) else Color(0xFF2C2C54))) {
+    Button(onClick = onClick, modifier = modifier.height(50.dp), shape = RoundedCornerShape(12.dp), colors = ButtonDefaults.buttonColors(containerColor = if (currentStatus == status) Color(0xFFF299B5) else Color(0xFF2C2C54))) {
         Text(label, fontSize = 12.sp, color = Color.White)
     }
 }

@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
 
-                    // --- BARRE DE NAVIGATION EN BAS (BottomBar) ---
+                    // BARRE DE NAVIGATION EN BAS (BottomBar)
                     bottomBar = {
                         // On cache la barre de navigation si on est sur l'écran de connexion (auth)
                         if (currentRoute != "auth") {
@@ -98,13 +98,13 @@ class MainActivity : ComponentActivity() {
                             startDestination = "auth" // L'écran de départ au lancement de l'application
                         ) {
 
-                            // --- ROUTES SIMPLES (Sans paramètres) ---
+                            // ROUTES SIMPLES (Sans paramètres)
                             composable("auth") { AuthScreen(navController) }
                             composable("home") { HomeScreen(navController) }
                             composable("market") { MarketScreen(navController) }
                             composable("profile") { ProfileScreen(navController) }
 
-                            // --- ROUTE DE L'UNIVERS (Avec 1 paramètre) ---
+                            // ROUTE DE L'UNIVERS (Avec 1 paramètre)
                             // Exemple : "universe/Marvel" -> Va ouvrir la page Marvel
                             composable("universe/{universeName}") { backStackEntry ->
                                 val universeName = backStackEntry.arguments?.getString("universeName") ?: ""
@@ -114,7 +114,7 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            // --- ROUTE DES DÉTAILS DU FILM (Avec 6 paramètres) ---
+                            // ROUTE DES DÉTAILS DU FILM (Avec 6 paramètres)
                             // On passe toutes les infos de base par l'URL pour ne pas ralentir l'application
                             // L'écran de détails se chargera lui-même d'aller chercher l'image et le synopsis
                             composable("movie/{titre}/{annee}/{genre}/{duree}/{realisateur}/{franchise}") { backStackEntry ->

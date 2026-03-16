@@ -276,7 +276,7 @@ fun GenreDynamicRow(genreName: String, genreId: String, navController: NavContro
         Spacer(modifier = Modifier.height(16.dp))
         Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Text(genreName, color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            Text("Voir plus", color = Color(0xFFE50914), fontSize = 14.sp, fontWeight = FontWeight.Medium, modifier = Modifier.clickable {
+            Text("Voir plus", color = Color(0xFFF299B5), fontSize = 14.sp, fontWeight = FontWeight.Medium, modifier = Modifier.clickable {
                 navController.navigate("genre/${Uri.encode(genreName)}/$genreId")
             })
         }

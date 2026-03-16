@@ -171,7 +171,7 @@ fun UniverseScreen(navController: NavController, universeName: String) {
     ) { innerPadding ->
         Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
             if (isLoading) {
-                CircularProgressIndicator(color = Color(0xFFE50914), modifier = Modifier.align(Alignment.Center))
+                CircularProgressIndicator(color = Color(0xFFF299B5), modifier = Modifier.align(Alignment.Center))
             } else if (sousSagas.isEmpty()) {
                 Text("Aucun film trouvé pour cet univers", color = Color.Gray, modifier = Modifier.align(Alignment.Center))
             } else {
