@@ -1,5 +1,6 @@
 package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.screen
 
+import android.net.Uri // <-- Import ajouté pour sécuriser le titre
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -201,9 +202,10 @@ fun MoviePosterGrid(
                                     .clip(RoundedCornerShape(8.dp))
                                     .background(Color(0xFF31343E))
                                     .clickable {
+                                        // --- CORRECTION DE LA NAVIGATION ICI ---
                                         movie.posterUrl?.let { PosterCache.posters[movie.title] = it }
-                                        //navController.navigate("movie/${movie.title}/-/-")
-                                        navController.navigate("movie/${movie.title.replace(' ', '_')}/-/-")
+                                        val safeTitre = Uri.encode(movie.title.ifBlank { "Inconnu" })
+                                        navController.navigate("movie/$safeTitre/Inconnue/Profil/Inconnue/Inconnu/Pop Culture")
                                     }
                             )
                             IconButton(
