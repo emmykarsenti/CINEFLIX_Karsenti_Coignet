@@ -105,9 +105,9 @@ class MainActivity : ComponentActivity() {
                             composable("profile") { ProfileScreen(navController) }
 
                             // ROUTE DE L'UNIVERS (Avec 1 paramètre)
-                            // Exemple : "universe/Marvel" -> Va ouvrir la page Marvel
-                            composable("universe/{universeName}") { backStackEntry ->
-                                val universeName = backStackEntry.arguments?.getString("universeName") ?: ""
+                            // Utilisation de "it" pour remplacer l'ancienne variable backStackEntry
+                            composable("universe/{universeName}") {
+                                val universeName = it.arguments?.getString("universeName") ?: ""
                                 UniverseScreen(
                                     navController = navController,
                                     universeName = universeName
@@ -115,17 +115,14 @@ class MainActivity : ComponentActivity() {
                             }
 
                             // ROUTE DES DÉTAILS DU FILM (Avec 6 paramètres)
-                            // On passe toutes les infos de base par l'URL pour ne pas ralentir l'application
-                            // L'écran de détails se chargera lui-même d'aller chercher l'image et le synopsis
-                            composable("movie/{titre}/{annee}/{genre}/{duree}/{realisateur}/{franchise}") { backStackEntry ->
-
-                                // On récupère chaque morceau de la route
-                                val titre = backStackEntry.arguments?.getString("titre") ?: "Titre inconnu"
-                                val annee = backStackEntry.arguments?.getString("annee") ?: "Année inconnue"
-                                val genre = backStackEntry.arguments?.getString("genre") ?: "Genre inconnu"
-                                val duree = backStackEntry.arguments?.getString("duree") ?: "Durée inconnue"
-                                val realisateur = backStackEntry.arguments?.getString("realisateur") ?: "Réalisateur inconnu"
-                                val franchise = backStackEntry.arguments?.getString("franchise") ?: "Franchise inconnue"
+                            composable("movie/{titre}/{annee}/{genre}/{duree}/{realisateur}/{franchise}") {
+                                // On utilise "it" pour accéder directement aux arguments de l'URL
+                                val titre = it.arguments?.getString("titre") ?: "Titre inconnu"
+                                val annee = it.arguments?.getString("annee") ?: "Année inconnue"
+                                val genre = it.arguments?.getString("genre") ?: "Genre inconnu"
+                                val duree = it.arguments?.getString("duree") ?: "Durée inconnue"
+                                val realisateur = it.arguments?.getString("realisateur") ?: "Réalisateur inconnu"
+                                val franchise = it.arguments?.getString("franchise") ?: "Franchise inconnue"
 
                                 // On affiche l'écran de détails en lui donnant ces informations
                                 MovieDetailScreen(
@@ -138,11 +135,14 @@ class MainActivity : ComponentActivity() {
                                     franchise = franchise
                                 )
                             }
+
                             // ROUTE DES GENRES (Avec 2 paramètres)
-                            composable("genre/{genreName}/{genreId}") { backStackEntry ->
-                                val genreName = backStackEntry.arguments?.getString("genreName") ?: "Inconnu"
-                                val genreId = backStackEntry.arguments?.getString("genreId") ?: "0"
-                                val genreScreen = GenreScreen(
+                            composable("genre/{genreName}/{genreId}") {
+                                val genreName = it.arguments?.getString("genreName") ?: "Inconnu"
+                                val genreId = it.arguments?.getString("genreId") ?: "0"
+
+                                // Appel direct de l'écran (sans stocker dans une variable)
+                                GenreScreen(
                                     navController = navController,
                                     genreName = genreName,
                                     genreId = genreId
