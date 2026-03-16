@@ -105,7 +105,6 @@ class MainActivity : ComponentActivity() {
                             composable("profile") { ProfileScreen(navController) }
 
                             // ROUTE DE L'UNIVERS (Avec 1 paramètre)
-                            // Utilisation de "it" pour remplacer l'ancienne variable backStackEntry
                             composable("universe/{universeName}") {
                                 val universeName = it.arguments?.getString("universeName") ?: ""
                                 UniverseScreen(
