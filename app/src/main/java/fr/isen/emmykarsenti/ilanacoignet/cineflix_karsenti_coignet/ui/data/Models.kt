@@ -1,21 +1,21 @@
 package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.data
 
-// Modèle pour un Film
+// modèle pour un film
 data class Film(
     val id: String = "",
-    val title: String = "", // ex: Skywalker
-    val universe: String = "", // ex: Marvel, Disney, Star Wars...
+    val title: String = "", // ex: skywalker
+    val universe: String = "", // ex: marvel, disney, star wars...
     val releaseDate: String = "",
-    val category: String = "" // ex: Skywalker Saga
+    val category: String = "" // ex:skywalker saga
 )
 
 
-// Modèle pour les actions de l'utilisateur sur un film (Vu, À voir, Possède...)
+// modèle pour les actions du user sur un film (vu, à voir, possède...)
 data class UserFilmAction(
-    val userId: String = "", // Identifiant de l'utilisateur
-    val filmId: String = "", // Identifiant du film
-    val isWatched: Boolean = false, // Vu
-    val wantToWatch: Boolean = false, // À voir
-    val ownOnDVD: Boolean = false, // Possède sur DVD
-    val wantToGetRidOf: Boolean = false // Ne veut plus voir
+    val userId: String = "", // id user
+    val filmId: String = "", // id film
+    val isWatched: Boolean = false, // vu
+    val wantToWatch: Boolean = false, // à voir
+    val ownOnDVD: Boolean = false, // possède sur dvd
+    val wantToGetRidOf: Boolean = false //veut s'en séparer
 )

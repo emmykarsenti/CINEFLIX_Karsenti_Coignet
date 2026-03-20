@@ -33,10 +33,7 @@ import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.data.Poste
 import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.data.TmdbClient
 import kotlinx.coroutines.launch
 
-/**
- * Modèle de données pour un film mis en vente par un utilisateur.
- * Contient le titre, le pseudo du vendeur et l'URL de l'affiche.
- */
+//représente un film mis en vente par un autre user
 data class FilmEnVente(
     val titre: String,
     val vendeurPseudo: String,
@@ -45,15 +42,11 @@ data class FilmEnVente(
 
 @Composable
 fun MarketScreen(navController: NavController) {
-    // Récupération de l'utilisateur actuellement connecté pour exclure ses propres films de la liste d'achat
+    //// on exclut les films du user connecté de la liste d'achats
     val currentUser = FirebaseAuth.getInstance().currentUser
-
-    // Scope pour lancer des requêtes asynchrones (comme la récupération des affiches)
     val coroutineScope = rememberCoroutineScope()
     val myApiKey = "9b06bfc70be38627cb51e3cb6d008512"
-
-    // Prix par défaut affiché pour tous les films (pourrait être dynamisé plus tard)
-    val prixDefaut = "5€"
+    val prixDefaut = "5€" // prix fixe affiché pour tous les films
 
     // ÉTATS DE L'INTERFACE
     // Liste des films disponibles à la vente sur la plateforme
@@ -61,10 +54,7 @@ fun MarketScreen(navController: NavController) {
     // Gère l'affichage du logo de chargement pendant la requête Firebase
     var isLoading by remember { mutableStateOf(true) }
 
-    /**
-     * Fonction pour récupérer l'URL de l'affiche d'un film.
-     * Utilise le système de cache pour éviter de spammer l'API TMDB si l'image a déjà été chargée ailleurs.
-     */
+    // // récupère l'affiche d'un film : depuis le cache si disponible, sinon via tmdb
     suspend fun fetchPoster(title: String): String? {
         PosterCache.posters[title]?.let { return it }
         return try {
@@ -78,61 +68,52 @@ fun MarketScreen(navController: NavController) {
         } catch (e: Exception) { null }
     }
 
-    // NOUVELLE VERSION DU CHARGEMENT AVEC RÉCUPÉRATION DES PSEUDOS
     LaunchedEffect(Unit) {
         val db = FirebaseDatabase.getInstance("https://cineflix-karsenti-coignet-default-rtdb.europe-west1.firebasedatabase.app")
 
-        // 1. On écoute le nœud global "userMovies" pour voir tous les films de tous les utilisateurs
+        //on écoute tous les films de tous les utilisateurs en temps réel
         db.getReference("userMovies")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val result = mutableListOf<FilmEnVente>()
 
-                    // On compte le nombre d'utilisateurs restants à traiter (en excluant l'utilisateur actuel)
-                    // Cela nous permettra de savoir quand toutes les requêtes de pseudos seront terminées
+                    //compteur pour savoir quand toutes les requêtes de pseudos sont terminées
                     var usersRestants = snapshot.children.count { it.key != currentUser?.uid }
 
-                    // Si personne d'autre n'a de films, on arrête le chargement immédiatement
+                    // si personne d'autre n'a de films on arrête le chargement
                     if (usersRestants == 0) {
                         isLoading = false
                         return
                     }
 
-                    // 2. On parcourt chaque utilisateur et ses films
+                    //on parcourt chaque user et ses films
                     for (userSnap in snapshot.children) {
                         val uid = userSnap.key ?: continue
+                        if (uid == currentUser?.uid) continue //// on ignore nos propres films
 
-                        // On ignore nos propres films (on ne peut pas s'acheter un film à soi-même)
-                        if (uid == currentUser?.uid) continue
-
-                        // 3. Pour chaque utilisateur, on fait une requête asynchrone pour récupérer son pseudo
+                        //pour chaque user, on récupère son pseudo dans firebase
                         db.getReference("users/$uid/username")
                             .get()
                             .addOnSuccessListener { usernameSnap ->
-                                // Si le pseudo n'existe pas, on génère un pseudo par défaut avec le début de l'UID
-                                val pseudo = usernameSnap.getValue(String::class.java)
+                                val pseudo = usernameSnap.getValue(String::class.java) // // si pas de pseudo enregistré, on en génère un par défaut
                                     ?: "Utilisateur_${uid.take(5)}"
 
-                                // 4. On parcourt les films de cet utilisateur précis
+                                //on ajoute à la liste les films que ce user souhaite vendre
                                 for (filmSnap in userSnap.children) {
                                     val titre = filmSnap.key ?: continue
                                     val ownStatus = filmSnap.child("own_status").getValue(String::class.java)
 
-                                    // Si le film a le statut "WANT_TO_SELL" (À vendre), on l'ajoute à la liste de résultats
+                                    // si le film a le statut want to sell, on l'ajoute à la liste de résultats
                                     if (ownStatus == "WANT_TO_SELL") {
                                         result.add(FilmEnVente(titre, pseudo, null))
                                     }
                                 }
 
-                                // 5. On décrémente le compteur d'utilisateurs traités
                                 usersRestants--
 
-                                // Si tous les utilisateurs ont été traités, on peut finaliser
-                                if (usersRestants == 0) {
+                                if (usersRestants == 0) { // quand tous les users ont été traités, on charge les affiches et on affiche
                                     coroutineScope.launch {
-                                        // On récupère les affiches pour tous les films trouvés
-                                        filmsEnVente = result.map { it.copy(posterUrl = fetchPoster(it.titre)) }
-                                        // On désactive l'écran de chargement
+                                        filmsEnVente = result.map { it.copy(posterUrl = fetchPoster(it.titre)) } // recuperation des affiches de film
                                         isLoading = false
                                     }
                                 }
@@ -145,35 +126,31 @@ fun MarketScreen(navController: NavController) {
             })
     }
 
-    // CONSTRUCTION DE L'INTERFACE UTILISATEUR
+    //interface user
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF1A1D29)) // Fond global
+            .background(Color(0xFF1A1D29))
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // En-tête de la page Market
+        // en-tête
         Text("Achat/Revente", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color(0xFFF299B5))
         Text("Films proposés par la communauté CinéFlix", fontSize = 14.sp, color = Color.Gray,
             modifier = Modifier.padding(bottom = 16.dp))
 
-        // Gestion des 3 états de l'écran : Chargement / Vide / Liste remplie
-        if (isLoading) {
-            // ÉTAT 1 : Chargement en cours
+        // 3 états possibles: chargement / vide / liste remplie
+        if (isLoading) {//chargement
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(color = Color(0xFFF299B5))
             }
-        } else if (filmsEnVente.isEmpty()) {
-            // ÉTAT 2 : Aucun film à vendre trouvé
+        } else if (filmsEnVente.isEmpty()) { //vide: aucun film à vendre
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text("Aucun film en vente pour le moment.", color = Color.Gray)
             }
-        } else {
-            // ÉTAT 3 : Affichage de la liste des films
+        } else {//pour liste remplie
             LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 items(filmsEnVente) { film ->
-                    // Carte individuelle pour chaque film
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
@@ -183,7 +160,7 @@ fun MarketScreen(navController: NavController) {
                             modifier = Modifier.padding(12.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            // Affiche du film
+                            //affiche film
                             AsyncImage(
                                 model = film.posterUrl ?: "",
                                 contentDescription = film.titre,
@@ -192,28 +169,27 @@ fun MarketScreen(navController: NavController) {
                                     .width(60.dp)
                                     .height(90.dp)
                                     .clip(RoundedCornerShape(8.dp))
-                                    .background(Color(0xFF1A1D29)) // Fond noir si l'image est manquante
+                                    .background(Color(0xFF1A1D29))
                             )
                             Spacer(modifier = Modifier.width(12.dp))
 
-                            // Informations sur la droite de l'affiche
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(film.titre, color = Color.White, fontWeight = FontWeight.Bold,
                                     fontSize = 15.sp, maxLines = 2, overflow = TextOverflow.Ellipsis)
                                 Spacer(modifier = Modifier.height(4.dp))
 
-                                // Pseudo du vendeur
+                                // pseudo du vendeur
                                 Text("👤 ${film.vendeurPseudo}", color = Color.Gray, fontSize = 12.sp)
                                 Spacer(modifier = Modifier.height(4.dp))
 
-                                // Prix du film
+                                // prix film
                                 Text(" $prixDefaut", color = Color(0xFFF299B5), fontSize = 14.sp,
                                     fontWeight = FontWeight.Bold)
                                 Spacer(modifier = Modifier.height(8.dp))
 
-                                // Bouton de contact (logique de messagerie ou email à implémenter)
+                                //bouton de contact du vendeur
                                 Button(
-                                    onClick = { /* Action à définir : ouvrir un chat ou envoyer un email */ },
+                                    onClick = { },
                                     modifier = Modifier.height(34.dp),
                                     contentPadding = PaddingValues(horizontal = 12.dp),
                                     shape = RoundedCornerShape(8.dp),
@@ -225,7 +201,7 @@ fun MarketScreen(navController: NavController) {
                         }
                     }
                 }
-                // Espace vide en bas pour éviter que le dernier élément ne soit caché par la barre de navigation
+                //espace en bas pour ne pas être caché par la barre de navigation
                 item { Spacer(modifier = Modifier.height(80.dp)) }
             }
         }

@@ -6,50 +6,48 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 import retrofit2.http.Path
 
-// 1. MODÈLES DE DONNÉES (Pour lire l'API)
-
-// L'API nous renvoie un objet qui contient une liste "results"
+//réponse de l'api : un objet contenant une liste de films
 data class MovieResponse(
-    val results: List<TmdbMovie> // Liste de films trouvés
+    val results: List<TmdbMovie>
 )
 
-// Les détails d'un seul film
+// Les détails d'un seul film retourvé par tmdn api
 data class TmdbMovie(
-    val id: Int,                // Identifiant unique
-    val title: String,        // Titre principal
-    val poster_path: String?,    // Affiche verticale (jaquette classique)
-    val backdrop_path: String?,  // Affiche horizontale (parfaite pour le carrousel du haut)
-    val release_date: String?,    // Date de sortie
-    val overview: String?,        // Résumé
+    val id: Int,                // identifiant unique
+    val title: String,        // titre principal
+    val poster_path: String?,    // affiche verticale (jaquette classique)
+    val backdrop_path: String?,  // affiche horizontale (parfaite pour le carrousel du haut)
+    val release_date: String?,    // aate de sortie
+    val overview: String?,        // résumé
     val genre_ids: List<Int>? = null
 )
 
-// 2. INTERFACE API (Les requêtes qu'on peut faire)
+//on définit les requêtes disponibles vers l'api tmdb
 interface TmdbApiService {
 
-    // Requête magique pour filtrer, trier et récupérer exactement ce qu'on veut
+    //recherche avancée : permet de filtrer par studio, genre, date, popularité...
     @GET("discover/movie")
     suspend fun discoverMovies(
-        @Query("api_key") apiKey: String, // Votre clé API TMDB
-        @Query("with_companies") companyId: String? = null, // Permet de filtrer par univers (ex: 2|3|420|1|574)
-        @Query("language") language: String = "fr-FR", // Pour avoir les titres et résumés en français
-        @Query("sort_by") sortBy: String = "popularity.desc", // Le tri par défaut (les plus populaires d'abord)
-        @Query("primary_release_date.lte") maxDate: String? = null, // Permet d'exclure les films qui ne sont pas encore sortis (lte = Less Than or Equal)
-        @Query("with_genres") withGenres: String? = null // Permet de filtrer par genre (ex: 35 = Comedie)
+        @Query("api_key") apiKey: String, // clé api tmdb
+        @Query("with_companies") companyId: String? = null, // permet de filtrer par univers (ex: 2|3|420|1|574)
+        @Query("language") language: String = "fr-FR", // pour avoir les titres et résumés en français
+        @Query("sort_by") sortBy: String = "popularity.desc", // tri par défaut (les plus populaires d'abord)
+        @Query("primary_release_date.lte") maxDate: String? = null, // permet d'exclure les films qui ne sont pas encore sortis (lte = less than or equal)
+        @Query("with_genres") withGenres: String? = null // filtrer par genre (ex: 35 = comedie)
     ): MovieResponse
 
-    // Requête pour la barre de recherche
+    //recherche par titre : utilisée pour la barre de recherche et la récupération d'affiches
     @GET("search/movie")
     suspend fun searchMovie(
-        @Query("api_key") apiKey: String, // Votre clé API TMDB
-        @Query("query") query: String, // Le texte recherché
-        @Query("language") language: String = "fr-FR" // Pour avoir les titres et résumés en français
+        @Query("api_key") apiKey: String, //clé api tmdb
+        @Query("query") query: String, //texte saisie par le user
+        @Query("language") language: String = "fr-FR" //avoir les titres et résumés en français
     ): MovieResponse
 }
 
-// 3. CLIENT RETROFIT (Le moteur de connexion)
+//client retrofit configuré pour communiquer avec l'api tmdb
 object TmdbClient {
-    private const val BASE_URL = "https://api.themoviedb.org/3/" // URL de base de l'API TMDB
+    private const val BASE_URL = "https://api.themoviedb.org/3/" //url de base de l'api tmdb
 
 
     val apiService: TmdbApiService by lazy {
@@ -61,6 +59,7 @@ object TmdbClient {
     }
 }
 
+//clé = titre du film, valeur = donnée associée
 object PosterCache {
     val posters = mutableMapOf<String, String>()
     val years = mutableMapOf<String, String>()

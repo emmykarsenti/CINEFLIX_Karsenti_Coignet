@@ -26,16 +26,15 @@ import coil.compose.AsyncImage
 import com.google.firebase.database.*
 import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.data.TmdbClient
 
-// 1. MODÈLES DE DONNÉES LOCAUX
-// Correspond exactement aux informations stockées dans Firebase
+//représente un film tel qu'il est stocké dans firebase
 data class FilmFirebase(
     val titre: String = "",
     val annee: Int = 0,
     val genre: String = "",
-    val numero: Int = 0,
+    val numero: Int = 0, // numéro d'ordre dans la saga (pour le tri)
     val duree: String = "",
     val realisateur: String = "",
-    val franchise: String = "" // La franchise est sauvegardée pour l'écran de détails !
+    val franchise: String = "" //franchise sauvegardée pour l'écran de détails
 )
 
 data class SousSaga(
@@ -43,16 +42,16 @@ data class SousSaga(
     val films: List<FilmFirebase> = emptyList()
 )
 
-// 2. ÉCRAN PRINCIPAL
+//écran principal
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UniverseScreen(navController: NavController, universeName: String) {
     val backgroundDark = Color(0xFF1A1D29)
-    // Permet de savoir si l'utilisateur a cliqué sur "Voir tous"
+    //// "voir tous" affiche toutes les franchises sans filtre
     val isAllCategories = universeName == "Voir tous" || universeName == "Toutes Catégories" || universeName == "All"
     val displayTitle = if (isAllCategories) "Toutes catégories" else universeName
 
-    // Formatage pour matcher les noms précis dans Firebase
+    //certains noms d'univers dans firebase diffèrent de ceux affichés dans l'ui
     val firebaseName = when (universeName) {
         "Marvel" -> "Marvel Cinematic Universe"
         else -> universeName
@@ -61,34 +60,31 @@ fun UniverseScreen(navController: NavController, universeName: String) {
     var sousSagas by remember { mutableStateOf<List<SousSaga>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
 
-    // RECHERCHE DANS FIREBASE
+    //chargement des films depuis Firebase au lancement de l'écran
     LaunchedEffect(universeName) {
         val db = FirebaseDatabase.getInstance("https://cineflix-karsenti-coignet-default-rtdb.europe-west1.firebasedatabase.app").reference
 
-        // On écoute le dossier entier "categories"
+        //écoute du dossier entier "categories"
         db.child("categories").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val result = mutableListOf<SousSaga>()
 
-                // On boucle sur toutes les catégories (ex: Sci-Fi, Animation...)
                 for (categorySnap in snapshot.children) {
                     val catName = categorySnap.child("categorie").getValue(String::class.java) ?: ""
                     val isCatMatch = catName.contains(firebaseName, ignoreCase = true)
-
                     val franchisesSnap = categorySnap.child("franchises")
 
-                    // On boucle sur toutes les franchises (ex: Marvel, Star Wars...)
                     for (franchiseSnap in franchisesSnap.children) {
                         val franchiseNom = franchiseSnap.child("nom").getValue(String::class.java) ?: ""
                         val isFranchiseMatch = franchiseNom.contains(firebaseName, ignoreCase = true)
 
-                        // CAS A : La franchise contient des sous-sagas (ex: MCU -> Phase 1, Phase 2)
+                        // cas 1 : la franchise contient des sous-sagas
                         if (franchiseSnap.hasChild("sous_sagas")) {
                             for (ssSnap in franchiseSnap.child("sous_sagas").children) {
                                 val ssNom = ssSnap.child("nom").getValue(String::class.java) ?: ""
                                 val isSsMatch = ssNom.contains(firebaseName, ignoreCase = true)
 
-                                // Si ça correspond à notre recherche, on récupère les films
+                                // si ça correspond à notre recherche, on récupère les films
                                 if (isAllCategories || isCatMatch || isFranchiseMatch || isSsMatch) {
                                     val films = mutableListOf<FilmFirebase>()
 
@@ -116,7 +112,7 @@ fun UniverseScreen(navController: NavController, universeName: String) {
                             }
                         }
 
-                        // CAS B : La franchise a ses films directement à la racine (ex: Avatar, Toy Story)
+                        // cas 2: la franchise a ses films directement sans sous sagas (ex: Avatar, Toy Story)
                         if (franchiseSnap.hasChild("films")) {
                             if (isAllCategories || isCatMatch || isFranchiseMatch) {
                                 val films = mutableListOf<FilmFirebase>()
@@ -142,7 +138,7 @@ fun UniverseScreen(navController: NavController, universeName: String) {
                     }
                 }
 
-                // On regroupe pour éviter les doublons et on affiche
+                //regroupement pour éviter les doublons et on affiche
                 val groupedResult = result.groupBy { it.nom }.map { (nom, sagas) ->
                     SousSaga(nom = nom, films = sagas.flatMap { it.films }.distinctBy { it.titre }.sortedBy { it.numero })
                 }
@@ -154,7 +150,7 @@ fun UniverseScreen(navController: NavController, universeName: String) {
         })
     }
 
-    // INTERFACE GRAPHIQUE
+    //interface graphique
     Scaffold(
         topBar = {
             TopAppBar(
@@ -170,14 +166,14 @@ fun UniverseScreen(navController: NavController, universeName: String) {
         containerColor = backgroundDark
     ) { innerPadding ->
         Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
-            if (isLoading) {
+            if (isLoading) {//chargement en cours
                 CircularProgressIndicator(color = Color(0xFFF299B5), modifier = Modifier.align(Alignment.Center))
-            } else if (sousSagas.isEmpty()) {
+            } else if (sousSagas.isEmpty()) {//aucun film trouvé pour l'univers en question
                 Text("Aucun film trouvé pour cet univers", color = Color.Gray, modifier = Modifier.align(Alignment.Center))
-            } else {
+            } else {//affichage liste
                 LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(vertical = 16.dp), verticalArrangement = Arrangement.spacedBy(24.dp)) {
 
-                    // On affiche une ligne horizontale (LazyRow) par Sous-saga (ex: Phase 1, Phase 2)
+                    //une section par sous-saga avec un carrousel horizontal de films
                     items(sousSagas) { sousSaga ->
                         Column(modifier = Modifier.fillMaxWidth()) {
                             Text(
@@ -187,6 +183,7 @@ fun UniverseScreen(navController: NavController, universeName: String) {
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(horizontal = 16.dp).padding(bottom = 12.dp)
                             )
+                            //carrousel horizontal avec affiches
                             LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                                 items(sousSaga.films) { film ->
                                     FilmPosterCard(film = film, navController = navController) // L'Affiche du film
@@ -200,13 +197,13 @@ fun UniverseScreen(navController: NavController, universeName: String) {
     }
 }
 
-// 3. COMPOSANT : CARTE INDIVIDUELLE D'UN FILM
+//carte cliquable affichant l'affiche d'un film récupérée avec tmdb
 @Composable
 fun FilmPosterCard(film: FilmFirebase, navController: NavController) {
     var posterUrl by remember { mutableStateOf<String?>(null) }
     val myApiKey = "9b06bfc70be38627cb51e3cb6d008512"
 
-    // On va chercher la belle affiche TMDB grâce au titre venant de Firebase
+    // on va chercher l'affiche tmdb grâce au titre venant de firebase
     LaunchedEffect(film.titre) {
         try {
             val response = TmdbClient.apiService.searchMovie(myApiKey, film.titre)
@@ -223,22 +220,21 @@ fun FilmPosterCard(film: FilmFirebase, navController: NavController) {
             .clip(RoundedCornerShape(8.dp))
             .background(Color(0xFF31343E))
             .clickable {
-                // ENCODAGE DE SÉCURITÉ : Transforme les espaces et caractères spéciaux pour passer dans l'URL
+                // on fait l'encodage des paramètres pour éviter les problèmes avec les espaces et caractères spéciaux dans l'url
                 val safeTitre = Uri.encode(if (film.titre.isNotBlank()) film.titre else "Inconnu")
                 val safeGenre = Uri.encode(if (film.genre.isNotBlank()) film.genre else "Inconnu")
                 val safeDuree = Uri.encode(if (film.duree.isNotBlank()) film.duree else "Inconnue")
                 val safeRealisateur = Uri.encode(if (film.realisateur.isNotBlank()) film.realisateur else "Inconnu")
                 val safeFranchise = Uri.encode(if (film.franchise.isNotBlank()) film.franchise else "Inconnue")
 
-                // Navigation vers la page détail du film, avec nos 6 variables à la suite !
                 navController.navigate("movie/$safeTitre/${film.annee}/$safeGenre/$safeDuree/$safeRealisateur/$safeFranchise")
             },
         contentAlignment = Alignment.Center
     ) {
-        if (posterUrl != null) {
+        if (posterUrl != null) { //affiche tmdb disponible
             AsyncImage(model = posterUrl, contentDescription = film.titre, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
         } else {
-            // Plan B visuel si TMDB n'a pas trouvé d'affiche
+            // si tmdb n'a pas trouvé
             Column(modifier = Modifier.padding(8.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
                 Text(film.titre, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 12.sp, textAlign = TextAlign.Center)
                 Spacer(modifier = Modifier.height(4.dp))

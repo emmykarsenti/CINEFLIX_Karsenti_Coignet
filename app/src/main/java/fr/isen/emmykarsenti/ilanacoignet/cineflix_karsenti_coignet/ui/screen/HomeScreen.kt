@@ -35,16 +35,11 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-/* * NOTE IMPORTANTE CONCERNANT LES FRANCHISES :
- * Nous avons voulu restreindre l'intégralité de l'application aux franchises
- * Disney, Pixar, Marvel, Star Wars et Avatar. Cependant, l'API TMDB présente des limites.
- * Si le endpoint "discover" permet d'utiliser un "companyId", le endpoint de recherche
- * textuelle ("search/movie") ne permet PAS de filtrer par studio. Par conséquent,
- * lors d'une recherche, des films n'appartenant pas à nos franchises peuvent apparaître.
- * C'est une limitation directe de l'API TMDB que nous ne pouvons pas contourner.
- */
+//app centrée sur disney, pixar, marvel, star wars et avatar
+//l'endpoint "discover" de tmdb permet de filtrer par studio, mais pas l'endpoint "search": donc quand on fait une recherche dans la barre de recherche, des films hors franchise peuvent apparaître (limite de l'api qu'on ne peut pas contourner...)
 
-// Objet de cache pour éviter de recharger l'API à chaque recomposition de l'écran d'accueil
+
+// objets de cache pour ne pas à avoir à recharger l'api à chaque affichage de l'écran d'accueil
 object SessionCache {
     var latestReleasesCache: List<TmdbMovie>? = null
     var popularMoviesCache: List<TmdbMovie>? = null
@@ -54,16 +49,16 @@ object SessionCache {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
-    // Clé API TMDB et IDs des studios ciblés
+    // key api tmdb et id des studios
     val myApiKey = "9b06bfc70be38627cb51e3cb6d008512"
     val myUniverses = "2|3|420|1|574" // Disney, Pixar, Marvel, StarWars, Avatar
 
-    // États pour stocker les listes de films de l'accueil
+    // états pour stocker les listes de films de l'accueil
     var latestReleases by remember { mutableStateOf<List<TmdbMovie>>(emptyList()) }
     var popularMovies by remember { mutableStateOf<List<TmdbMovie>>(emptyList()) }
     var recommendedMovies by remember { mutableStateOf<List<TmdbMovie>>(emptyList()) }
 
-    // États pour gérer la barre de recherche
+    // états pour gérer la barre de recherche
     var searchQuery by remember { mutableStateOf("") }
     var searchResults by remember { mutableStateOf<List<TmdbMovie>>(emptyList()) }
 
@@ -71,24 +66,23 @@ fun HomeScreen(navController: NavController) {
     val listState = rememberLazyListState()
     val todayDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
-    // 1. Chargement initial de l'en-tête (Nouveautés, Populaires, Recommandés)
-    // On utilise le cache pour limiter les requêtes réseau
+    //chargement de base de l'en-tête (type nouveautés, populaires, recommandés)
     LaunchedEffect(Unit) {
         coroutineScope.launch {
             try {
-                if (SessionCache.latestReleasesCache == null) {
+                if (SessionCache.latestReleasesCache == null) { //nouveautés triées par date de sortie
                     val responseReleases = TmdbClient.apiService.discoverMovies(apiKey = myApiKey, companyId = myUniverses, sortBy = "primary_release_date.desc", maxDate = todayDate)
                     SessionCache.latestReleasesCache = responseReleases.results.filter { it.backdrop_path != null }.take(5)
                 }
                 latestReleases = SessionCache.latestReleasesCache!!
 
-                if (SessionCache.popularMoviesCache == null) {
+                if (SessionCache.popularMoviesCache == null) { // popularité des films/series
                     val responsePopular = TmdbClient.apiService.discoverMovies(apiKey = myApiKey, companyId = myUniverses, sortBy = "popularity.desc")
                     SessionCache.popularMoviesCache = responsePopular.results.filter { it.poster_path != null }.take(10)
                 }
                 popularMovies = SessionCache.popularMoviesCache!!
 
-                if (SessionCache.recommendedMoviesCache == null) {
+                if (SessionCache.recommendedMoviesCache == null) { //recommandations (qui varient)
                     val responseRecs = TmdbClient.apiService.discoverMovies(apiKey = myApiKey, companyId = myUniverses)
                     SessionCache.recommendedMoviesCache = responseRecs.results.shuffled().take(10)
                 }
@@ -98,26 +92,25 @@ fun HomeScreen(navController: NavController) {
         }
     }
 
-    // 2. Gestion de la Recherche Textuelle (Appel API dynamique)
+    //pour gérer la recherche par texte (appel api dynamique): on attend que le user rentre au moins 3 caractères
     LaunchedEffect(searchQuery) {
         if (searchQuery.length > 2) {
-            delay(250) // Délai anti-spam (debounce) pour ne pas saturer l'API à chaque lettre tapée
+            delay(250) // délai pour le debounce pour ne pas spammmer l'api à chaque lettre tapée
             try {
-                // RAPPEL LIMITATION TMDB : Impossible de forcer 'myUniverses' ici.
                 val response = TmdbClient.apiService.searchMovie(myApiKey, searchQuery)
-                val forbiddenGenres = listOf(27, 53, 80) // Exclusion manuelle des genres indésirables (Horreur, Thriller, Crime)
+                val forbiddenGenres = listOf(27, 53, 80) // exclusion des genres "indésirables" (horreur, thriller, crime...)
                 searchResults = response.results.filter { movie ->
                     movie.poster_path != null && movie.genre_ids?.none { id -> id in forbiddenGenres } == true
                 }
             } catch (e: Exception) { e.printStackTrace() }
         } else {
-            searchResults = emptyList() // On vide les résultats si la recherche est trop courte
+            searchResults = emptyList() // on vide les résultats si la recherche est trop courte
         }
     }
 
     Column(modifier = Modifier.fillMaxSize().background(Color(0xFF1A1D29))) {
 
-        // Logo de l'application en haut de l'écran
+        // logo cineflix
         Image(
             painter = painterResource(id = R.drawable.logo_cineflix_homescreen),
             contentDescription = "Logo Cineflix",
@@ -125,7 +118,7 @@ fun HomeScreen(navController: NavController) {
             contentScale = ContentScale.Fit
         )
 
-        // BARRE DE RECHERCHE FIXE
+        //barre de recherche fixe
         Row(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -137,7 +130,7 @@ fun HomeScreen(navController: NavController) {
                 placeholder = { Text("Rechercher un film...", color = Color.Gray) },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = Color.Gray) },
                 trailingIcon = {
-                    // Bouton pour effacer la recherche
+                    // bouton pour effacer la recherche
                     if (searchQuery.isNotEmpty()) {
                         IconButton(onClick = { searchQuery = "" }) { Icon(Icons.Default.Close, contentDescription = "Effacer", tint = Color.White) }
                     }
@@ -155,8 +148,7 @@ fun HomeScreen(navController: NavController) {
             )
         }
 
-        // AFFICHAGE CONDITIONNEL : Si l'utilisateur cherche, on affiche la liste des résultats.
-        // Sinon, on affiche la page d'accueil avec les carrousels.
+        // si le user cherche quelque chose, on affiche la liste des résultats. Sinon, on affiche la page d'accueil normale.
         if (searchQuery.isNotEmpty()) {
             LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f), contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 items(searchResults) { movie ->
@@ -179,13 +171,13 @@ fun HomeScreen(navController: NavController) {
                 }
             }
         } else {
-            // PAGE D'ACCUEIL CLASSIQUE
+            // page d'accueil avec carrousel
             LazyColumn(modifier = Modifier.fillMaxSize().weight(1f)) {
 
-                // 1. Carrousel des nouveautés (Bannières larges)
+                // carrousel des nouveautés sous forme de banière
                 item {
                     LazyRow(state = listState, contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                        items(count = Int.MAX_VALUE) { index -> // Boucle infinie simulée
+                        items(count = Int.MAX_VALUE) { index -> // on simule une boucle infinie
                             if (latestReleases.isNotEmpty()) {
                                 val movie = latestReleases[index % latestReleases.size]
                                 AsyncImage(
@@ -203,7 +195,7 @@ fun HomeScreen(navController: NavController) {
                     }
                 }
 
-                // 2. Grille de navigation des univers (Studios)
+                // grille pour la navigation dans les univers
                 item {
                     Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -220,20 +212,20 @@ fun HomeScreen(navController: NavController) {
                     }
                 }
 
-                // 3. Carrousels standards (Populaires & Recommandés)
+                // carrousels des films populaires
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
                     Text("Les plus populaires", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
                     MovieCarouselRow(movies = popularMovies, navController = navController, genreTag = "Populaire")
                 }
-
+                // carrousel des recommandations
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
                     Text("Recommandés pour vous", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
                     MovieCarouselRow(movies = recommendedMovies, navController = navController, genreTag = "Recommandé")
                 }
 
-                // 4. Génération automatique des carrousels pour chaque genre ciblé
+                // carrousels par genre générés automatiquement
                 val listOfAllGenres = listOf(
                     "Action" to "28", "Animation & Dessin Animé" to "16", "Aventure" to "12", "Comédie" to "35",
                     "Comédie Dramatique" to "35|18", "Comédie Musicale" to "10402", "Documentaire" to "99",
@@ -246,32 +238,26 @@ fun HomeScreen(navController: NavController) {
                     GenreDynamicRow(genreName, genreId, navController, myApiKey, myUniverses)
                 }
 
-                // Espace vide en bas pour éviter que le contenu ne soit caché par la barre de navigation
+                // cet esapce nous permet d'éviter de cacher le contenu par la barre de navbar
                 item { Spacer(modifier = Modifier.height(100.dp)) }
             }
         }
     }
 }
 
-// COMPOSANTS UI RÉUTILISABLES
-
-/**
- * Composant intelligent gérant le chargement asynchrone d'une rangée de films par genre.
- * Gère également l'affichage du titre et du bouton "Voir plus".
- */
+//carrousel par genre (charge les films dynamiquement et affiche le titre + "voir plus")
 @Composable
 fun GenreDynamicRow(genreName: String, genreId: String, navController: NavController, apiKey: String, universes: String) {
     var movies by remember { mutableStateOf<List<TmdbMovie>>(emptyList()) }
 
     LaunchedEffect(genreId) {
         try {
-            // Ici le filtre par studio fonctionne car nous utilisons l'endpoint 'discover'
             val response = TmdbClient.apiService.discoverMovies(apiKey = apiKey, companyId = universes, withGenres = genreId, sortBy = "popularity.desc")
             movies = response.results.filter { it.poster_path != null }.take(10)
         } catch (e: Exception) { e.printStackTrace() }
     }
 
-    // On n'affiche la section que si des films ont été trouvés
+    // affichage de la section que si des films ont été trouvés par ce genre
     if (movies.isNotEmpty()) {
         Spacer(modifier = Modifier.height(16.dp))
         Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
@@ -284,9 +270,7 @@ fun GenreDynamicRow(genreName: String, genreId: String, navController: NavContro
     }
 }
 
-/**
- * Composant affichant une liste horizontale (carrousel) d'affiches de films.
- */
+//rangée horizontale d'affiches de films cliquables
 @Composable
 fun MovieCarouselRow(movies: List<TmdbMovie>, navController: NavController, genreTag: String) {
     if (movies.isNotEmpty()) {
@@ -309,9 +293,7 @@ fun MovieCarouselRow(movies: List<TmdbMovie>, navController: NavController, genr
     }
 }
 
-/**
- * Bouton de catégorie stylisé (ex: Disney, Pixar, etc.)
- */
+//bouton de catégorie disney, pixar, etc...
 @Composable
 fun CategoryCard(title: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Card(

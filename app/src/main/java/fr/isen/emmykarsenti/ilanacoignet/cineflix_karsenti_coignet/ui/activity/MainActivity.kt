@@ -36,49 +36,44 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Permet à l'application de s'afficher en plein écran (sous la barre de statut et de navigation d'Android)
+        // affichage plein écran sous la barre de statut Android
         enableEdgeToEdge()
 
         setContent {
-            // Application de notre thème personnalisé (couleurs, polices, etc.)
             CINEFLIX_Karsenti_CoignetTheme {
 
-                // 1. INITIALISATION DE LA NAVIGATION
-                // navController est le "volant" de notre application, il permet de passer d'un écran à l'autre
+                // navController gère la navigation entre les écrans
                 val navController = rememberNavController()
 
-                // On observe l'écran actuel pour savoir quel onglet de la barre de navigation doit être surligné
+                // on observe la route actuelle pour savoir quel onglet surligner dans la bottom bar
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.destination?.route
 
-                // 2. STRUCTURE PRINCIPALE DE L'ÉCRAN (Scaffold)
-                // Scaffold est un composant de base de Material Design qui facilite le placement des barres d'outils et de navigation
+                // le scaffold qui pose la structure de base : fond + bottom bar + contenu principal
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-
-                    // BARRE DE NAVIGATION EN BAS (BottomBar)
                     bottomBar = {
-                        // On cache la barre de navigation si on est sur l'écran de connexion (auth)
+                        //bottom bar cachée sur l'écran de connexion
                         if (currentRoute != "auth") {
                             NavigationBar(
                                 containerColor = Color(0xFF1A1D29), // Couleur de fond (Bleu/Gris très foncé)
                                 contentColor = Color.White // Couleur des icônes
                             ) {
-                                // Bouton : Accueil
+                                // bouton accueil
                                 NavigationBarItem(
                                     icon = { Icon(Icons.Filled.Home, contentDescription = "Accueil") },
                                     label = { Text("Accueil") },
                                     selected = currentRoute == "home", // Surligné si on est sur "home"
                                     onClick = { navController.navigate("home") }
                                 )
-                                // Bouton : Échanges (Market)
+                                // bouton échange/market
                                 NavigationBarItem(
                                     icon = { Icon(Icons.Filled.ShoppingCart, contentDescription = "Échanges") },
                                     label = { Text("Échanges") },
                                     selected = currentRoute == "market",
                                     onClick = { navController.navigate("market") }
                                 )
-                                // Bouton : Profil
+                                // bouton profil
                                 NavigationBarItem(
                                     icon = { Icon(Icons.Filled.Person, contentDescription = "Profil") },
                                     label = { Text("Profil") },
@@ -90,21 +85,20 @@ class MainActivity : ComponentActivity() {
                     }
                 ) { innerPadding ->
 
-                    // 3. GESTIONNAIRE DES ROUTES (NavHost)
-                    // C'est ici qu'on fait le lien entre une "URL" (String) et l'écran (Composable) à afficher.
+                    //le navhost fait le lien entre chaque route (string) et l'écran correspondant
                     Box(modifier = Modifier.padding(innerPadding)) {
                         NavHost(
                             navController = navController,
-                            startDestination = "auth" // L'écran de départ au lancement de l'application
+                            startDestination = "auth" //l'app démarre toujours sur la page de connexion
                         ) {
 
-                            // ROUTES SIMPLES (Sans paramètres)
+                            // routes sans paramètres
                             composable("auth") { AuthScreen(navController) }
                             composable("home") { HomeScreen(navController) }
                             composable("market") { MarketScreen(navController) }
                             composable("profile") { ProfileScreen(navController) }
 
-                            // ROUTE DE L'UNIVERS (Avec 1 paramètre)
+                            //pour univers on passe le nom de l'univers sélectionné (disney, marvel, etc...)
                             composable("universe/{universeName}") {
                                 val universeName = it.arguments?.getString("universeName") ?: ""
                                 UniverseScreen(
@@ -113,9 +107,8 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            // ROUTE DES DÉTAILS DU FILM (Avec 6 paramètres)
+                            // détail d'un film où on passe titre, année, genre, durée, réalisateur et franchise
                             composable("movie/{titre}/{annee}/{genre}/{duree}/{realisateur}/{franchise}") {
-                                // On utilise "it" pour accéder directement aux arguments de l'URL
                                 val titre = it.arguments?.getString("titre") ?: "Titre inconnu"
                                 val annee = it.arguments?.getString("annee") ?: "Année inconnue"
                                 val genre = it.arguments?.getString("genre") ?: "Genre inconnu"
@@ -123,7 +116,7 @@ class MainActivity : ComponentActivity() {
                                 val realisateur = it.arguments?.getString("realisateur") ?: "Réalisateur inconnu"
                                 val franchise = it.arguments?.getString("franchise") ?: "Franchise inconnue"
 
-                                // On affiche l'écran de détails en lui donnant ces informations
+                                //affichage de l'écran de détails en lui donnant ces informations
                                 MovieDetailScreen(
                                     navController = navController,
                                     titre = titre,
@@ -135,12 +128,11 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            // ROUTE DES GENRES (Avec 2 paramètres)
+                            //pour genre on passe le nom et l'id du genre pour charger les films correspondants
                             composable("genre/{genreName}/{genreId}") {
                                 val genreName = it.arguments?.getString("genreName") ?: "Inconnu"
                                 val genreId = it.arguments?.getString("genreId") ?: "0"
 
-                                // Appel direct de l'écran (sans stocker dans une variable)
                                 GenreScreen(
                                     navController = navController,
                                     genreName = genreName,
