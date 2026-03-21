@@ -23,6 +23,7 @@ Nous avons enrichi l'application pour offrir une expérience digne d'une vérita
 - Place de marché centralisée (Achat/Vendeur) : Initialisation d'un espace d'échange via une page listant la totalité des films mis en vente par la communauté. Chaque annonce affiche l'identifiant unique (pseudo) du vendeur pour faciliter les futures interactions.
 - Authentification Avancée : À l'inscription, l'utilisateur choisit un identifiant (pseudo). La connexion inclut une option "Rester connecté" (maintien de session) et il est bien sûr possible de se déconnecter depuis le profil.
 - Performances & Cache : Mise en place d'un système de cache en mémoire pour les affiches afin d'éviter les rechargements inutiles et fluidifier la navigation.
+- Recherche Dynamique en Temps Réel : Intégration d'une barre de recherche intelligente qui filtre et propose des suggestions de films instantanément dès la saisie des premières lettres par l'utilisateur.
 
 # Pour aller plus loin : Perspectives d'évolution (Marché)
 La fonctionnalité "Achat/Revente" remplit actuellement le critère "voir qui veut se débarrasser d'un film". Toutefois, elle a été conçue comme une base évolutive pour devenir une véritable marketplace de DVD/Blu-Ray. Voici nos objectifs pour les versions futures :
