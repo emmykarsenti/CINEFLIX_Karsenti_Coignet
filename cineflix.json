@@ -1,0 +1,1568 @@
+{
+  "categories": [
+    {
+      "categorie": "Univers Cineflix",
+      "franchises": [
+        {
+          "nom": "Marvel Cinematic Universe",
+          "sous_sagas": [
+            {
+              "nom": "Phase 1 - Le Rassemblement",
+              "films": [
+                {
+                  "titre": "Iron Man",
+                  "annee": 2008,
+                  "duree": "2h 06min",
+                  "realisateur": "Jon Favreau",
+                  "resume": "Tony Stark, inventeur de génie et marchand d'armes, construit une armure high-tech pour s'échapper de ses ravisseurs. De retour chez lui, il décide d'utiliser cette technologie pour protéger le monde.",
+                  "numero": 1
+                },
+                {
+                  "titre": "L'Incroyable Hulk",
+                  "annee": 2008,
+                  "duree": "1h 52min",
+                  "realisateur": "Louis Leterrier",
+                  "resume": "Le scientifique Bruce Banner cherche désespérément un remède contre les radiations gamma qui l'ont empoisonné et qui le transforment en un monstre incontrôlable lorsqu'il se met en colère.",
+                  "numero": 2
+                },
+                {
+                  "titre": "Iron Man 2",
+                  "annee": 2010,
+                  "duree": "2h 04min",
+                  "realisateur": "Jon Favreau",
+                  "resume": "Le monde sait maintenant que Tony Stark est Iron Man. Sous la pression du gouvernement et de la presse, il doit faire face à un nouvel ennemi lié au passé de sa famille : Ivan Vanko.",
+                  "numero": 3
+                },
+                {
+                  "titre": "Thor",
+                  "annee": 2011,
+                  "duree": "1h 55min",
+                  "realisateur": "Kenneth Branagh",
+                  "resume": "Banni du royaume d'Asgard par son père Odin à cause de son arrogance, le puissant Thor est envoyé sur Terre sans ses pouvoirs. Il doit prouver qu'il est digne de brandir son marteau, Mjolnir.",
+                  "numero": 4
+                },
+                {
+                  "titre": "Captain America : First Avenger",
+                  "annee": 2011,
+                  "duree": "2h 04min",
+                  "realisateur": "Joe Johnston",
+                  "resume": "En 1941, le frêle Steve Rogers accepte de participer à une expérience militaire secrète qui le transforme en un super-soldat. Il devient Captain America et affronte la sinistre organisation HYDRA.",
+                  "numero": 5
+                },
+                {
+                  "titre": "Avengers",
+                  "annee": 2012,
+                  "duree": "2h 23min",
+                  "realisateur": "Joss Whedon",
+                  "resume": "Lorsque Loki menace la Terre avec une armée extraterrestre, Nick Fury, directeur du S.H.I.E.L.D., rassemble Iron Man, Captain America, Thor, Hulk, Black Widow et Hawkeye pour repousser l'invasion.",
+                  "numero": 6
+                }
+              ]
+            },
+            {
+              "nom": "Phase 2 - L'Ère d'Ultron",
+              "films": [
+                {
+                  "titre": "Iron Man 3",
+                  "annee": 2013,
+                  "duree": "2h 10min",
+                  "realisateur": "Shane Black",
+                  "resume": "Traumatisé par les événements de New York, Tony Stark fait face à un redoutable terroriste appelé le Mandarin, qui détruit son univers personnel et le pousse dans ses retranchements.",
+                  "numero": 7
+                },
+                {
+                  "titre": "Thor : Le Monde des ténèbres",
+                  "annee": 2013,
+                  "duree": "1h 52min",
+                  "realisateur": "Alan Taylor",
+                  "resume": "Thor doit s'allier à son frère traître, Loki, pour sauver les Neuf Royaumes et la Terre d'une ancienne race d'Elfes Noirs menée par le maléfique Malekith.",
+                  "numero": 8
+                },
+                {
+                  "titre": "Captain America : Le Soldat de l'hiver",
+                  "annee": 2014,
+                  "duree": "2h 16min",
+                  "realisateur": "Anthony & Joe Russo",
+                  "resume": "Steve Rogers s'associe à Black Widow et au Faucon pour déjouer un complot meurtrier au sein même du S.H.I.E.L.D., tout en affrontant un mystérieux assassin : le Soldat de l'Hiver.",
+                  "numero": 9
+                },
+                {
+                  "titre": "Les Gardiens de la Galaxie",
+                  "annee": 2014,
+                  "duree": "2h 01min",
+                  "realisateur": "James Gunn",
+                  "resume": "L'aventurier Peter Quill se retrouve traqué après avoir volé un orbe mystérieux. Pour survivre, il s'allie à un groupe de hors-la-loi cosmiques excentriques : Rocket, Groot, Gamora et Drax.",
+                  "numero": 10
+                },
+                {
+                  "titre": "Avengers : L'Ère d'Ultron",
+                  "annee": 2015,
+                  "duree": "2h 21min",
+                  "realisateur": "Joss Whedon",
+                  "resume": "Tony Stark crée Ultron, une intelligence artificielle censée protéger le monde. Mais Ultron décide que la seule façon de sauver la Terre est d'éradiquer l'humanité. Les Avengers doivent l'arrêter.",
+                  "numero": 11
+                },
+                {
+                  "titre": "Ant-Man",
+                  "annee": 2015,
+                  "duree": "1h 57min",
+                  "realisateur": "Peyton Reed",
+                  "resume": "Le cambrioleur Scott Lang reçoit un costume qui lui permet de rétrécir tout en augmentant sa force. Aidé par le Dr Hank Pym, il doit réaliser un casse pour sauver le monde.",
+                  "numero": 12
+                }
+              ]
+            },
+            {
+              "nom": "Phase 3 - L'Infini",
+              "films": [
+                {
+                  "titre": "Captain America : Civil War",
+                  "annee": 2016,
+                  "duree": "2h 27min",
+                  "realisateur": "Anthony & Joe Russo",
+                  "resume": "Suite à des dommages collatéraux, les Nations Unies veulent contrôler les Avengers. Cette décision divise l'équipe en deux camps : l'un mené par Steve Rogers, l'autre par Tony Stark.",
+                  "numero": 13
+                },
+                {
+                  "titre": "Doctor Strange",
+                  "annee": 2016,
+                  "duree": "1h 55min",
+                  "realisateur": "Scott Derrickson",
+                  "resume": "Après un grave accident de voiture, le brillant neurochirurgien Stephen Strange découvre le monde caché de la magie et des dimensions alternatives en cherchant la guérison au Népal.",
+                  "numero": 14
+                },
+                {
+                  "titre": "Les Gardiens de la Galaxie Vol. 2",
+                  "annee": 2017,
+                  "duree": "2h 16min",
+                  "realisateur": "James Gunn",
+                  "resume": "Alors qu'ils parcourent le cosmos, les Gardiens de la Galaxie aident Peter Quill à percer le mystère de sa véritable filiation en rencontrant son père, l'être céleste Ego.",
+                  "numero": 15
+                },
+                {
+                  "titre": "Spider-Man : Homecoming",
+                  "annee": 2017,
+                  "duree": "2h 13min",
+                  "realisateur": "Jon Watts",
+                  "resume": "De retour à New York après son aventure avec les Avengers, le jeune Peter Parker essaie de concilier sa vie de lycéen avec son identité secrète de Spider-Man, sous l'œil de Tony Stark.",
+                  "numero": 16
+                },
+                {
+                  "titre": "Thor : Ragnarok",
+                  "annee": 2017,
+                  "duree": "2h 10min",
+                  "realisateur": "Taika Waititi",
+                  "resume": "Privé de son marteau et prisonnier sur la planète Sakaar, Thor doit mener un combat de gladiateurs contre Hulk, avant de retourner à Asgard pour empêcher la destructrice Hela d'accomplir le Ragnarok.",
+                  "numero": 17
+                },
+                {
+                  "titre": "Black Panther",
+                  "annee": 2018,
+                  "duree": "2h 14min",
+                  "realisateur": "Ryan Coogler",
+                  "resume": "Après la mort de son père, T'Challa retourne au Wakanda pour monter sur le trône. Mais un vieil ennemi réapparaît, menaçant le destin du Wakanda et du monde entier.",
+                  "numero": 18
+                },
+                {
+                  "titre": "Avengers : Infinity War",
+                  "annee": 2018,
+                  "duree": "2h 29min",
+                  "realisateur": "Anthony & Joe Russo",
+                  "resume": "Le redoutable Thanos veut rassembler les six Pierres d'Infinité pour anéantir la moitié de la vie dans l'univers. Les Avengers et leurs alliés doivent tout sacrifier pour l'en empêcher.",
+                  "numero": 19
+                },
+                {
+                  "titre": "Ant-Man et la Guêpe",
+                  "annee": 2018,
+                  "duree": "1h 58min",
+                  "realisateur": "Peyton Reed",
+                  "resume": "Assigné à résidence, Scott Lang est contacté par Hope van Dyne et le Dr Hank Pym pour une mission urgente : explorer le Royaume Quantique pour retrouver Janet van Dyne.",
+                  "numero": 20
+                },
+                {
+                  "titre": "Captain Marvel",
+                  "annee": 2019,
+                  "duree": "2h 03min",
+                  "realisateur": "Anna Boden, Ryan Fleck",
+                  "resume": "Dans les années 90, Carol Danvers devient l'une des héroïnes les plus puissantes de l'univers et se retrouve au milieu d'une guerre galactique entre deux races extraterrestres, les Kree et les Skrulls.",
+                  "numero": 21
+                },
+                {
+                  "titre": "Avengers : Endgame",
+                  "annee": 2019,
+                  "duree": "3h 01min",
+                  "realisateur": "Anthony & Joe Russo",
+                  "resume": "Cinq ans après la victoire de Thanos, les Avengers survivants découvrent un moyen de voyager dans le temps. Ils se lancent dans une mission désespérée pour ramener ceux qui ont disparu.",
+                  "numero": 22
+                },
+                {
+                  "titre": "Spider-Man : Far From Home",
+                  "annee": 2019,
+                  "duree": "2h 09min",
+                  "realisateur": "Jon Watts",
+                  "resume": "Pendant un voyage scolaire en Europe, Peter Parker est recruté par Nick Fury pour affronter des créatures élémentaires aux côtés d'un nouveau héros mystérieux : Mysterio.",
+                  "numero": 23
+                }
+              ]
+            },
+            {
+              "nom": "Phase 4 - Le Multivers",
+              "films": [
+                {
+                  "titre": "Black Widow",
+                  "annee": 2021,
+                  "duree": "2h 14min",
+                  "realisateur": "Cate Shortland",
+                  "resume": "Natasha Romanoff, alias Black Widow, doit renouer avec son passé et sa fausse famille d'espions russes pour démanteler la Chambre Rouge et son impitoyable dirigeant.",
+                  "numero": 24
+                },
+                {
+                  "titre": "Shang-Chi et la Légende des Dix Anneaux",
+                  "annee": 2021,
+                  "duree": "2h 12min",
+                  "realisateur": "Destin Daniel Cretton",
+                  "resume": "Shang-Chi doit affronter le passé qu'il pensait avoir laissé derrière lui lorsqu'il est rattrapé par la mystérieuse organisation des Dix Anneaux, dirigée par son propre père.",
+                  "numero": 25
+                },
+                {
+                  "titre": "Les Éternels",
+                  "annee": 2021,
+                  "duree": "2h 36min",
+                  "realisateur": "Chloé Zhao",
+                  "resume": "Un groupe d'êtres immortels, envoyés sur Terre il y a des milliers d'années pour protéger l'humanité des Déviants, est contraint de sortir de l'ombre face à une nouvelle menace cosmique.",
+                  "numero": 26
+                },
+                {
+                  "titre": "Spider-Man : No Way Home",
+                  "annee": 2021,
+                  "duree": "2h 28min",
+                  "realisateur": "Jon Watts",
+                  "resume": "L'identité de Spider-Man étant révélée, Peter demande l'aide du Doctor Strange. Mais le sort tourne mal, ouvrant le multivers et faisant apparaître des méchants d'autres réalités.",
+                  "numero": 27
+                },
+                {
+                  "titre": "Doctor Strange in the Multiverse of Madness",
+                  "annee": 2022,
+                  "duree": "2h 06min",
+                  "realisateur": "Sam Raimi",
+                  "resume": "Le Doctor Strange voyage à travers les réalités hallucinantes et dangereuses du multivers pour protéger une jeune fille dotée d'un pouvoir unique, pourchassée par la Sorcière Rouge.",
+                  "numero": 28
+                },
+                {
+                  "titre": "Thor : Love and Thunder",
+                  "annee": 2022,
+                  "duree": "1h 59min",
+                  "realisateur": "Taika Waititi",
+                  "resume": "Thor, en quête de paix intérieure, doit reprendre les armes pour affronter Gorr le Boucher des Dieux. Il est aidé par Valkyrie, Korg et son ex-petite amie Jane Foster, qui manie désormais Mjolnir.",
+                  "numero": 29
+                },
+                {
+                  "titre": "Black Panther : Wakanda Forever",
+                  "annee": 2022,
+                  "duree": "2h 41min",
+                  "realisateur": "Ryan Coogler",
+                  "resume": "Après la mort du roi T'Challa, la reine Ramonda, Shuri et les guerriers du Wakanda doivent se battre pour protéger leur nation d'une menace venue des profondeurs des océans : Namor.",
+                  "numero": 30
+                }
+              ]
+            },
+            {
+              "nom": "Phase 5 - Les Nouveaux Héros",
+              "films": [
+                {
+                  "titre": "Ant-Man et la Guêpe : Quantumania",
+                  "annee": 2023,
+                  "duree": "2h 04min",
+                  "realisateur": "Peyton Reed",
+                  "resume": "Scott Lang, Hope van Dyne et leur famille sont accidentellement aspirés dans le Royaume Quantique. Ils y découvrent un monde étrange dirigé d'une main de fer par Kang le Conquérant.",
+                  "numero": 31
+                },
+                {
+                  "titre": "Les Gardiens de la Galaxie Vol. 3",
+                  "annee": 2023,
+                  "duree": "2h 30min",
+                  "realisateur": "James Gunn",
+                  "resume": "Les Gardiens s'installent sur Knowhere, mais leur paix est de courte durée. Pour sauver la vie de Rocket, Peter Quill doit rassembler son équipe pour une ultime et dangereuse mission.",
+                  "numero": 32
+                },
+                {
+                  "titre": "The Marvels",
+                  "annee": 2023,
+                  "duree": "1h 45min",
+                  "realisateur": "Nia DaCosta",
+                  "resume": "Les pouvoirs de Carol Danvers s'entremêlent avec ceux de Kamala Khan (Ms. Marvel) et de Monica Rambeau. Les trois héroïnes doivent faire équipe pour sauver l'univers d'une révolutionnaire Kree.",
+                  "numero": 33
+                },
+                {
+                  "titre": "Deadpool & Wolverine",
+                  "annee": 2024,
+                  "duree": "2h 07min",
+                  "realisateur": "Shawn Levy",
+                  "resume": "Le TVA recrute Deadpool pour une mission qui va bouleverser le multivers. Pour réussir et sauver son propre monde, il doit convaincre un Wolverine brisé de faire équipe avec lui.",
+                  "numero": 34
+                },
+                {
+                  "titre": "Captain America: Brave New World",
+                  "annee": 2025,
+                  "duree": "2h 15min",
+                  "realisateur": "Julius Onah",
+                  "resume": "Sam Wilson, ayant officiellement repris le bouclier de Captain America, se retrouve au cœur d'un incident international impliquant Thaddeus Ross, le nouveau président des États-Unis.",
+                  "numero": 35
+                },
+                {
+                  "titre": "Thunderbolts*",
+                  "annee": 2025,
+                  "duree": "2h 10min",
+                  "realisateur": "Jake Schreier",
+                  "resume": "Yelena Belova, Bucky Barnes, U.S. Agent et d'autres anti-héros du MCU sont recrutés par la CIA pour former une équipe chargée des missions trop sombres pour les Avengers.",
+                  "numero": 36
+                }
+              ]
+            },
+            {
+              "nom": "Phase 6 - Final du Multivers",
+              "films": [
+                {
+                  "titre": "The Fantastic Four: First Steps",
+                  "annee": 2025,
+                  "duree": "2h 20min",
+                  "realisateur": "Matt Shakman",
+                  "resume": "Dans une version rétro-futuriste des années 60, Reed Richards, Sue Storm, Johnny Storm et Ben Grimm acquièrent de fabuleux pouvoirs et doivent affronter la menace cosmique de Galactus.",
+                  "numero": 37
+                },
+                {
+                  "titre": "Avengers: Doomsday",
+                  "annee": 2026,
+                  "duree": "2h 45min",
+                  "realisateur": "Anthony & Joe Russo",
+                  "resume": "Les héros de la Terre et du multivers doivent se réunir en urgence pour faire face à la plus grande menace de leur existence : le tyrannique et surpuissant Docteur Victor Von Doom.",
+                  "numero": 38
+                },
+                {
+                  "titre": "Avengers: Secret Wars",
+                  "annee": 2027,
+                  "duree": "3h 00min",
+                  "realisateur": "Anthony & Joe Russo",
+                  "resume": "Le multivers s'effondre. Des héros et des vilains issus de différentes réalités sont projetés sur le Battleworld pour un affrontement ultime qui redéfinira l'univers entier.",
+                  "numero": 39
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Pixar",
+          "sous_sagas": [
+            {
+              "nom": "Les Sagas Pixar",
+              "films": [
+                {
+                  "titre": "Toy Story",
+                  "annee": 1995,
+                  "duree": "1h 21min",
+                  "realisateur": "John Lasseter",
+                  "resume": "La vie de Woody, le jouet préféré d'Andy, est bouleversée par l'arrivée de Buzz l'Éclair, un astronaute arrogant qui ne sait pas qu'il est un jouet.",
+                  "numero": 1
+                },
+                {
+                  "titre": "Toy Story 2",
+                  "annee": 1999,
+                  "duree": "1h 32min",
+                  "realisateur": "John Lasseter",
+                  "resume": "Woody est kidnappé par un collectionneur de jouets sans scrupules. Buzz et ses amis se lancent dans une mission de sauvetage périlleuse pour le ramener avant qu'il ne soit vendu au Japon.",
+                  "numero": 2
+                },
+                {
+                  "titre": "Monstres & Cie",
+                  "annee": 2001,
+                  "duree": "1h 32min",
+                  "realisateur": "Pete Docter",
+                  "resume": "Dans l'usine de traitement de cris d'enfants de Monstropolis, Sulli et Bob voient leur vie basculer lorsqu'une petite fille humaine, Bouh, s'infiltre dans leur monde.",
+                  "numero": 3
+                },
+                {
+                  "titre": "Le Monde de Nemo",
+                  "annee": 2003,
+                  "duree": "1h 40min",
+                  "realisateur": "Andrew Stanton",
+                  "resume": "Marin, un poisson-clown très protecteur, traverse l'océan avec l'aide de Dory, un poisson à la mémoire défaillante, pour retrouver son fils Nemo, capturé par un plongeur.",
+                  "numero": 4
+                },
+                {
+                  "titre": "Les Indestructibles",
+                  "annee": 2004,
+                  "duree": "1h 55min",
+                  "realisateur": "Brad Bird",
+                  "resume": "Contraints de vivre une vie normale après l'interdiction des super-héros, Bob Parr et sa famille doivent reprendre du service pour déjouer les plans du machiavélique Syndrome.",
+                  "numero": 5
+                },
+                {
+                  "titre": "Cars",
+                  "annee": 2006,
+                  "duree": "1h 57min",
+                  "realisateur": "John Lasseter",
+                  "resume": "Flash McQueen, une voiture de course arrogante, se retrouve bloqué dans la petite ville oubliée de Radiator Springs, où il apprend les vraies valeurs de la vie et de l'amitié.",
+                  "numero": 6
+                },
+                {
+                  "titre": "Toy Story 3",
+                  "annee": 2010,
+                  "duree": "1h 43min",
+                  "realisateur": "Lee Unkrich",
+                  "resume": "Alors qu'Andy s'apprête à partir pour l'université, ses jouets se retrouvent par erreur dans une garderie dirigée par un ours en peluche tyrannique.",
+                  "numero": 7
+                },
+                {
+                  "titre": "Cars 2",
+                  "annee": 2011,
+                  "duree": "1h 46min",
+                  "realisateur": "John Lasseter",
+                  "resume": "Flash McQueen participe au tout premier Grand Prix Mondial. Mais son ami Martin se retrouve impliqué malgré lui dans une affaire d'espionnage international.",
+                  "numero": 8
+                },
+                {
+                  "titre": "Monstres Academy",
+                  "annee": 2013,
+                  "duree": "1h 44min",
+                  "realisateur": "Dan Scanlon",
+                  "resume": "Bob et Sulli n'ont pas toujours été les meilleurs amis du monde. Ce film raconte leur rencontre à l'université et comment, de rivaux, ils sont devenus inséparables.",
+                  "numero": 9
+                },
+                {
+                  "titre": "Vice-Versa",
+                  "annee": 2015,
+                  "duree": "1h 35min",
+                  "realisateur": "Pete Docter",
+                  "resume": "Dans le quartier général de l'esprit de la jeune Riley, Joie et Tristesse sont accidentellement expulsées. Elles doivent traverser l'esprit de Riley pour sauver sa personnalité.",
+                  "numero": 10
+                },
+                {
+                  "titre": "Le Monde de Dory",
+                  "annee": 2016,
+                  "duree": "1h 37min",
+                  "realisateur": "Andrew Stanton",
+                  "resume": "Dory, le poisson-chirurgien amnésique, se souvient soudainement de ses parents. Avec l'aide de Marin et Nemo, elle traverse l'océan pour les retrouver à l'Institut de la Vie Marine.",
+                  "numero": 11
+                },
+                {
+                  "titre": "Cars 3",
+                  "annee": 2017,
+                  "duree": "1h 42min",
+                  "realisateur": "Brian Fee",
+                  "resume": "Dépassé par une nouvelle génération de bolides ultra-rapides, Flash McQueen doit s'entraîner avec la jeune mécanicienne Cruz Ramirez pour prouver qu'il n'est pas encore fini.",
+                  "numero": 12
+                },
+                {
+                  "titre": "Les Indestructibles 2",
+                  "annee": 2018,
+                  "duree": "1h 58min",
+                  "realisateur": "Brad Bird",
+                  "resume": "Alors qu'Elastigirl est choisie pour redorer l'image des super-héros, Bob doit rester à la maison pour s'occuper des enfants et gérer les nouveaux pouvoirs incontrôlables de Jack-Jack.",
+                  "numero": 13
+                },
+                {
+                  "titre": "Toy Story 4",
+                  "annee": 2019,
+                  "duree": "1h 40min",
+                  "realisateur": "Josh Cooley",
+                  "resume": "Woody a toujours été sûr de sa place dans le monde. Mais l'arrivée de Fourchette, un jouet récalcitrant, l'entraîne dans un road trip où il va retrouver son amour perdu, la Bergère.",
+                  "numero": 14
+                },
+                {
+                  "titre": "Buzz l'Éclair",
+                  "annee": 2022,
+                  "duree": "1h 40min",
+                  "realisateur": "Angus MacLane",
+                  "resume": "L'histoire d'origine du véritable héros qui a inspiré le jouet. Le ranger de l'espace Buzz l'Éclair se retrouve coincé sur une planète hostile et doit trouver un moyen de ramener son équipage chez eux.",
+                  "numero": 15
+                },
+                {
+                  "titre": "Vice-Versa 2",
+                  "annee": 2024,
+                  "duree": "1h 36min",
+                  "realisateur": "Kelsey Mann",
+                  "resume": "Riley devient adolescente. Le quartier général subit des travaux soudains pour faire place à de toutes nouvelles émotions : Anxiété, Envie, Ennui et Embarras.",
+                  "numero": 16
+                },
+                {
+                  "titre": "Toy Story 5",
+                  "annee": 2026,
+                  "duree": "1h 35min",
+                  "realisateur": "Andrew Stanton",
+                  "resume": "Woody, Buzz et la bande de jouets se retrouvent confrontés à leur plus grand défi à ce jour : la technologie qui accapare l'attention des enfants, reléguant les jouets traditionnels au placard.",
+                  "numero": 17
+                }
+              ]
+            },
+            {
+              "nom": "Les Films Originaux",
+              "films": [
+                {
+                  "titre": "1001 Pattes",
+                  "annee": 1998,
+                  "duree": "1h 35min",
+                  "realisateur": "John Lasseter",
+                  "resume": "Tilt, une fourmi maladroite, recrute par erreur une troupe de cirque ratée pour défendre sa colonie contre les redoutables sauterelles racketteuses menées par Le Borgne.",
+                  "numero": 1
+                },
+                {
+                  "titre": "Ratatouille",
+                  "annee": 2007,
+                  "duree": "1h 51min",
+                  "realisateur": "Brad Bird",
+                  "resume": "Rémy, un jeune rat doté d'un incroyable talent pour la cuisine, s'allie avec Alfredo Linguini, un marmiton maladroit, pour devenir le plus grand chef de Paris.",
+                  "numero": 2
+                },
+                {
+                  "titre": "WALL-E",
+                  "annee": 2008,
+                  "duree": "1h 38min",
+                  "realisateur": "Andrew Stanton",
+                  "resume": "Dans un futur où la Terre est recouverte de déchets, le petit robot nettoyeur WALL-E tombe amoureux de la sonde EVE et l'accompagne dans un voyage à travers l'espace qui pourrait sauver l'humanité.",
+                  "numero": 3
+                },
+                {
+                  "titre": "Là-haut",
+                  "annee": 2009,
+                  "duree": "1h 36min",
+                  "realisateur": "Pete Docter",
+                  "resume": "Carl Fredricksen, un vendeur de ballons à la retraite, attache des milliers de ballons à sa maison pour s'envoler vers l'Amérique du Sud. Mais il emporte par erreur Russell, un jeune explorateur très bavard.",
+                  "numero": 4
+                },
+                {
+                  "titre": "Rebelle",
+                  "annee": 2012,
+                  "duree": "1h 33min",
+                  "realisateur": "Mark Andrews, Brenda Chapman",
+                  "resume": "Merida, une princesse écossaise rebelle et excellente archère, refuse de se plier aux traditions. Son choix déclenche le chaos dans le royaume et la force à réparer une terrible malédiction.",
+                  "numero": 5
+                },
+                {
+                  "titre": "Le Voyage d'Arlo",
+                  "annee": 2015,
+                  "duree": "1h 33min",
+                  "realisateur": "Peter Sohn",
+                  "resume": "Et si l'astéroïde qui a détruit les dinosaures avait manqué la Terre ? Arlo, un jeune Apatosaure peureux, se lie d'amitié avec un petit garçon humain sauvage lors d'un voyage pour retrouver sa famille.",
+                  "numero": 6
+                },
+                {
+                  "titre": "Coco",
+                  "annee": 2017,
+                  "duree": "1h 45min",
+                  "realisateur": "Lee Unkrich",
+                  "resume": "Malgré l'interdiction de la musique dans sa famille, Miguel rêve de devenir musicien. Il se retrouve par magie dans le monde des ancêtres et cherche l'aide de son arrière-arrière-grand-père.",
+                  "numero": 7
+                },
+                {
+                  "titre": "En avant",
+                  "annee": 2020,
+                  "duree": "1h 42min",
+                  "realisateur": "Dan Scanlon",
+                  "resume": "Dans un monde fantastique modernisé, deux frères elfes adolescents s'embarquent dans une quête extraordinaire pour découvrir s'il reste encore un peu de magie dans le monde afin de passer un dernier jour avec leur père.",
+                  "numero": 8
+                },
+                {
+                  "titre": "Soul",
+                  "annee": 2020,
+                  "duree": "1h 40min",
+                  "realisateur": "Pete Docter",
+                  "resume": "Joe Gardner, un professeur de musique qui vient de décrocher le concert de sa vie, a un accident. Son âme se retrouve dans le Grand Avant, où il doit aider la jeune âme 22 à trouver sa passion pour pouvoir retourner sur Terre.",
+                  "numero": 9
+                },
+                {
+                  "titre": "Luca",
+                  "annee": 2021,
+                  "duree": "1h 35min",
+                  "realisateur": "Enrico Casarosa",
+                  "resume": "Sur la Riviera italienne, Luca passe un été inoubliable avec son nouvel ami Alberto. Mais leur bonheur est menacé par un secret lourd à porter : ils sont tous les deux des monstres marins.",
+                  "numero": 10
+                },
+                {
+                  "titre": "Alerte Rouge",
+                  "annee": 2022,
+                  "duree": "1h 40min",
+                  "realisateur": "Domee Shi",
+                  "resume": "Meilin Lee, une jeune fille de 13 ans très assurée, découvre que ses émotions fortes la transforment en un immense panda roux géant à cause d'une ancienne malédiction familiale.",
+                  "numero": 11
+                },
+                {
+                  "titre": "Élémentaire",
+                  "annee": 2023,
+                  "duree": "1h 41min",
+                  "realisateur": "Peter Sohn",
+                  "resume": "Dans Element City, où le feu, l'eau, la terre et l'air vivent ensemble, l'histoire de Flam, une jeune femme vive et incandescente, et Flack, un garçon aquatique et sensible qui remet en question les croyances de leur monde.",
+                  "numero": 12
+                },
+                {
+                  "titre": "Elio",
+                  "annee": 2025,
+                  "duree": "1h 40min",
+                  "realisateur": "Adrian Molina",
+                  "resume": "Elio, un petit garçon avec beaucoup d'imagination, est téléporté à travers la galaxie et confondu avec le grand ambassadeur de la Terre par une étrange organisation interplanétaire.",
+                  "numero": 13
+                },
+                {
+                  "titre": "Hoppers",
+                  "annee": 2026,
+                  "duree": "1h 38min",
+                  "realisateur": "Daniel Chun",
+                  "resume": "Mabel, une jeune fille fascinée par le monde animal, utilise une technologie secrète pour transférer sa conscience dans le corps d'un castor robotique et découvrir leur vie sauvage de l'intérieur.",
+                  "numero": 14
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Disney",
+          "sous_sagas": [
+            {
+              "nom": "L'Âge d'Or (1937 - 1942)",
+              "films": [
+                {
+                  "titre": "Blanche-Neige et les Sept Nains",
+                  "annee": 1937,
+                  "duree": "1h 23min",
+                  "realisateur": "David Hand",
+                  "resume": "Une jeune princesse d'une grande beauté est contrainte de fuir sa belle-mère jalouse. Elle trouve refuge dans la forêt chez sept nains mineurs.",
+                  "numero": 1
+                },
+                {
+                  "titre": "Pinocchio",
+                  "annee": 1940,
+                  "duree": "1h 28min",
+                  "realisateur": "Ben Sharpsteen, Hamilton Luske",
+                  "resume": "La fée bleue donne vie à une marionnette en bois. Pour devenir un vrai petit garçon, Pinocchio doit prouver qu'il est courageux, honnête et généreux.",
+                  "numero": 2
+                },
+                {
+                  "titre": "Fantasia",
+                  "annee": 1940,
+                  "duree": "2h 05min",
+                  "realisateur": "Samuel Armstrong, James Algar",
+                  "resume": "Une série de huit séquences animées illustrant des chefs-d'œuvre de la musique classique, dont l'apprenti sorcier avec Mickey Mouse.",
+                  "numero": 3
+                },
+                {
+                  "titre": "Dumbo",
+                  "annee": 1941,
+                  "duree": "1h 04min",
+                  "realisateur": "Ben Sharpsteen",
+                  "resume": "Un petit éléphant de cirque, moqué pour ses oreilles géantes, découvre qu'il possède le don extraordinaire de voler.",
+                  "numero": 4
+                },
+                {
+                  "titre": "Bambi",
+                  "annee": 1942,
+                  "duree": "1h 10min",
+                  "realisateur": "David Hand",
+                  "resume": "L'histoire touchante d'un jeune faon qui découvre la vie, l'amitié et les dangers de la forêt en grandissant pour devenir le Prince de la Forêt.",
+                  "numero": 5
+                }
+              ]
+            },
+            {
+              "nom": "L'Ère des Packages (1942 - 1949)",
+              "films": [
+                {
+                  "titre": "Saludos Amigos",
+                  "annee": 1942,
+                  "duree": "0h 42min",
+                  "realisateur": "Norman Ferguson",
+                  "resume": "Donald Duck et Dingo partent à la découverte de l'Amérique du Sud dans ce film mêlant prises de vues réelles et animation.",
+                  "numero": 1
+                },
+                {
+                  "titre": "Les Trois Caballeros",
+                  "annee": 1944,
+                  "duree": "1h 11min",
+                  "realisateur": "Norman Ferguson",
+                  "resume": "Donald Duck célèbre son anniversaire avec ses amis José Carioca et Panchito Pistoles à travers un voyage musical en Amérique latine.",
+                  "numero": 2
+                },
+                {
+                  "titre": "La Boîte à musique",
+                  "annee": 1946,
+                  "duree": "1h 15min",
+                  "realisateur": "Jack Kinney, Clyde Geronimi",
+                  "resume": "Dix courts métrages d'animation musicaux variés, allant du jazz à la balade populaire.",
+                  "numero": 3
+                },
+                {
+                  "titre": "Coquin de Printemps",
+                  "annee": 1947,
+                  "duree": "1h 13min",
+                  "realisateur": "Jack Kinney, Bill Roberts",
+                  "resume": "Deux histoires réunies : celle de Bongo, un petit ours de cirque qui s'échappe, et celle de Mickey et le Haricot magique.",
+                  "numero": 4
+                },
+                {
+                  "titre": "Mélodie Cocktail",
+                  "annee": 1948,
+                  "duree": "1h 15min",
+                  "realisateur": "Clyde Geronimi, Wilfred Jackson",
+                  "resume": "Sept séquences animées musicales, mettant en scène des légendes américaines comme Johnny Pépin-de-Pomme et Pecos Bill.",
+                  "numero": 5
+                },
+                {
+                  "titre": "Le Crapaud et le Maître d'école",
+                  "annee": 1949,
+                  "duree": "1h 08min",
+                  "realisateur": "Jack Kinney, Clyde Geronimi",
+                  "resume": "L'adaptation de deux classiques de la littérature : La Mare aux grenouilles et La Légende du Cavalier sans tête.",
+                  "numero": 6
+                }
+              ]
+            },
+            {
+              "nom": "L'Âge d'Argent (1950 - 1959)",
+              "films": [
+                {
+                  "titre": "Cendrillon",
+                  "annee": 1950,
+                  "duree": "1h 14min",
+                  "realisateur": "Clyde Geronimi, Wilfred Jackson, Hamilton Luske",
+                  "resume": "Maltraité par sa belle-mère et ses demi-sœurs, Cendrillon voit son destin changer grâce à sa marraine la bonne fée et un bal royal.",
+                  "numero": 1
+                },
+                {
+                  "titre": "Alice au pays des merveilles",
+                  "annee": 1951,
+                  "duree": "1h 15min",
+                  "realisateur": "Clyde Geronimi, Wilfred Jackson, Hamilton Luske",
+                  "resume": "La jeune Alice suit un Lapin Blanc très pressé et atterrit dans un monde farfelu et illogique rempli de personnages étranges.",
+                  "numero": 2
+                },
+                {
+                  "titre": "Peter Pan",
+                  "annee": 1953,
+                  "duree": "1h 17min",
+                  "realisateur": "Clyde Geronimi, Wilfred Jackson, Hamilton Luske",
+                  "resume": "Wendy et ses frères s'envolent vers le Pays Imaginaire avec Peter Pan, le garçon qui refuse de grandir, pour affronter le Capitaine Crochet.",
+                  "numero": 3
+                },
+                {
+                  "titre": "La Belle et le Clochard",
+                  "annee": 1955,
+                  "duree": "1h 16min",
+                  "realisateur": "Clyde Geronimi, Wilfred Jackson, Hamilton Luske",
+                  "resume": "L'histoire d'amour entre Lady, une chienne cocker spaniel de bonne famille, et Clochard, un chien des rues au grand cœur.",
+                  "numero": 4
+                },
+                {
+                  "titre": "La Belle au bois dormant",
+                  "annee": 1959,
+                  "duree": "1h 15min",
+                  "realisateur": "Clyde Geronimi",
+                  "resume": "Frappée par une terrible malédiction, la princesse Aurore est plongée dans un profond sommeil que seul le baiser d'un prince peut briser.",
+                  "numero": 5
+                }
+              ]
+            },
+            {
+              "nom": "L'Âge de Bronze (1961 - 1988)",
+              "films": [
+                {
+                  "titre": "Les 101 Dalmatiens",
+                  "annee": 1961,
+                  "duree": "1h 19min",
+                  "realisateur": "Wolfgang Reitherman, Hamilton Luske, Clyde Geronimi",
+                  "resume": "Pongo et Perdita, deux dalmatiens, doivent secourir leurs chiots kidnappés par la cruelle Cruella d'Enfer, qui veut en faire des manteaux de fourrure.",
+                  "numero": 1
+                },
+                {
+                  "titre": "Merlin l'Enchanteur",
+                  "annee": 1963,
+                  "duree": "1h 19min",
+                  "realisateur": "Wolfgang Reitherman",
+                  "resume": "Le jeune et chétif Arthur reçoit l'éducation magique et farfelue du puissant magicien Merlin, avant de découvrir son destin royal.",
+                  "numero": 2
+                },
+                {
+                  "titre": "Le Livre de la jungle",
+                  "annee": 1967,
+                  "duree": "1h 18min",
+                  "realisateur": "Wolfgang Reitherman",
+                  "resume": "Mowgli, un petit d'homme élevé par des loups, est contraint de quitter la jungle pour échapper au redoutable tigre Shere Khan.",
+                  "numero": 3
+                },
+                {
+                  "titre": "Les Aristochats",
+                  "annee": 1970,
+                  "duree": "1h 18min",
+                  "realisateur": "Wolfgang Reitherman",
+                  "resume": "À Paris, une chatte de gouttière bourgeoise et ses trois chatons sont kidnappés par un majordome cupide. Ils sont aidés par Thomas O'Malley, un chat de gouttière.",
+                  "numero": 4
+                },
+                {
+                  "titre": "Robin des Bois",
+                  "annee": 1973,
+                  "duree": "1h 23min",
+                  "realisateur": "Wolfgang Reitherman",
+                  "resume": "Le renard hors-la-loi Robin des Bois vole aux riches pour donner aux pauvres, tout en défiant le tyrannique Prince Jean et le shérif de Nottingham.",
+                  "numero": 5
+                },
+                {
+                  "titre": "Les Aventures de Bernard et Bianca",
+                  "annee": 1977,
+                  "duree": "1h 17min",
+                  "realisateur": "Wolfgang Reitherman, John Lounsbery",
+                  "resume": "Deux courageuses petites souris de la SOS Société s'envolent pour le bayou afin de sauver une petite fille orpheline nommée Penny de la terrible Madame Médusa.",
+                  "numero": 6
+                },
+                {
+                  "titre": "Rox et Rouky",
+                  "annee": 1981,
+                  "duree": "1h 23min",
+                  "realisateur": "Ted Berman, Richard Rich",
+                  "resume": "L'amitié improbable et touchante entre un jeune renard, Rox, et un chiot de chasse, Rouky, est mise à l'épreuve par la nature de leurs instincts en grandissant.",
+                  "numero": 7
+                },
+                {
+                  "titre": "Taram et le Chaudron magique",
+                  "annee": 1985,
+                  "duree": "1h 20min",
+                  "realisateur": "Ted Berman, Richard Rich",
+                  "resume": "Un jeune porcher, Taram, s'associe à la princesse Éloïse pour empêcher le maléfique Seigneur des Ténèbres de s'emparer d'un chaudron aux pouvoirs destructeurs.",
+                  "numero": 8
+                },
+                {
+                  "titre": "Basil, détective privé",
+                  "annee": 1986,
+                  "duree": "1h 14min",
+                  "realisateur": "Ron Clements, John Musker",
+                  "resume": "Dans le Londres victorien, la souris détective Basil enquête sur la disparition d'un fabricant de jouets, un complot ourdi par le diabolique professeur Ratigan.",
+                  "numero": 9
+                },
+                {
+                  "titre": "Oliver et Compagnie",
+                  "annee": 1988,
+                  "duree": "1h 14min",
+                  "realisateur": "George Scribner",
+                  "resume": "L'histoire d'Oliver Twist transposée à New York avec des animaux : un petit chaton orphelin rejoint un gang de chiens des rues débrouillards.",
+                  "numero": 10
+                }
+              ]
+            },
+            {
+              "nom": "La Renaissance Disney (1989 - 1999)",
+              "films": [
+                {
+                  "titre": "La Petite Sirène",
+                  "annee": 1989,
+                  "duree": "1h 23min",
+                  "realisateur": "Ron Clements, John Musker",
+                  "resume": "Ariel, une jeune sirène fascinée par le monde des humains, conclut un pacte avec la maléfique sorcière des mers Ursula pour obtenir des jambes.",
+                  "numero": 1
+                },
+                {
+                  "titre": "Bernard et Bianca au pays des kangourous",
+                  "annee": 1990,
+                  "duree": "1h 17min",
+                  "realisateur": "Hendel Butoy, Mike Gabriel",
+                  "resume": "Les deux courageuses souris détectives se rendent en Australie pour sauver un jeune garçon et un aigle royal capturés par un redoutable braconnier.",
+                  "numero": 2
+                },
+                {
+                  "titre": "La Belle et la Bête",
+                  "annee": 1991,
+                  "duree": "1h 24min",
+                  "realisateur": "Gary Trousdale, Kirk Wise",
+                  "resume": "Pour sauver son père, l'intelligente Belle accepte d'être prisonnière dans le château d'une Bête effrayante, qui s'avère être un prince maudit.",
+                  "numero": 3
+                },
+                {
+                  "titre": "Aladdin",
+                  "annee": 1992,
+                  "duree": "1h 30min",
+                  "realisateur": "Ron Clements, John Musker",
+                  "resume": "Un jeune voleur au grand cœur trouve une lampe magique abritant un génie exubérant, et tente de conquérir le cœur de la princesse Jasmine.",
+                  "numero": 4
+                },
+                {
+                  "titre": "Le Roi Lion",
+                  "annee": 1994,
+                  "duree": "1h 28min",
+                  "realisateur": "Roger Allers, Rob Minkoff",
+                  "resume": "Le jeune lionceau Simba, héritier du trône de la savane, est injustement accusé de la mort de son père Mufasa par son oncle Scar et s'enfuit en exil.",
+                  "numero": 5
+                },
+                {
+                  "titre": "Pocahontas, une légende indienne",
+                  "annee": 1995,
+                  "duree": "1h 21min",
+                  "realisateur": "Mike Gabriel, Eric Goldberg",
+                  "resume": "Une jeune Amérindienne tente de maintenir la paix entre son peuple et les colons anglais, tout en tombant amoureuse de l'explorateur John Smith.",
+                  "numero": 6
+                },
+                {
+                  "titre": "Le Bossu de Notre-Dame",
+                  "annee": 1996,
+                  "duree": "1h 31min",
+                  "realisateur": "Gary Trousdale, Kirk Wise",
+                  "resume": "Quasimodo, le sonneur de cloches reclus de la cathédrale, brave l'interdit de son cruel maître Frollo pour participer à la Fête des Fous.",
+                  "numero": 7
+                },
+                {
+                  "titre": "Hercule",
+                  "annee": 1997,
+                  "duree": "1h 33min",
+                  "realisateur": "Ron Clements, John Musker",
+                  "resume": "Fils de Zeus transformé en demi-dieu mortel, Hercule doit prouver qu'il est un véritable héros pour regagner sa place sur le mont Olympe.",
+                  "numero": 8
+                },
+                {
+                  "titre": "Mulan",
+                  "annee": 1998,
+                  "duree": "1h 28min",
+                  "realisateur": "Tony Bancroft, Barry Cook",
+                  "resume": "Pour sauver son père malade, une jeune fille courageuse se déguise en homme et prend sa place dans l'armée impériale chinoise pour combattre les Huns.",
+                  "numero": 9
+                },
+                {
+                  "titre": "Tarzan",
+                  "annee": 1999,
+                  "duree": "1h 28min",
+                  "realisateur": "Chris Buck, Kevin Lima",
+                  "resume": "Un homme élevé par des gorilles découvre sa véritable nature lorsqu'il rencontre une expédition humaine, dont fait partie la belle Jane Porter.",
+                  "numero": 10
+                }
+              ]
+            },
+            {
+              "nom": "L'Ère Post-Renaissance (2000 - 2008)",
+              "films": [
+                {
+                  "titre": "Fantasia 2000",
+                  "annee": 2000,
+                  "duree": "1h 14min",
+                  "realisateur": "Don Hahn, Pixote Hunt...",
+                  "resume": "La suite du classique de 1940, combinant de nouvelles séquences d'animation époustouflantes avec de grands morceaux de musique classique.",
+                  "numero": 1
+                },
+                {
+                  "titre": "Dinosaure",
+                  "annee": 2000,
+                  "duree": "1h 22min",
+                  "realisateur": "Ralph Zondag, Eric Leighton",
+                  "resume": "Un Iguanodon élevé par des lémuriens voit son île détruite par une météorite. Il rejoint un troupeau de dinosaures en quête de la Terre des Nids.",
+                  "numero": 2
+                },
+                {
+                  "titre": "Kuzco, l'empereur mégalo",
+                  "annee": 2000,
+                  "duree": "1h 18min",
+                  "realisateur": "Mark Dindal",
+                  "resume": "Un jeune empereur arrogant est transformé en lama par sa conseillère perfide, Yzma, et doit s'allier à un paysan pour retrouver son trône.",
+                  "numero": 3
+                },
+                {
+                  "titre": "Atlantide, l'empire perdu",
+                  "annee": 2001,
+                  "duree": "1h 35min",
+                  "realisateur": "Gary Trousdale, Kirk Wise",
+                  "resume": "Un jeune cartographe rejoint une expédition sous-marine à bord d'un sous-marin géant pour découvrir la mythique cité engloutie d'Atlantide.",
+                  "numero": 4
+                },
+                {
+                  "titre": "Lilo & Stitch",
+                  "annee": 2002,
+                  "duree": "1h 25min",
+                  "realisateur": "Chris Sanders, Dean DeBlois",
+                  "resume": "Une petite fille hawaïenne adopte un étrange animal, sans savoir qu'il s'agit d'une expérience extraterrestre destructrice recherchée dans toute la galaxie.",
+                  "numero": 5
+                },
+                {
+                  "titre": "La Planète au trésor, un nouvel univers",
+                  "annee": 2002,
+                  "duree": "1h 35min",
+                  "realisateur": "Ron Clements, John Musker",
+                  "resume": "Le jeune Jim Hawkins s'embarque dans un voyage à travers l'espace à bord d'un galion solaire pour trouver le légendaire butin du Capitaine Flint.",
+                  "numero": 6
+                },
+                {
+                  "titre": "Frère des ours",
+                  "annee": 2003,
+                  "duree": "1h 25min",
+                  "realisateur": "Aaron Blaise, Robert Walker",
+                  "resume": "Un jeune chasseur inuit est transformé en ours par les Grands Esprits pour apprendre une leçon d'empathie à travers les yeux de sa proie.",
+                  "numero": 7
+                },
+                {
+                  "titre": "La Ferme se rebelle",
+                  "annee": 2004,
+                  "duree": "1h 16min",
+                  "realisateur": "Will Finn, John Sanford",
+                  "resume": "Trois vaches laitières têtues s'improvisent chasseuses de primes pour capturer le voleur de bétail Alameda Slim et sauver leur ferme.",
+                  "numero": 8
+                },
+                {
+                  "titre": "Chicken Little",
+                  "annee": 2005,
+                  "duree": "1h 21min",
+                  "realisateur": "Mark Dindal",
+                  "resume": "Un petit poulet moqué par toute la ville pour avoir cru que le ciel lui tombait sur la tête tente de sauver le monde d'une véritable invasion extraterrestre.",
+                  "numero": 9
+                },
+                {
+                  "titre": "Bienvenue chez les Robinson",
+                  "annee": 2007,
+                  "duree": "1h 35min",
+                  "realisateur": "Stephen J. Anderson",
+                  "resume": "Lewis, un jeune orphelin inventeur de génie, voyage dans le futur et rencontre l'excentrique famille Robinson, qui l'aide à découvrir son destin.",
+                  "numero": 10
+                },
+                {
+                  "titre": "Volt, star malgré lui",
+                  "annee": 2008,
+                  "duree": "1h 36min",
+                  "realisateur": "Chris Williams, Byron Howard",
+                  "resume": "Volt, le chien star d'une série télévisée, est persuadé d'avoir des super-pouvoirs. Perdu à New York, il découvre la vraie vie avec l'aide d'une chatte et d'un hamster.",
+                  "numero": 11
+                }
+              ]
+            },
+            {
+              "nom": "Le Renouveau (2009 - Aujourd'hui)",
+              "films": [
+                {
+                  "titre": "La Princesse et la Grenouille",
+                  "annee": 2009,
+                  "duree": "1h 37min",
+                  "realisateur": "Ron Clements, John Musker",
+                  "resume": "À la Nouvelle-Orléans, la jeune Tiana est transformée en grenouille après avoir embrassé un prince maudit. Ils cherchent ensemble un remède.",
+                  "numero": 1
+                },
+                {
+                  "titre": "Raiponce",
+                  "annee": 2010,
+                  "duree": "1h 40min",
+                  "realisateur": "Byron Howard, Nathan Greno",
+                  "resume": "La princesse à la longue chevelure magique, enfermée dans une tour depuis son enfance, s'échappe avec l'aide d'un charmant bandit, Flynn Rider.",
+                  "numero": 2
+                },
+                {
+                  "titre": "Winnie l'Ourson",
+                  "annee": 2011,
+                  "duree": "1h 03min",
+                  "realisateur": "Stephen J. Anderson, Don Hall",
+                  "resume": "Winnie, Porcinet, Tigrou et toute la bande de la Forêt des Rêves Bleus se lancent dans une quête pour retrouver la queue perdue de Bourriquet.",
+                  "numero": 3
+                },
+                {
+                  "titre": "Les Mondes de Ralph",
+                  "annee": 2012,
+                  "duree": "1h 41min",
+                  "realisateur": "Rich Moore",
+                  "resume": "Ralph, le méchant d'un jeu d'arcade, veut prouver qu'il peut être un héros et voyage à travers différents jeux vidéo où il rencontre Vanellope.",
+                  "numero": 4
+                },
+                {
+                  "titre": "La Reine des neiges",
+                  "annee": 2013,
+                  "duree": "1h 42min",
+                  "realisateur": "Chris Buck, Jennifer Lee",
+                  "resume": "La princesse Anna part à la recherche de sa sœur Elsa, dont les pouvoirs glaciaux ont plongé le royaume d'Arendelle dans un hiver éternel.",
+                  "numero": 5
+                },
+                {
+                  "titre": "Les Nouveaux Héros",
+                  "annee": 2014,
+                  "duree": "1h 42min",
+                  "realisateur": "Don Hall, Chris Williams",
+                  "resume": "Un jeune prodige de la robotique et son robot gonflable soignant Baymax forment une équipe de super-héros pour sauver la ville de San Fransokyo.",
+                  "numero": 6
+                },
+                {
+                  "titre": "Zootopie",
+                  "annee": 2016,
+                  "duree": "1h 48min",
+                  "realisateur": "Byron Howard, Rich Moore",
+                  "resume": "La lapine policière idéaliste Judy Hopps s'associe au renard arnaqueur Nick Wilde pour résoudre une mystérieuse affaire de disparitions.",
+                  "numero": 7
+                },
+                {
+                  "titre": "Vaiana, la légende du bout du monde",
+                  "annee": 2016,
+                  "duree": "1h 47min",
+                  "realisateur": "Ron Clements, John Musker",
+                  "resume": "Une jeune navigatrice audacieuse part en mission pour sauver son peuple, s'alliant en chemin avec le demi-dieu métamorphe Maui.",
+                  "numero": 8
+                },
+                {
+                  "titre": "Ralph 2.0",
+                  "annee": 2018,
+                  "duree": "1h 52min",
+                  "realisateur": "Rich Moore, Phil Johnston",
+                  "resume": "Ralph et Vanellope quittent leur salle d'arcade et s'aventurent dans le monde inconnu et passionnant d'Internet pour trouver une pièce de rechange.",
+                  "numero": 9
+                },
+                {
+                  "titre": "La Reine des neiges 2",
+                  "annee": 2019,
+                  "duree": "1h 43min",
+                  "realisateur": "Chris Buck, Jennifer Lee",
+                  "resume": "Elsa, Anna, Kristoff, Olaf et Sven entreprennent un voyage au-delà de leur royaume pour découvrir l'origine des pouvoirs d'Elsa.",
+                  "numero": 10
+                },
+                {
+                  "titre": "Raya et le Dernier Dragon",
+                  "annee": 2021,
+                  "duree": "1h 54min",
+                  "realisateur": "Don Hall, Carlos López Estrada",
+                  "resume": "Dans le royaume fracturé de Kumandra, une guerrière solitaire doit trouver le dernier dragon pour restaurer la paix et sauver son monde.",
+                  "numero": 11
+                },
+                {
+                  "titre": "Encanto, la fantastique famille Madrigal",
+                  "annee": 2021,
+                  "duree": "1h 42min",
+                  "realisateur": "Jared Bush, Byron Howard",
+                  "resume": "En Colombie, Mirabel est la seule enfant de la famille à ne pas avoir de don magique. Mais elle devient leur seul espoir quand la magie est menacée.",
+                  "numero": 12
+                },
+                {
+                  "titre": "Avalonia, l'étrange voyage",
+                  "annee": 2022,
+                  "duree": "1h 42min",
+                  "realisateur": "Don Hall",
+                  "resume": "La légendaire famille d'explorateurs Clade s'aventure dans une terre inexplorée et dangereuse pour sauver la ressource énergétique de leur monde.",
+                  "numero": 13
+                },
+                {
+                  "titre": "Wish, Asha et la bonne étoile",
+                  "annee": 2023,
+                  "duree": "1h 35min",
+                  "realisateur": "Chris Buck, Fawn Veerasunthorn",
+                  "resume": "Asha fait un vœu si puissant qu'il est exaucé par une force cosmique : Star. Ensemble, elles affrontent le redoutable roi Magnifico.",
+                  "numero": 14
+                },
+                {
+                  "titre": "Vaiana 2",
+                  "annee": 2024,
+                  "duree": "1h 40min",
+                  "realisateur": "David G. Derrick Jr.",
+                  "resume": "Vaiana entreprend un nouveau voyage épique sur les mers de l'Océanie, répondant à un appel inattendu de ses ancêtres.",
+                  "numero": 15
+                },
+                {
+                  "titre": "Zootopie 2",
+                  "annee": 2025,
+                  "duree": "1h 45min",
+                  "realisateur": "Jared Bush",
+                  "resume": "Judy et Nick font face à une nouvelle menace qui pourrait bouleverser l'harmonie de la ville de Zootopie.",
+                  "numero": 16
+                }
+              ]
+            },
+            {
+              "nom": "Les Suites & DisneyToon Studios",
+              "films": [
+                {
+                  "titre": "Le Retour de Jafar",
+                  "annee": 1994,
+                  "duree": "1h 09min",
+                  "realisateur": "Toby Shelton, Tad Stones, Alan Zaslove",
+                  "resume": "Jafar parvient à s'échapper de sa lampe magique avec une seule idée en tête : se venger d'Aladdin et reprendre le contrôle d'Agrabah.",
+                  "numero": 1
+                },
+                {
+                  "titre": "Dingo et Max",
+                  "annee": 1995,
+                  "duree": "1h 18min",
+                  "realisateur": "Kevin Lima",
+                  "resume": "Pour resserrer les liens avec son fils adolescent Max, Dingo l'embarque de force dans un grand road-trip à travers le pays pour aller à la pêche.",
+                  "numero": 2
+                },
+                {
+                  "titre": "Aladdin et le Roi des Voleurs",
+                  "annee": 1996,
+                  "duree": "1h 21min",
+                  "realisateur": "Tad Stones",
+                  "resume": "Alors qu'Aladdin et Jasmine s'apprêtent enfin à se marier, la cérémonie est interrompue par les Quarante Voleurs menés par le père d'Aladdin.",
+                  "numero": 3
+                },
+                {
+                  "titre": "Le Roi Lion 2 : L'Honneur de la tribu",
+                  "annee": 1998,
+                  "duree": "1h 21min",
+                  "realisateur": "Darrell Rooney",
+                  "resume": "Kiara, la fille de Simba, tombe amoureuse de Kovu, un lionceau appartenant au clan des exilés restés fidèles au défunt Scar.",
+                  "numero": 4
+                },
+                {
+                  "titre": "Pocahontas 2 : Un monde nouveau",
+                  "annee": 1998,
+                  "duree": "1h 12min",
+                  "realisateur": "Tom Ellery, Bradley Raymond",
+                  "resume": "Pocahontas entreprend un grand voyage vers l'Angleterre en tant qu'ambassadrice pour tenter de maintenir la paix avec le roi Jacques.",
+                  "numero": 5
+                },
+                {
+                  "titre": "La Petite Sirène 2 : Retour à l'océan",
+                  "annee": 2000,
+                  "duree": "1h 15min",
+                  "realisateur": "Jim Kammerud, Brian Smith",
+                  "resume": "Pour la protéger de Morgana, la sœur d'Ursula, Ariel cache à sa fille Mélodie ses origines de sirène. Mais l'appel de l'océan est trop fort.",
+                  "numero": 6
+                },
+                {
+                  "titre": "Peter Pan 2 : Retour au Pays Imaginaire",
+                  "annee": 2002,
+                  "duree": "1h 12min",
+                  "realisateur": "Robin Budd, Donovan Cook",
+                  "resume": "En plein cœur de la Seconde Guerre mondiale à Londres, la fille de Wendy, Jane, est kidnappée par le Capitaine Crochet et emmenée au Pays Imaginaire.",
+                  "numero": 7
+                },
+                {
+                  "titre": "Le Roi Lion 3 : Hakuna Matata",
+                  "annee": 2004,
+                  "duree": "1h 16min",
+                  "realisateur": "Bradley Raymond",
+                  "resume": "L'histoire du Roi Lion revisitée à travers les yeux (et les pitreries) de Timon et Pumbaa, bien avant leur rencontre avec Simba.",
+                  "numero": 8
+                },
+                {
+                  "titre": "Mulan 2 : La Mission de l'Empereur",
+                  "annee": 2004,
+                  "duree": "1h 19min",
+                  "realisateur": "Darrell Rooney, Lynne Southerland",
+                  "resume": "Mulan et Shang doivent escorter trois princesses à travers la Chine pour un mariage arrangé essentiel à la paix de l'Empire.",
+                  "numero": 9
+                },
+                {
+                  "titre": "Bambi 2",
+                  "annee": 2006,
+                  "duree": "1h 12min",
+                  "realisateur": "Brian Pimental",
+                  "resume": "Suite directe du premier film, l'histoire se concentre sur l'éducation de Bambi par son père, le Grand Prince de la forêt, après la mort de sa mère.",
+                  "numero": 10
+                },
+                {
+                  "titre": "Le Secret de la Petite Sirène",
+                  "annee": 2008,
+                  "duree": "1h 17min",
+                  "realisateur": "Peggy Holmes",
+                  "resume": "Préquel qui raconte la jeunesse d'Ariel avant sa rencontre avec Éric, à l'époque où la musique était interdite dans le royaume d'Atlantica par le roi Triton.",
+                  "numero": 11
+                },
+                {
+                  "titre": "La Fée Clochette",
+                  "annee": 2008,
+                  "duree": "1h 18min",
+                  "realisateur": "Bradley Raymond",
+                  "resume": "Découvrez le monde magique de la Vallée des Fées et les origines de Clochette, bien avant qu'elle ne rencontre Peter Pan.",
+                  "numero": 12
+                }
+              ]
+            },
+            {
+              "nom": "Films Live-Action (Classiques & Remakes)",
+              "films": [
+                {
+                  "titre": "Mary Poppins",
+                  "annee": 1964,
+                  "duree": "2h 19min",
+                  "realisateur": "Robert Stevenson",
+                  "resume": "Une nounou aux pouvoirs magiques redescend du ciel pour ramener la joie et la fantaisie dans la vie d'une famille londonienne très stricte.",
+                  "numero": 1
+                },
+                {
+                  "titre": "L'Apprentie Sorcière",
+                  "annee": 1971,
+                  "duree": "1h 57min",
+                  "realisateur": "Robert Stevenson",
+                  "resume": "Pendant la Seconde Guerre mondiale, trois enfants évacués découvrent que leur hôtesse est une apprentie sorcière qui tente de sauver l'Angleterre.",
+                  "numero": 2
+                },
+                {
+                  "titre": "Tron",
+                  "annee": 1982,
+                  "duree": "1h 36min",
+                  "realisateur": "Steven Lisberger",
+                  "resume": "Un concepteur de jeux vidéo est littéralement aspiré à l'intérieur d'un ordinateur où il doit participer à des jeux de gladiateurs virtuels pour survivre.",
+                  "numero": 3
+                },
+                {
+                  "titre": "Chérie, j'ai rétréci les gosses",
+                  "annee": 1989,
+                  "duree": "1h 33min",
+                  "realisateur": "Joe Johnston",
+                  "resume": "Un inventeur excentrique rétrécit accidentellement ses enfants et ceux des voisins. Devenus minuscules, ils doivent traverser le jardin, devenu une jungle mortelle.",
+                  "numero": 4
+                },
+                {
+                  "titre": "Hocus Pocus : Les Trois Sorcières",
+                  "annee": 1993,
+                  "duree": "1h 36min",
+                  "realisateur": "Kenny Ortega",
+                  "resume": "Le soir d'Halloween, un adolescent ressuscite accidentellement trois sœurs sorcières de Salem pendues 300 ans plus tôt.",
+                  "numero": 5
+                },
+                {
+                  "titre": "Pirates des Caraïbes : La Malédiction du Black Pearl",
+                  "annee": 2003,
+                  "duree": "2h 23min",
+                  "realisateur": "Gore Verbinski",
+                  "resume": "Le forgeron Will Turner s'allie à l'excentrique pirate Jack Sparrow pour sauver la fille du gouverneur, enlevée par des pirates maudits.",
+                  "numero": 6
+                },
+                {
+                  "titre": "Benjamin Gates et le Trésor des Templiers",
+                  "annee": 2004,
+                  "duree": "2h 11min",
+                  "realisateur": "Jon Turteltaub",
+                  "resume": "Un historien aventurier cherche à découvrir le mythique trésor des Templiers, dont la carte serait cachée au dos de la Déclaration d'indépendance.",
+                  "numero": 7
+                },
+                {
+                  "titre": "Alice au pays des merveilles",
+                  "annee": 2010,
+                  "duree": "1h 48min",
+                  "realisateur": "Tim Burton",
+                  "resume": "Alice, désormais âgée de 19 ans, retourne dans le monde fantastique qu'elle a découvert enfant pour affronter la terrible Reine Rouge.",
+                  "numero": 8
+                },
+                {
+                  "titre": "Maléfique",
+                  "annee": 2014,
+                  "duree": "1h 37min",
+                  "realisateur": "Robert Stromberg",
+                  "resume": "La véritable histoire de la méchante de La Belle au bois dormant, qui révèle les raisons de son cœur de pierre et de sa malédiction sur Aurore.",
+                  "numero": 9
+                },
+                {
+                  "titre": "Le Livre de la Jungle",
+                  "annee": 2016,
+                  "duree": "1h 46min",
+                  "realisateur": "Jon Favreau",
+                  "resume": "L'adaptation épique en prises de vues réelles et effets visuels spectaculaires du classique d'animation centré sur Mowgli.",
+                  "numero": 10
+                },
+                {
+                  "titre": "La Belle et la Bête",
+                  "annee": 2017,
+                  "duree": "2h 09min",
+                  "realisateur": "Bill Condon",
+                  "resume": "Le film en live-action majestueux du classique de 1991, avec Emma Watson dans le rôle de Belle.",
+                  "numero": 11
+                },
+                {
+                  "titre": "Aladdin",
+                  "annee": 2019,
+                  "duree": "2h 08min",
+                  "realisateur": "Guy Ritchie",
+                  "resume": "Le remake explosif et coloré d'Aladdin, avec Will Smith dans le rôle de l'exubérant Génie de la lampe.",
+                  "numero": 12
+                },
+                {
+                  "titre": "Le Roi Lion",
+                  "annee": 2019,
+                  "duree": "1h 58min",
+                  "realisateur": "Jon Favreau",
+                  "resume": "Une re-création intégrale en images de synthèse ultra-réalistes du chef-d'œuvre de la savane africaine.",
+                  "numero": 13
+                },
+                {
+                  "titre": "Cruella",
+                  "annee": 2021,
+                  "duree": "2h 14min",
+                  "realisateur": "Craig Gillespie",
+                  "resume": "Dans le Londres des années 70, la jeune escroc Estella se transforme peu à peu en l'impitoyable légende de la mode, Cruella d'Enfer.",
+                  "numero": 14
+                },
+                {
+                  "titre": "La Petite Sirène",
+                  "annee": 2023,
+                  "duree": "2h 15min",
+                  "realisateur": "Rob Marshall",
+                  "resume": "La réinvention en prises de vues réelles de l'histoire d'Ariel, avec de nouvelles chansons composées par Lin-Manuel Miranda.",
+                  "numero": 15
+                },
+                {
+                  "titre": "Mufasa : Le Roi Lion",
+                  "annee": 2024,
+                  "duree": "1h 58min",
+                  "realisateur": "Barry Jenkins",
+                  "resume": "Préquel explorant l'ascension de Mufasa en tant que l'un des plus grands rois de la Terre des Lions, raconté par Rafiki.",
+                  "numero": 16
+                },
+                {
+                  "titre": "Blanche-Neige",
+                  "annee": 2025,
+                  "duree": "À venir",
+                  "realisateur": "Marc Webb",
+                  "resume": "L'adaptation en prises de vues réelles du tout premier chef-d'œuvre d'animation de Walt Disney.",
+                  "numero": 17
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Avatar",
+          "sous_sagas": [
+            {
+              "nom": "La Saga Avatar",
+              "films": [
+                {
+                  "titre": "Avatar",
+                  "annee": 2009,
+                  "duree": "2h 42min",
+                  "realisateur": "James Cameron",
+                  "resume": "Malgré sa paralysie, Jake Sully, un ancien marine, est envoyé sur la planète Pandora pour aider à l'extraction d'un minerai rare. Il finit par tomber amoureux d'une Na'vi et rejoint leur combat pour la survie.",
+                  "numero": 1
+                },
+                {
+                  "titre": "Avatar : La Voie de l'eau",
+                  "annee": 2022,
+                  "duree": "3h 12min",
+                  "realisateur": "James Cameron",
+                  "resume": "Jake Sully et Ney'tiri ont formé une famille et font tout pour rester aussi unis que possible. Face à une ancienne menace, ils doivent quitter leur foyer et explorer les régions océaniques de Pandora.",
+                  "numero": 2
+                },
+                {
+                  "titre": "Avatar: Fire and Ash",
+                  "annee": 2025,
+                  "duree": "2h 55min",
+                  "realisateur": "James Cameron",
+                  "resume": "La suite des aventures de Jake et Neytiri. Ils font face à une nouvelle menace venue d'une tribu de Na'vi liée au feu et aux cendres, le Peuple des Cendres, bien plus belliqueuse que les précédentes.",
+                  "numero": 3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Star Wars",
+          "sous_sagas": [
+            {
+              "nom": "La Prélogie",
+              "films": [
+                {
+                  "titre": "Star Wars : La Menace fantôme",
+                  "annee": 1999,
+                  "duree": "2h 16min",
+                  "realisateur": "George Lucas",
+                  "resume": "Deux chevaliers Jedi fuient une planète hostile avec une jeune reine pour sauver son peuple. En chemin, ils rencontrent un jeune garçon, Anakin Skywalker, qui possède un lien exceptionnel avec la Force.",
+                  "numero": 1
+                },
+                {
+                  "titre": "Star Wars : L'Attaque des clones",
+                  "annee": 2002,
+                  "duree": "2h 22min",
+                  "realisateur": "George Lucas",
+                  "resume": "Dix ans après, la galaxie est au bord de la guerre civile. Obi-Wan enquête sur un mystérieux complot tandis qu'Anakin est chargé de protéger Padmé, dont il tombe éperdument amoureux.",
+                  "numero": 2
+                },
+                {
+                  "titre": "Star Wars : La Revanche des Sith",
+                  "annee": 2005,
+                  "duree": "2h 20min",
+                  "realisateur": "George Lucas",
+                  "resume": "La Guerre des Clones fait rage. Déchiré entre sa loyauté envers les Jedi et son amour pour Padmé, Anakin est peu à peu séduit par le côté obscur de la Force par le chancelier Palpatine.",
+                  "numero": 3
+                }
+              ]
+            },
+            {
+              "nom": "La Trilogie Originale",
+              "films": [
+                {
+                  "titre": "Star Wars : Un nouvel espoir",
+                  "annee": 1977,
+                  "duree": "2h 01min",
+                  "realisateur": "George Lucas",
+                  "resume": "Le jeune Luke Skywalker quitte sa planète désertique pour rejoindre l'Alliance Rebelle. Accompagné de Han Solo et Obi-Wan Kenobi, il tente de sauver la Princesse Leia de la redoutable Étoile de la Mort.",
+                  "numero": 4
+                },
+                {
+                  "titre": "Star Wars : L'Empire contre-attaque",
+                  "annee": 1980,
+                  "duree": "2h 04min",
+                  "realisateur": "Irvin Kershner",
+                  "resume": "L'Empire traque les Rebelles à travers la galaxie. Pendant que Han et Leia fuient Dark Vador, Luke part sur la planète Dagobah pour suivre l'entraînement Jedi du maître Yoda.",
+                  "numero": 5
+                },
+                {
+                  "titre": "Star Wars : Le Retour du Jedi",
+                  "annee": 1983,
+                  "duree": "2h 11min",
+                  "realisateur": "Richard Marquand",
+                  "resume": "L'Empire construit une seconde Étoile de la Mort. Luke, désormais un puissant Jedi, tente de ramener son père, Dark Vador, du bon côté de la Force avant l'affrontement final.",
+                  "numero": 6
+                }
+              ]
+            },
+            {
+              "nom": "La Postlogie",
+              "films": [
+                {
+                  "titre": "Star Wars : Le Réveil de la Force",
+                  "annee": 2015,
+                  "duree": "2h 18min",
+                  "realisateur": "J.J. Abrams",
+                  "resume": "Trente ans après la défaite de l'Empire, une nouvelle menace émerge : le Premier Ordre. Rey, une pilleuse d'épaves, et Finn, un Stormtrooper déserteur, se joignent à la Résistance.",
+                  "numero": 7
+                },
+                {
+                  "titre": "Star Wars : Les Derniers Jedi",
+                  "annee": 2017,
+                  "duree": "2h 32min",
+                  "realisateur": "Rian Johnson",
+                  "resume": "Rey retrouve Luke Skywalker en exil pour qu'il la forme aux voies de la Force, tandis que la Résistance, menée par la Générale Leia, est traquée sans relâche par Kylo Ren.",
+                  "numero": 8
+                },
+                {
+                  "titre": "Star Wars : L'Ascension de Skywalker",
+                  "annee": 2019,
+                  "duree": "2h 21min",
+                  "realisateur": "J.J. Abrams",
+                  "resume": "Le sinistre Empereur Palpatine est de retour. Rey et ses amis se lancent dans une quête ultime pour trouver la planète Exegol et mettre fin à la guerre entre les Jedi et les Sith.",
+                  "numero": 9
+                }
+              ]
+            },
+            {
+              "nom": "Films Dérivés & Nouvelle Ère",
+              "films": [
+                {
+                  "titre": "Star Wars: The Clone Wars",
+                  "annee": 2008,
+                  "duree": "1h 38min",
+                  "realisateur": "Dave Filoni",
+                  "resume": "Pendant la Guerre des Clones, Anakin Skywalker et sa nouvelle apprentie, Ahsoka Tano, se lancent dans une mission pour secourir le fils kidnappé de Jabba le Hutt.",
+                  "numero": 1
+                },
+                {
+                  "titre": "Rogue One: A Star Wars Story",
+                  "annee": 2016,
+                  "duree": "2h 13min",
+                  "realisateur": "Gareth Edwards",
+                  "resume": "Un groupe de héros improbables s'unit pour une mission périlleuse : voler les plans de la terrible arme de destruction massive de l'Empire, l'Étoile de la Mort.",
+                  "numero": 2
+                },
+                {
+                  "titre": "Solo: A Star Wars Story",
+                  "annee": 2018,
+                  "duree": "2h 15min",
+                  "realisateur": "Ron Howard",
+                  "resume": "La jeunesse du célèbre contrebandier Han Solo, sa rencontre avec son futur copilote Chewbacca et son association avec l'escroc Lando Calrissian.",
+                  "numero": 3
+                },
+                {
+                  "titre": "The Mandalorian & Grogu",
+                  "annee": 2026,
+                  "duree": "2h 10min",
+                  "realisateur": "Jon Favreau",
+                  "resume": "Le Mandalorien Din Djarin et son apprenti Grogu doivent s'allier pour protéger les restes de la Nouvelle République face aux ultimes vestiges de l'Empire.",
+                  "numero": 4
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
