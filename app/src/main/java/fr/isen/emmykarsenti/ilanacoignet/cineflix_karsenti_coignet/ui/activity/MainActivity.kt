@@ -16,12 +16,12 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.screen.AuthScreen
 import fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.screen.GenreScreen
@@ -36,78 +36,85 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // affichage plein écran sous la barre de statut Android
         enableEdgeToEdge()
 
         setContent {
             CINEFLIX_Karsenti_CoignetTheme {
 
-                // navController gère la navigation entre les écrans
-                val navController = rememberNavController()
+                val navController = rememberNavController() //gère la navigation entre les écrans
+                val ongletActif = remember { mutableStateOf("auth") } // on suit manuellement l'onglet actif pour gérer le surlignage et la visibilité de la bottom bar
 
-                // on observe la route actuelle pour savoir quel onglet surligner dans la bottom bar
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentRoute = navBackStackEntry?.destination?.route
-
-                // le scaffold qui pose la structure de base : fond + bottom bar + contenu principal
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    bottomBar = {
-                        //bottom bar cachée sur l'écran de connexion
-                        if (currentRoute != "auth") {
+                    bottomBar = { // la bottom bar est cachée sur l'écran de connexion
+                        if (ongletActif.value != "auth") {
                             NavigationBar(
-                                containerColor = Color(0xFF1A1D29), // Couleur de fond (Bleu/Gris très foncé)
-                                contentColor = Color.White // Couleur des icônes
+                                containerColor = Color(0xFF1A1D29),
+                                contentColor = Color.White
                             ) {
                                 // bouton accueil
                                 NavigationBarItem(
                                     icon = { Icon(Icons.Filled.Home, contentDescription = "Accueil") },
                                     label = { Text("Accueil") },
-                                    selected = currentRoute == "home", // Surligné si on est sur "home"
-                                    onClick = { navController.navigate("home") }
+                                    selected = ongletActif.value == "home", // surligné si l'onglet actif est "home"
+                                    onClick = {
+                                        navController.navigate("home")
+                                        ongletActif.value = "home"
+                                    }
                                 )
-                                // bouton échange/market
+                                // bouton échanges
                                 NavigationBarItem(
                                     icon = { Icon(Icons.Filled.ShoppingCart, contentDescription = "Échanges") },
                                     label = { Text("Échanges") },
-                                    selected = currentRoute == "market",
-                                    onClick = { navController.navigate("market") }
+                                    selected = ongletActif.value == "market",
+                                    onClick = {
+                                        navController.navigate("market")
+                                        ongletActif.value = "market"
+                                    }
                                 )
                                 // bouton profil
                                 NavigationBarItem(
                                     icon = { Icon(Icons.Filled.Person, contentDescription = "Profil") },
                                     label = { Text("Profil") },
-                                    selected = currentRoute == "profile",
-                                    onClick = { navController.navigate("profile") }
+                                    selected = ongletActif.value == "profile",
+                                    onClick = {
+                                        navController.navigate("profile")
+                                        ongletActif.value = "profile"
+                                    }
                                 )
                             }
                         }
                     }
                 ) { innerPadding ->
-
-                    //le navhost fait le lien entre chaque route (string) et l'écran correspondant
+                    // le navhost fait le lien entre chaque route (string) et l'écran correspondant
                     Box(modifier = Modifier.padding(innerPadding)) {
                         NavHost(
                             navController = navController,
                             startDestination = "auth" //l'app démarre toujours sur la page de connexion
                         ) {
-
                             // routes sans paramètres
-                            composable("auth") { AuthScreen(navController) }
-                            composable("home") { HomeScreen(navController) }
-                            composable("market") { MarketScreen(navController) }
-                            composable("profile") { ProfileScreen(navController) }
-
-                            //pour univers on passe le nom de l'univers sélectionné (disney, marvel, etc...)
+                            composable("auth") {
+                                ongletActif.value = "auth"
+                                AuthScreen(navController)
+                            }
+                            composable("home") {
+                                ongletActif.value = "home"
+                                HomeScreen(navController)
+                            }
+                            composable("market") {
+                                ongletActif.value = "market"
+                                MarketScreen(navController)
+                            }
+                            composable("profile") {
+                                ongletActif.value = "profile"
+                                ProfileScreen(navController)
+                            }
+                            // univers : on passe le nom de l'univers sélectionné (disney, marvel, etc.)
                             composable("universe/{universeName}") {
                                 val universeName = it.arguments?.getString("universeName") ?: ""
-                                UniverseScreen(
-                                    navController = navController,
-                                    universeName = universeName
-                                )
+                                UniverseScreen(navController = navController, universeName = universeName)
                             }
-
-                            // détail d'un film où on passe titre, année, genre, durée, réalisateur et franchise
+                            // détail d'un film : on passe titre, année, genre, durée, réalisateur et franchise
                             composable("movie/{titre}/{annee}/{genre}/{duree}/{realisateur}/{franchise}") {
                                 val titre = it.arguments?.getString("titre") ?: "Titre inconnu"
                                 val annee = it.arguments?.getString("annee") ?: "Année inconnue"
@@ -115,8 +122,6 @@ class MainActivity : ComponentActivity() {
                                 val duree = it.arguments?.getString("duree") ?: "Durée inconnue"
                                 val realisateur = it.arguments?.getString("realisateur") ?: "Réalisateur inconnu"
                                 val franchise = it.arguments?.getString("franchise") ?: "Franchise inconnue"
-
-                                //affichage de l'écran de détails en lui donnant ces informations
                                 MovieDetailScreen(
                                     navController = navController,
                                     titre = titre,
@@ -127,12 +132,10 @@ class MainActivity : ComponentActivity() {
                                     franchise = franchise
                                 )
                             }
-
-                            //pour genre on passe le nom et l'id du genre pour charger les films correspondants
+                            // genre : on passe le nom et l'id du genre pour charger les films correspondants
                             composable("genre/{genreName}/{genreId}") {
                                 val genreName = it.arguments?.getString("genreName") ?: "Inconnu"
                                 val genreId = it.arguments?.getString("genreId") ?: "0"
-
                                 GenreScreen(
                                     navController = navController,
                                     genreName = genreName,
