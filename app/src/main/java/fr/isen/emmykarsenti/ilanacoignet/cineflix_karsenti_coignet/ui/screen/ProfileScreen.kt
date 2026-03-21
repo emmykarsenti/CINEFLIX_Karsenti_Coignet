@@ -1,6 +1,6 @@
 package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.screen
 
-import android.net.Uri // Import nécessaire pour sécuriser le titre du film dans l'URL de navigation
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*

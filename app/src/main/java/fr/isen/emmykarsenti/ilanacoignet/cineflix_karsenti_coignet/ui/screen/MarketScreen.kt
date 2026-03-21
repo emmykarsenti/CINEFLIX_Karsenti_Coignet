@@ -1,9 +1,3 @@
-/* package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.screen
-
-... (Ancienne version du code conservée telle quelle) ...
-
-}*/
-
 package fr.isen.emmykarsenti.ilanacoignet.cineflix_karsenti_coignet.ui.screen
 
 import androidx.compose.foundation.background
