@@ -46,8 +46,8 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
 
                 // on observe la route actuelle pour savoir quel onglet surligner dans la bottom bar
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentRoute = navBackStackEntry?.destination?.route
+                val currentNavEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = currentNavEntry?.destination?.route
 
                 // le scaffold qui pose la structure de base : fond + bottom bar + contenu principal
                 Scaffold(
